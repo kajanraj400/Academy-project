@@ -3,6 +3,7 @@ import {CheckBooking} from './CheckBooking';
 import { ToastContainer, toast } from 'react-toastify';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Toaster } from 'sonner';
+import Cookies from 'js-cookie';
 
 
 
@@ -17,13 +18,20 @@ function BookingForm() {
         if (!CheckBooking(formDetails)) {
             return;
         }
+
+        const userData = Cookies.get('user');
+        const user = userData ? JSON.parse(userData) : null;
+        const userEmails = user && user.user ? user.user.email : null;
+        console.log("Email: " + userEmails);
     
+        const formDetailsWithEmail = { ...formDetails, userEmail: userEmails };
+
         const response = await fetch('http://localhost:5000/api/bookings', {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
             },
-            body: JSON.stringify(formDetails)
+            body: JSON.stringify(formDetailsWithEmail)
         });
     
         if (!response.ok) {
@@ -211,6 +219,7 @@ function BookingForm() {
                                             type='date' 
                                             onChange={(e)=> {setFormDetails({...formDetails, eventDate: e.target.value})}}  
                                             name= 'eventDate'
+                                            min={new Date().toISOString().split('T')[0]}
                                             required 
                                         />
                                     </div>

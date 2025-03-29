@@ -1,7 +1,8 @@
+import OldEventUploadPage from "@/pages/admin-view/oldEvent/OldEventUpload";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { ToastContainer, toast } from "react-toastify";
-
+import { toast, ToastContainer } from "react-toastify";
+import Swal from "sweetalert2";
 
 
 const OldEvents = () => {
@@ -12,27 +13,40 @@ const OldEvents = () => {
         navigate(`/admin/DisplayOldFullEvent/${id}`)
     }
     
-    const handleEventRemove = async(index, place) => {
-        const isConfirmed = window.confirm(`Are you sure you want to Delete ${place}'s Event?`);
+   
 
-        if( isConfirmed ) {
+    const handleEventRemove = async (index, place) => {
+        const result = await Swal.fire({
+            title: "Are you sure?",
+            text: `Do you really want to delete ${place}'s event?`,
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#d33",
+            cancelButtonColor: "#3085d6",
+            confirmButtonText: "Yes, delete it!",
+            cancelButtonText: "Cancel",
+        });
+
+        if (result.isConfirmed) {
             try {
-                await fetch(`http://localhost:5000/api/deleteOldEvent/${index}`, {
-                    method: "DELETE",
-                    headers: { "Content-Type": "application/json" },
-                }).then(res => {
-                    if(res.ok) {
-                        toast.success(`${place}'s Event Deleted successfully!`);
-                        setOldEvent((prevEvent) => prevEvent.filter((event)=> event._id !== index ));
-                    } else {
-                        console.log("Unable to delete");
-                    }
-                })
+            const res = await fetch(`http://localhost:5000/api/deleteOldEvent/${index}`, {
+                method: "DELETE",
+                headers: { "Content-Type": "application/json" },
+            });
+
+            if (res.ok) {
+                toast.success(`${place}'s event deleted successfully!`);
+                setOldEvent((prevEvent) => prevEvent.filter((event) => event._id !== index));
+            } else {
+                Swal.fire("Error", "Unable to delete the event.", "error");
+            }
             } catch (error) {
-                console.log(error);
+            Swal.fire("Oops!", "Something went wrong.", "error");
+            console.error(error);
             }
         }
-    }
+    };
+
 
 
     useEffect(() => {
@@ -72,7 +86,7 @@ const OldEvents = () => {
                 style={{ zIndex: 9999, position: 'fixed', top: 0 }} 
             />
 
-            <h1 className="text-center text-4xl my-11 mt-20 font-extrabold underline">PAST EVENT PACKAGES</h1>
+            <h1 className="text-4xl mt-8 mb-8 text-center text-blue-900 underline font-bold">PAST EVENT DETAILS</h1>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 m-5 gap-y-20">
                 {OldEvent.length > 0 ? (
@@ -80,8 +94,8 @@ const OldEvents = () => {
                         const imageUrl = Events.EventURLs?.[0]?.url;
 
                         return (
-                            <div key={idx} onClick={() => handleNavigate(Events._id)} className="h-auto shadow-lg hover:shadow-xl p-[1.5px] hover:border-2 hover:border-gray-400 hover:rounded-lg flex flex-col justify-between">
-                                
+                            <div key={idx} onClick={() => handleNavigate(Events._id)} className="bg-gray-200 rounded-lg h-auto shadow-lg hover:shadow-xl p-[1.5px] hover:border-2 hover:border-gray-400 hover:rounded-lg flex flex-col justify-between">
+
                                 {imageUrl ? (
                                     <img
                                         src={imageUrl}

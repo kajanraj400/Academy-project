@@ -1,11 +1,11 @@
+import GalleryPage from "../GalleryPage/GalleryPage";
+
 const SlideBar = () => {
   return (
     <div className="w-full">
-        <img
-            src='/bg11.jpg'
-            alt="Loading..."
-            className="w-full h-fit sm:h-[800px]"
-        />
+        <div className="w-full h-fit sm:h-[800px]">
+          <GalleryPage />
+        </div>
     </div>
   )
 }

@@ -2,7 +2,7 @@ const Booking = require('../../models/EventBookingModel');
 
 
 const EventBookings = async(req, res) => {
-    const {clientName, phoneNumber, email, address, eventType, eventDate, location, duration, guestCount, budgetRange, knowUs, videography, drone, live, terms, status} = req.body;
+    const {userEmail, clientName, phoneNumber, email, address, eventType, eventDate, location, duration, guestCount, budgetRange, knowUs, videography, drone, live, terms, status} = req.body;
 
 
     try {
@@ -15,7 +15,7 @@ const EventBookings = async(req, res) => {
             });
         }
 
-        const newBooking = new Booking({clientName, phoneNumber, email, address, eventType, eventDate, location, duration, guestCount, budgetRange, knowUs, videography, drone, live, terms, status});
+        const newBooking = new Booking({ userEmail, clientName, phoneNumber, email, address, eventType, eventDate, location, duration, guestCount, budgetRange, knowUs, videography, drone, live, terms, status});
 
         await newBooking.save();
         res.status(201).json(newBooking);

@@ -1,0 +1,135 @@
+/* Profile.css */
+
+.profile-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #f4f4f4;
+    min-height: 100vh;
+    padding: 20px;
+}
+
+.profile-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: black;
+    padding: 10px 30px;
+    width: 100%;
+}
+
+.logo {
+    width: 200px;
+    height: auto;
+}
+
+.back-button {
+    display: inline-block;
+    padding: 10px 20px;
+    font-size: 18px;
+    background-color: rgb(20, 190, 190);
+    color: white;
+    text-decoration: none;
+    border-radius: 25px;
+    text-align: center;
+}
+
+.profile-content {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    width: 100%;
+    margin-top: 20px;
+}
+
+.profile-card {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    width: 350px;
+    margin-bottom: 20px;
+}
+
+.profile-image {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    border: 2px solid #ddd;
+    margin-bottom: 15px;
+}
+
+.profile-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+    margin: 10px 0;
+}
+
+.profile-table .label {
+    font-weight: bold;
+    padding-right: 10px;
+}
+
+.profile-card button {
+    padding: 10px 20px;
+    margin: 10px 0;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 100%;
+}
+
+.edit-button {
+    background-color: rgb(57, 137, 202);
+    color: white;
+}
+
+.delete-button {
+    background-color: red;
+    color: white;
+}
+
+.change-password-button {
+    background-color: #20C997;
+    color: white;
+}
+
+.orders-container {
+    flex: 1;
+    max-width: 800px;
+    padding: 20px;
+}
+
+.table-wrapper {
+    overflow-x: auto;
+}
+
+.styled-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+.styled-table th, .styled-table td {
+    border: 1px solid black;
+    padding: 8px;
+    text-align: left;
+}
+
+.styled-table thead {
+    background-color: #ddd;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .profile-content {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .orders-container {
+        max-width: 100%;
+    }
+}

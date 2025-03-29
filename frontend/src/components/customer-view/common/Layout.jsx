@@ -11,7 +11,7 @@ const ClientLayout = () => {
   return (
     <div className="overflow-x-hidden">
         { !location.pathname.startsWith('/client/DisplayOldFullEvent/') && 
-            <header className="absolute z-10 w-full bg-white/40 backdrop-blur-sm">
+            <header className="absolute z-10 w-full bg-black/50 backdrop-blur-sm">
             <ClientHeader />
         </header>
         }
@@ -25,4 +25,4 @@ const ClientLayout = () => {
   )
 }
 
-export default ClientLayout
+export default ClientLayout;

@@ -1,4 +1,4 @@
-const sendEmail = require('../../mailService');
+const sendEmail = require('../../config/mailService');
 const Booking = require('../../models/EventBookingModel');
 
 const updateEventBooking = async (req, res) => {
@@ -6,7 +6,7 @@ const updateEventBooking = async (req, res) => {
     const to = req.params.email;
     const { status, clientName, eventDate, eventType, eventLocation } = req.body;
 
-    try {
+    try { 
         const updateBooking = await Booking.findByIdAndUpdate(
             bookingId,
             { status: status },

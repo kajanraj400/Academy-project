@@ -1,6 +1,10 @@
 const mongoose = require('mongoose');
 
 const BookingSchema = new mongoose.Schema({
+    userEmail: {
+        type: String,
+        required: true
+    },
     clientName: {
         type: String,
         required: true
@@ -18,7 +22,7 @@ const BookingSchema = new mongoose.Schema({
         required: true
     },
     eventType: {
-        type: String,
+        type: String, 
         required: true
     },
     eventDate: {
@@ -70,3 +74,4 @@ const BookingSchema = new mongoose.Schema({
 BookingSchema.index({ email: 1, eventDate: 1 , eventType: 1}, { unique: true });
 
 module.exports = mongoose.model('Booking', BookingSchema);
+

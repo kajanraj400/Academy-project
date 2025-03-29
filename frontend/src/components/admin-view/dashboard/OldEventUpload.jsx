@@ -1,3 +1,4 @@
+import OldEventUploadPage from "@/pages/admin-view/oldEvent/OldEventUpload";
 import { useEffect, useState } from "react"
 import { ToastContainer, toast } from "react-toastify";
 
@@ -60,7 +61,7 @@ const OldEventUpload = () => {
             }).then(response => {
                 toast.dismiss(toastId);
                 if(response.ok) {
-                    alert("Details submitted successfully!");
+                    toast.success("Details submitted successfully!"); 
     
                     setImage([]);
                     setFormDetails({
@@ -71,7 +72,7 @@ const OldEventUpload = () => {
                         
                     });
                 } else{
-                    alert("Details submit failed.");
+                    toast.error("Details submit failed.");
                 }
             }).catch(error => {
                 toast.dismiss(toastId);
@@ -97,7 +98,7 @@ const OldEventUpload = () => {
 
     return (
         <div className="flex items-center justify-center">
-            <div className="w-9/12 bg-blue-200 h-auto m-4 p-7 rounded-2xl">
+            <div className="w-9/12 bg-black/10 h-auto m-4 p-7 rounded-2xl">
                 <ToastContainer
                     position="top-center"
                     hideProgressBar={false}
@@ -110,7 +111,7 @@ const OldEventUpload = () => {
                     style={{ zIndex: 9999, position: 'fixed', top: 0 }}
                 />
                 <form onSubmit={onSubmit}>
-                    <h1 className="text-4xl text-blue-950 text-center font-bold mb-10 underline">Upload Old Event Details Here...</h1>
+                    <h1 className="text-4xl mt-8 mb-8 text-center text-blue-900 underline font-bold">Upload Old Event Details Here...</h1>
                     <input 
                         type="text" 
                         name="clientName"

@@ -1,4 +1,5 @@
 import { assets } from "@/assets/assets";
+import Cookies from "js-cookie";
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
@@ -9,6 +10,7 @@ const OldEvents = () => {
     const [visibleSort, setVisibleSort] = useState(false);
     const [selectedCategory, setSelectedCategory] = useState("All");
     const location = useLocation();
+
 
     const handleNavigation = (id) => {
         navigate(`/client/DisplayOldFullEvent/${id}`);
@@ -23,6 +25,8 @@ const OldEvents = () => {
                         "Content-Type": "application/json",
                     },
                 });
+
+                console.log("User Data : "+Cookies.get('user'));
 
                 const result = await res.json();
                 setOldEvent(result.data);

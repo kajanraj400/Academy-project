@@ -1,3 +1,4 @@
+import GalleryPage from '@/components/customer-view/GalleryPage/GalleryPage';
 import AboutStudio from '@/components/customer-view/home/AboutStudio';
 import BookingForm from '@/components/customer-view/home/BookingForm'
 import OldEvents from '@/components/customer-view/home/OldEvents';
@@ -7,8 +8,8 @@ import React from 'react'
 const Home = () => {
     return (
         <div>
-            <div className='flex flex-col items-center justify-center w-full'>
-                <div className='w-full md:h-[900px] mb-16 md:m-0'>
+            <div className='flex flex-col items-center justify-center w-full relative'>
+                <div className='w-full mb-16 md:m-0 md:mb-28 relative h-[500px] md:h-[700px]'>
                     <SlideBar />
                 </div>
 

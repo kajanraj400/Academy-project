@@ -115,3 +115,34 @@ a:hover p {
       color: white;
   }
 }
+
+#heading1{
+	text-align:center;
+	color:transparent;
+	-webkit-text-stroke:1px #fff;
+	background:url("./assets/back.png");
+	-webkit-background-clip:text;
+	animation:back 20s linear infinite;
+}
+
+@keyframes back{
+	100%{
+		background-position:2000px 0;
+	}
+}
+
+.get-started-btn {
+  width: auto;
+  padding: 12px 24px;
+  font-size: 1.2em;
+  font-weight: bold;
+  border-radius: 8px;
+  color: white;
+  background: linear-gradient(to right, #3b82f6, #9333ea);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  transition: transform 0.2s ease-in-out;
+}
+
+.get-started-btn:hover {
+  transform: scale(1.05);
+}

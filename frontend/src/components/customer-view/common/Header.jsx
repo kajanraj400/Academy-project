@@ -1,13 +1,17 @@
 import { assets } from "@/assets/assets";
 import { useState } from "react";
-import { Link, NavLink, Outlet } from "react-router-dom";
+import { Link, NavLink, Outlet, useNavigate } from "react-router-dom";
+import userprofile from '../../../assets/userimge.png'
+import Logout from "@/components/auth-view/Common/Logout";
 
-
+ 
 const ClientHeader = () => {
     const [visible, setVisible] = useState(false);
+    const navigate = useNavigate();
+    
 
   return (
-        <div className="flex items-center justify-around py-5 font-medium bg-transparent h-14 sm:h-28">
+        <div className="flex items-center justify-around py-5 font-medium bg-white/70 md:bg-transparent h-14 sm:h-28">
             <Link to='/client/home'><img src={assets.logo} alt="Logo" className="w-36" /></Link>
                     
             <ul className="hidden sm:flex gap-5 text-5m text-white">
@@ -19,8 +23,8 @@ const ClientHeader = () => {
                     <p className="text-base">BLOGS</p>
                     <hr className="w-2/4 border-none bg-gray-700 h-[1.5px] hidden" />
                 </NavLink>
-                <NavLink to='/client/gifts' className="flex flex-col items-center gap-1">
-                    <p className="text-base">GIFTS</p>
+                <NavLink to='/client/products' className="flex flex-col items-center gap-1">
+                    <p className="text-base">PRODUCTS</p>
                     <hr className="w-2/4 border-none bg-gray-700 h-[1.5px] hidden" />
                 </NavLink>
                 <NavLink to='/client/contact' className="flex flex-col items-center gap-1">
@@ -36,12 +40,13 @@ const ClientHeader = () => {
             {/* code for right side icon */}
             <div className='flex items-center gap-6'>
                 <div className='group relative'>
-                    <img src={assets.profile_icon} className='w-14 cursor-pointer' alt="" />
+                    <img src={userprofile} alt="User" className="w-[50px] md:w-[60px] h-[50px] md:[60px] opacity-65" style={{ borderRadius: "50%", border: "3px solid aqua", marginRight: "10px" }} />
                     <div className='group-hover:block hidden absolute dropdown-menu right-0 pt-4'>
                         <div className='flex flex-col gap-2 w-36 py-3 px-5 bg-slate-100 text-gray-500 rounded'>
-                            <p className='cursor-pointer hover:text-black'>Profile</p>
-                            <p className='cursor-pointer hover:text-black'>Orders</p>
-                            <p className='cursor-pointer hover:text-black'>Logout</p>
+                            <Link to='/client/profile'><p className='cursor-pointer hover:text-black'>Profile</p></Link>
+                            <p className='cursor-pointer hover:text-black'>MyBookings</p>
+                            <Link to='/client/my-orders'><p className='cursor-pointer hover:text-black'>My Orders</p></Link>
+                            <Logout />
                         </div>
                     </div>
                 </div>
@@ -60,7 +65,7 @@ const ClientHeader = () => {
 
                     <NavLink onClick={() => setVisible(false)} className='py-2 pl-6 border bg-gray-400' to='/client/home'>HOME</NavLink>
                     <NavLink onClick={() => setVisible(false)} className='py-2 pl-6 border bg-gray-400' to='/client/blog'>BLOG</NavLink>
-                    <NavLink onClick={() => setVisible(false)} className='py-2 pl-6 border bg-gray-400' to='/client/gifts'>GIFTS</NavLink>
+                    <NavLink onClick={() => setVisible(false)} className='py-2 pl-6 border bg-gray-400' to='/client/products'>PRODUCTS</NavLink>
                     <NavLink onClick={() => setVisible(false)} className='py-2 pl-6 border bg-gray-400' to='/client/contact'>CONTACT</NavLink>
                     <NavLink onClick={() => setVisible(false)} className='py-2 pl-6 border bg-gray-400' to='/client/about'>ABOUT</NavLink>
                 </div>

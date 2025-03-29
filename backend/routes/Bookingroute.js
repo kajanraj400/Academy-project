@@ -7,9 +7,10 @@ const getOldEvents = require('../controls/eventBookings/getOldEvents');
 const getSpecificEvent = require('../controls/eventBookings/getSpecificEvent');
 const getUpcomingEvents = require('../controls/eventBookings/getUpcomingEvents');
 const deleteOldEvent = require('../controls/eventBookings/deleteOldEvent');
-
-
+const { uploadFile, getFiles, deleteFile } = require('../controls/content/fileController');
 const router = express.Router();
+const fileController = require("../controls/content/fileController");
+const upload = require("../config/multerConfig"); 
 
 router.get('/getbookings', getEventBookings);
 router.post('/bookings', EventBookings);
@@ -20,4 +21,14 @@ router.get('/getUpcomingBookings', getUpcomingEvents);
 router.get('/getSpecificEvent/:id', getSpecificEvent);
 router.delete('/deleteOldEvent/:id', deleteOldEvent)
 
+
+
+router.post("/upload", upload.single("file"), fileController.uploadFile);
+router.get("/files", fileController.getFiles);
+router.delete("/file/:id", fileController.deleteFile);
+
+
+
+
+ 
 module.exports = router; 
