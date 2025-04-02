@@ -1,6 +1,8 @@
+
+
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { motion } from "framer-motion";
+import { color, motion } from "framer-motion";
 import { Toaster, toast } from "sonner";
 import axios from "axios";
 import loginbackground from "../../../assets/loginlogo.png";
@@ -16,13 +18,29 @@ const Forgotpassword = () => {
   const handleForgotPassword = (e) => {
     e.preventDefault();
     setError("");
-    
-    const strongPassword = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-    if (!password || !strongPassword.test(password)) {
-      setError("Password is not strong");
-      toast.error("Weak password: Use at least 8 characters with one uppercase, lowercase, number, and special character.");
+
+    const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.com$/;
+    if (!email || !emailPattern.test(email)) {
+      setError("Please enter a valid email address");
       return;
     }
+
+    const minLength = 8;
+    const strongPassword = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!#%*?&])[A-Za-z\d@$#!%*?&]+$/;
+
+    if (!password || password.length < minLength) {
+      setError("Password must be at least 8 characters long");
+      toast.error("Password must be at least 8 characters long");
+      return;
+     }
+
+   if (!strongPassword.test(password)) {
+     setError("Password not Strong");
+     toast.error("Weak password: Use at least 8 characters with one uppercase, lowercase, number, and special character.");
+    return;
+    }
+    
+    
 
     if (password !== confirmPassword) {
       setError("Passwords do not match");
@@ -39,7 +57,7 @@ const Forgotpassword = () => {
           toast.error("Email not found. Please sign up.");
         } else if (message === "Password updated successfully") {
           toast.success("Password updated successfully!");
-          setTimeout(() => navigate("/login"), 2000);
+          setTimeout(() => navigate("/auth/login"), 2000);
         }
       })
       .catch(() => {
@@ -73,7 +91,7 @@ const Forgotpassword = () => {
             <h2 className="text-center text-2xl font-bold text-gray-900 mb-6">Set Your Password</h2>
             
             <label className="block font-semibold text-gray-700">Email</label>
-            <input
+            <input style={{color:"black"}}
               type="email"
               placeholder="Enter your Email"
               required
@@ -82,7 +100,7 @@ const Forgotpassword = () => {
             />
             
             <label className="block mt-4 font-semibold text-gray-700">Password</label>
-            <input
+            <input style={{color:"black"}}
               type="password"
               placeholder="Create your Password"
               required
@@ -91,7 +109,7 @@ const Forgotpassword = () => {
             />
             
             <label className="block mt-4 font-semibold text-gray-700">Confirm Password</label>
-            <input
+            <input style={{color:"black"}}
               type="password"
               placeholder="Confirm your Password"
               required

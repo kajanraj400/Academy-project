@@ -12,7 +12,6 @@ const EventBookings = () => {
     const [sortedBookings, setSortedBookings] = useState([]);
     const [searchQuery, setSearchQuery] = useState("");
 
-
     const handleSearch = (e) => {
         setSearchQuery(e.target.value);
         const query = e.target.value.toLowerCase();
@@ -115,7 +114,7 @@ const EventBookings = () => {
     }
 
     return (
-        <div className="w-full p-4">
+        <div className="w-9/12 mx-auto p-4">
             <ToastContainer position="top-center" autoClose={3000} />
             
             <h1 className="text-4xl mt-8 mb-8 text-center text-blue-900 underline font-bold">Event Booking Details</h1>

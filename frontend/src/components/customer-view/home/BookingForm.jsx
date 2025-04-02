@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {CheckBooking} from './CheckBooking';
 import { ToastContainer, toast } from 'react-toastify';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -18,20 +18,23 @@ function BookingForm() {
     const location = useLocation();
     const [isOpen, setIsOpen] = useState(false);
     const todayDate = getTodayDate(); 
-    
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     const onSubmit = async (e) => {
         e.preventDefault();
-        if (!CheckBooking(formDetails)) {
-            return;
-        }
+        
+        setIsSubmitting(true);
 
         const userData = Cookies.get('user');
         const user = userData ? JSON.parse(userData) : null;
         const userEmails = user && user.user ? user.user.email : null;
-        console.log("Email: " + userEmails);
     
         const formDetailsWithEmail = { ...formDetails, userEmail: userEmails };
+
+        if (!CheckBooking(formDetails)) {
+            setIsSubmitting(false);
+            return;
+        }
 
         const response = await fetch('http://localhost:5000/api/bookings', {
             method: "POST",
@@ -48,6 +51,7 @@ function BookingForm() {
             } else {
                 toast.error('Booking Failed');
             }
+            setIsSubmitting(false);
             return;
         } else {            
             toast.success('Booking Successful!');          
@@ -55,7 +59,6 @@ function BookingForm() {
                 setFormDetails({
                     clientName: '',
                     phoneNumber: 0,
-                    email: '',
                     address: '',
                     eventType: '',
                     eventDate: '',
@@ -70,6 +73,9 @@ function BookingForm() {
                     terms: false
                 })
                 setIsOpen(false);
+                setTimeout(() => {
+                    setIsSubmitting(false);
+                }, 5000); 
             }, 5050);
         }
     
@@ -92,7 +98,6 @@ function BookingForm() {
     const [formDetails, setFormDetails] = useState({
         clientName: '',
         phoneNumber: 0,
-        email: '',
         address: '',
         eventType: '',
         eventDate: '',
@@ -107,6 +112,22 @@ function BookingForm() {
         terms: false
 
     })
+
+    const isFormComplete = () => {
+        return (
+            formDetails.clientName.trim() !== '' &&
+            formDetails.phoneNumber !== 0 &&
+            formDetails.address.trim() !== '' &&
+            formDetails.eventType.trim() !== '' &&
+            formDetails.eventDate.trim() !== '' &&
+            formDetails.location.trim() !== '' &&
+            formDetails.duration > 0 &&
+            formDetails.guestCount > 0 &&
+            formDetails.budgetRange !== 0 &&
+            formDetails.terms === true
+        );
+    };
+    
 
     
 
@@ -162,7 +183,7 @@ function BookingForm() {
                                 className='absolute top-4 right-4 text-white text-2xl hover:text-red-500 transition'>
                                 ✖
                             </button>                   
-
+ 
                             <h2 className='flex text-lg sm:text-3xl text-white font-medium justify-center mb-4 sm:mb-6'>
                                 Book Photography Service
                             </h2>
@@ -181,14 +202,6 @@ function BookingForm() {
                                     type='text'
                                     name= 'phoneNumber'
                                     placeholder='Enter Contact Number' 
-                                    required 
-                                />
-
-                                <input className='w-full p-2 border rounded-lg' 
-                                    onChange={(e) => {setFormDetails({...formDetails, email: e.target.value})}} 
-                                    type='email' 
-                                    name= 'email'
-                                    placeholder='Enter Email' 
                                     required 
                                 />
                                 
@@ -245,7 +258,7 @@ function BookingForm() {
                                     onChange={(e)=> {setFormDetails({...formDetails, duration: e.target.value})}} 
                                     name= 'duration'
                                     min="1"
-                                    max="12"
+                                    max="15"
                                     placeholder='Enter Event Duration ( In hours )' 
                                     required 
                                 />
@@ -255,7 +268,7 @@ function BookingForm() {
                                     onChange={(e)=> {setFormDetails({...formDetails, guestCount: e.target.value})}} 
                                     name= 'guestCount'
                                     min="0"
-                                    max="10000"
+                                    max="4000"
                                     step="1"
                                     placeholder='Enter Number of Guests' 
                                     required 
@@ -266,7 +279,7 @@ function BookingForm() {
                                     onChange={(e)=> {setFormDetails({...formDetails, budgetRange: e.target.value})}} 
                                     name= 'budgetRange'
                                     min="3000"
-                                    max="200000"
+                                    max="500000"
                                     step="1"
                                     placeholder='Enter Expected Budget' 
                                     required 
@@ -326,9 +339,17 @@ function BookingForm() {
                                 <Toaster position='center' />
                                 
 
-                                <button type='submit' className='w-full bg-blue-600 text-white p-3 rounded-lg hover:bg-blue-700 transition'>
-                                    Book for Event
+                                <button 
+                                    type='submit' 
+                                    className={`w-full p-3 rounded-lg transition ${
+                                        isFormComplete() && !isSubmitting ? 'bg-blue-600 text-white hover:bg-blue-700' : 'bg-blue-400 cursor-not-allowed'
+                                    }`} 
+                                    disabled={!isFormComplete() || isSubmitting} 
+                                    title={!isFormComplete() ? 'Please fill all fields before booking' : isSubmitting ? 'Processing...' : ''}
+                                >
+                                    {isSubmitting ? 'Booking...' : 'Book for Event'}
                                 </button>
+
                             </form>
                         </div>
                     </div>

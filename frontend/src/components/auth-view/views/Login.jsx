@@ -1,3 +1,5 @@
+
+
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
@@ -20,6 +22,14 @@ const Login = () => {
   const handleLogin = (e) => {
     e.preventDefault();
     setError("");
+    
+    const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.com$/;
+    if (!email || !emailPattern.test(email)) {
+      setError("Please enter a valid email address");
+      return;
+    }
+
+    
     const loadingToastId = toast.loading("Authenticating...");
 
     axios
@@ -96,6 +106,7 @@ const Login = () => {
               <motion.input
                 whileFocus={{ scale: 1.05 }}
                 type="email"
+                required
                 className="w-full bg-white/10 px-4 py-3 text-gray-900 placeholder-gray-600 rounded-lg outline-none focus:ring-2 focus:ring-blue-400 transition"
                 placeholder="Email"
                 onChange={(e) => setEmail(e.target.value)}
@@ -104,6 +115,7 @@ const Login = () => {
               <motion.input
                 whileFocus={{ scale: 1.05 }}
                 type="password"
+                required
                 className="w-full bg-white/10 px-4 py-3 text-gray-900 placeholder-gray-600 rounded-lg outline-none focus:ring-2 focus:ring-blue-400 transition"
                 placeholder="Password"
                 onChange={(e) => setPassword(e.target.value)}

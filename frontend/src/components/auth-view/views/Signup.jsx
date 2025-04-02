@@ -22,38 +22,55 @@ const Signup = () => {
   const [OTPVisible, setOTPVisible] = useState(false);
   const [otp, setOtp] = useState("");
   const navigate = useNavigate();
+  const [conformpassword, setconformpassword] = useState("");
   
 
   const handleSignup = (e) => {
     e.preventDefault();
-    setError(""); // Reset error message
+    setError(""); 
 
-    // Username validation
+    
     if (!username || username.length < 3) {
       setError("Username must be at least 3 characters long");
       return;
     }
 
-    // Email validation
-    const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.com$/;
     if (!email || !emailPattern.test(email)) {
       setError("Please enter a valid email address");
       return;
     }
 
-
-    // Phone validation (Assuming you want to validate the phone number similar to your AdminSignup)
-    const phonePattern = /^(?:\+94|0)(7[01245678]\d{7})$/;
+    const phonePattern = /^0(7[01245678]\d{7})$/;
     if (!phone || !phonePattern.test(phone)) {
-      setError("Invalid phone number. Please enter a valid Sri Lankan phone number.");
+      setError("Invalid phone number");
       return;
     }
 
-    // Password validation (Password must contain at least one uppercase letter, one number, and one special character)
-    const strongPassword = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!#%*?&])[A-Za-z\d@$#!%*?&]{8,}$/;
-    if (!password || !strongPassword.test(password)) {
-      setError("Password must be at least 8 characters long, including one uppercase letter, one number, and one special character.");
+    const Stongaddress = /^[a-zA-Z0-9\s,.-]{5,100}$/; 
+     if (!address || !Stongaddress.test(address)) {
+      setError("Please Check your address");
       return;
+    }
+
+    const minLength = 8;
+    const strongPassword = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!#%*?&])[A-Za-z\d@$#!%*?&]+$/;
+
+    if (!password || password.length < minLength) {
+      setError("Password must be at least 8 characters long");
+      return;
+     }
+
+   if (!strongPassword.test(password)) {
+     setError("Password should satisfy password requirements");
+    return;
+    }
+
+
+    if(password !== conformpassword){
+      setError("Password not match");
+      return;
+
     }
 
 
@@ -133,7 +150,7 @@ const Signup = () => {
         setTimeout(() => {
           toast.dismiss(toastLoadOTP);
           toast.error("Invalid OTP. Please try again.");
-          otpClose();
+          //otpClose();
         }, 2000);
       }
   })
@@ -188,6 +205,7 @@ const Signup = () => {
               <motion.input
                 whileFocus={{ scale: 1.05 }}
                 type="text"
+                required
                 className="w-full bg-white/10 px-4 py-3 text-gray-900 placeholder-gray-600 rounded-lg outline-none focus:ring-2 focus:ring-blue-400 transition"
                 placeholder="Username"
                 onChange={(e) => setUsername(e.target.value)}
@@ -196,6 +214,7 @@ const Signup = () => {
               <motion.input
                 whileFocus={{ scale: 1.05 }}
                 type="email"
+                required
                 className="w-full bg-white/10 px-4 py-3 text-gray-900 placeholder-gray-600 rounded-lg outline-none focus:ring-2 focus:ring-blue-400 transition"
                 placeholder="Email"
                 onChange={(e) => setEmail(e.target.value)}
@@ -204,6 +223,7 @@ const Signup = () => {
               <motion.input
                 whileFocus={{ scale: 1.05 }}
                 type="text"
+                required
                 className="w-full bg-white/10 px-4 py-3 text-gray-900 placeholder-gray-600 rounded-lg outline-none focus:ring-2 focus:ring-blue-400 transition"
                 placeholder="Address"
                 onChange={(e) => setAddress(e.target.value)}
@@ -212,6 +232,7 @@ const Signup = () => {
               <motion.input
                 whileFocus={{ scale: 1.05 }}
                 type="tel"
+                required
                 className="w-full bg-white/10 px-4 py-3 text-gray-900 placeholder-gray-600 rounded-lg outline-none focus:ring-2 focus:ring-blue-400 transition"
                 placeholder="Phone Number"
                 onChange={(e) => setPhone(e.target.value)}
@@ -220,9 +241,19 @@ const Signup = () => {
               <motion.input
                 whileFocus={{ scale: 1.05 }}
                 type="password"
+                required
                 className="w-full bg-white/10 px-4 py-3 text-gray-900 placeholder-gray-600 rounded-lg outline-none focus:ring-2 focus:ring-blue-400 transition"
                 placeholder="Password"
                 onChange={(e) => setPassword(e.target.value)}
+              />
+
+              <motion.input
+                whileFocus={{ scale: 1.05 }}
+                type="password"
+                required
+                className="w-full bg-white/10 px-4 py-3 text-gray-900 placeholder-gray-600 rounded-lg outline-none focus:ring-2 focus:ring-blue-400 transition"
+                placeholder="Conform Password"
+                onChange={(e) => setconformpassword(e.target.value)}
               />
             
                 <HoverCard>
@@ -231,7 +262,7 @@ const Signup = () => {
                     </HoverCardTrigger>
                     <HoverCardContent className="w-72 p-4 bg-gray-200 text-black rounded-lg shadow-lg">
                         <ul className="list-disc pl-4">
-                            <li>At least 8 characters</li>
+                            <li>Must 8 characters</li>
                             <li>At least one uppercase letter (A-Z)</li>
                             <li>At least one lowercase letter (a-z)</li>
                             <li>At least one number (0-9)</li>

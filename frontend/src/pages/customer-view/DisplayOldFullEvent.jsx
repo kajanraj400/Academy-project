@@ -71,7 +71,7 @@ const DisplayOldFullEvent = () => {
     }
 
     const handleNavigate = () => {
-        navigate('/client/blog')
+        window.history.back();
     }
 
     return (

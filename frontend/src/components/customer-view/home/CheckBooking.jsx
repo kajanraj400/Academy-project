@@ -18,7 +18,7 @@ export const CheckBooking = (formDetails) => {
             });
 
             return false;
-        } 
+        }  
     }
 
     if (formDetails.eventDate) {

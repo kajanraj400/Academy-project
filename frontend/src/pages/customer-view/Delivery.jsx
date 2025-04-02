@@ -66,7 +66,7 @@ function DeliveryMethodPage() {
         parseFloat(location.lng)
       );
       console.log(dist);
-      setDeliveryFee(dist > 1 ? Math.round((dist - 2) * 60) : 0);
+      setDeliveryFee(dist > 2 ? Math.round((dist - 2) * 60) : 0);
     }
   }, [location]);
 
