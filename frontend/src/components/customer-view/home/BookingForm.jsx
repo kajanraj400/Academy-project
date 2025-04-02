@@ -6,13 +6,20 @@ import { Toaster } from 'sonner';
 import Cookies from 'js-cookie';
 
 
+const getTodayDate = () => {
+    const today = new Date();
+    return today.toISOString().split("T")[0] + 1; // Ensures YYYY-MM-DD format
+};
+  
 
 
 function BookingForm() {
     const navigate = useNavigate();
     const location = useLocation();
     const [isOpen, setIsOpen] = useState(false);
-      
+    const todayDate = getTodayDate(); 
+    
+
     const onSubmit = async (e) => {
         e.preventDefault();
         if (!CheckBooking(formDetails)) {
@@ -219,7 +226,7 @@ function BookingForm() {
                                             type='date' 
                                             onChange={(e)=> {setFormDetails({...formDetails, eventDate: e.target.value})}}  
                                             name= 'eventDate'
-                                            min={new Date().toISOString().split('T')[0]}
+                                            min={todayDate}
                                             required 
                                         />
                                     </div>

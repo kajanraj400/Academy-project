@@ -12,7 +12,7 @@ const OGcart = () => {
   const handleChange = () => {
       navigate('/client/products')
   }
-
+ 
   useEffect(() => {
     const storedCart = JSON.parse(localStorage.getItem("cart")) || [];
     setCart(storedCart);
@@ -25,6 +25,7 @@ const OGcart = () => {
   };
 
   const updateQuantity = (index, quantity) => {
+
     const updatedCart = [...cart];
     updatedCart[index].quantity = quantity;
     setCart(updatedCart);
@@ -88,7 +89,7 @@ const OGcart = () => {
                 className="bg-white p-5 rounded-xl border border-black shadow-lg flex flex-col md:flex-row justify-between items-center transition duration-200 hover:shadow-xl"
               >
                 <div className="text-left mb-4 md:mb-0">
-                  <p className="text-xl font-semibold text-black">{item.name} ({item.selectedSize})</p>
+                  <p className="text-xl font-semibold text-black">{item.name} {item.selectedSize && ` (${item.selectedSize})`}</p>
                   <p className="text-gray-500 text-sm">{item.price} Rs/= per unit</p>
                 </div>
 
@@ -105,7 +106,7 @@ const OGcart = () => {
                     ))}
                   </select>
                   <span className="font-bold text-black text-lg">
-                    {item.price * item.quantity || 0} Rs/=
+                    {item.price * item.quantity || 0 } Rs/=
                   </span>
                 </div>
 
@@ -124,9 +125,19 @@ const OGcart = () => {
           </div>
 
           <div className="mt-8 text-center">
-            <button
+          <button
               className="bg-[#0cbdd6] hover:bg-[#0aa7be] text-white px-8 py-3 rounded-full text-lg shadow-md transition duration-300"
-              onClick={() => navigate("/client/design")}
+              onClick={() => {
+                const hasZeroQuantity = cart.some((item) => !item.quantity || item.quantity < 1);
+                  if (hasZeroQuantity) {
+                    toast.error("Minimum quantity is 1 for all items! or remove unwanted item!", {
+                      position: "top-center",
+                      autoClose: 3000,
+                    });
+                  } else {
+                    navigate("/client/design");
+                  }
+              }}
             >
               Proceed to Design
             </button>

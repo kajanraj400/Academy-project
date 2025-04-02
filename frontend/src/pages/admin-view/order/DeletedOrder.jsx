@@ -34,12 +34,30 @@ const DeletedOrders = () => {
       <div className="mt-6">
         {deletedOrders.length > 0 ? (
           deletedOrders.map((order) => (
-            <div key={order._id} className="border p-4 my-2 rounded-lg shadow-md bg-gray-200">
+            <div key={order._id} className="p-4 my-8 border-blue-400 border-2 rounded-lg shadow-md bg-gray-200">
               <p><strong>Order ID:</strong> {order._id}</p>
-              <p><strong>User ID:</strong> {order.userId}</p>
-              <p><strong>Product:</strong> {order.productName} ({order.size})</p>
-              <p><strong>Quantity:</strong> {order.quantity}</p>
-              <p><strong>Total:</strong> ${order.total}</p>
+              <p><strong>User Email:</strong> {order.email}</p>
+              <table className="w-2/6 border border-gray-300 shadow-md rounded-lg overflow-hidden">
+                  <thead className="bg-blue-200 text-black">
+                    <tr>
+                      <th className="px-4 py-2 border">Product</th>
+                      <th className="px-4 py-2 border">Size</th>
+                      <th className="px-4 py-2 border">Quantity</th>
+                      <th className="px-4 py-2 border">Price</th>
+                    </tr>
+                  </thead>
+                  <tbody className="bg-gray-100">
+                    {order.items.map((product, index) => (
+                      <tr key={index} className="hover:bg-gray-200 transition">
+                        <td className="px-4 py-2 border text-center">{product.productName}</td>
+                        <td className="px-4 py-2 border text-center">{product.size}</td>
+                        <td className="px-4 py-2 border text-center">{product.quantity}</td>
+                        <td className="px-4 py-2 border text-center">{product.price*product.quantity}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+
               <p><strong>Deleted At:</strong> {new Date(order.deletedAt).toLocaleString()}</p>
             </div>
           ))

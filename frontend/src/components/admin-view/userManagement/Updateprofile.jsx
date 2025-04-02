@@ -83,7 +83,7 @@ const ProfileUpdate= () => {
   return (<>
      <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', backgroundColor: 'black', padding: '10px 30px'}}>
         <img src={logo} alt="Logo" style={{ width: '260px', height: '100px' }} />
-        <Link  to="/admin/profile"  style={{ display: 'inline-block', padding: '10px 20px', fontSize: '18px', backgroundColor: 'rgb(20, 190, 190)', color: 'white', textDecoration: 'none', borderRadius: '25px', textAlign: 'center'}}><b>Back</b></Link>
+        <Link  to="/client/profile"  style={{ display: 'inline-block', padding: '10px 20px', fontSize: '18px', backgroundColor: 'rgb(20, 190, 190)', color: 'white', textDecoration: 'none', borderRadius: '25px', textAlign: 'center'}}><b>Back</b></Link>
     </header>
 
   

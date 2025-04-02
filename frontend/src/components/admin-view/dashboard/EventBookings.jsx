@@ -87,6 +87,7 @@ const EventBookings = () => {
         }).then(res => {
             if (res.ok) {
                 toast.success(`${clientName}'s booking ${status.toLowerCase()} successfully!`);
+                setSortedBookings(prev => prev.filter(book => book._id !== id));
                 setBookings(prev => prev.filter(book => book._id !== id));
                 setSelectedBooking(null);
             } else {
@@ -119,19 +120,19 @@ const EventBookings = () => {
             
             <h1 className="text-4xl mt-8 mb-8 text-center text-blue-900 underline font-bold">Event Booking Details</h1>
 
-            <div className="flex justify-between items-center mb-10">
+            <div className="flex justify-between items-center mb-10 w-8/12 m-auto">
                 <input
                     type="text"
                     value={searchQuery}
                     onChange={handleSearch}
                     placeholder="Search by Name or Event Type"
-                    className="w-9/12 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200"
+                    className="w-9/12 p-2 border-2  border-sky-500 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200"
                 />
 
                 <select 
                     value={sortOrder} 
                     onChange={(e) => handleSortChange(e.target.value)}
-                    className="w-3/12 px-4 py-2 text-lg border border-gray-300 rounded-md cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200"
+                    className="w-3/12 px-4 py-2 text-lg  border-sky-500 border-2 rounded-md cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200"
                 >
                     <option value="default">🔄 Reset to Default</option>
                     <option value="asc">⬆ Sort Ascending</option>

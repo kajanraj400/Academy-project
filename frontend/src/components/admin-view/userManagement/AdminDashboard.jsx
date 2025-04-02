@@ -73,6 +73,9 @@ function AdminDashboard() {
       user.address.toLowerCase().includes(query) ||
       user.phone.toLowerCase().includes(query)
     );
+
+
+
     setSearchResults(filteredUsers);
   };
 
@@ -86,7 +89,7 @@ function AdminDashboard() {
 
   return (
     <>
-      <nav className="bg-blue-500 p-4 shadow-lg mt-10">
+      <nav className="bg-blue-500 p-4 shadow-lg mt-10 w-10/12 m-auto">
             <div className="container mx-auto flex justify-between items-center">
               <h1 className="text-white text-xl font-bold">User Management</h1>
               <div className="space-x-6 flex items-center">
@@ -100,7 +103,7 @@ function AdminDashboard() {
             </div>
           </nav>
 
-          <h1 className='text-4xl mt-8 mb-8 text-center text-blue-900 underline font-bold'>Deleted Customers</h1>
+          <h1 className='text-4xl mt-8 mb-8 text-center text-blue-900 underline font-bold'>Current Customers</h1>
 
       <div style={{ display: 'flex', justifyContent: 'center', padding: '10px' }}>
         

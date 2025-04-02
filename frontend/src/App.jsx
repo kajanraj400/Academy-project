@@ -1,6 +1,6 @@
 import { Routes, Route, Router } from "react-router-dom";
 import Home from "./pages/customer-view/Home";
-import Blog from "./pages/customer-view/Blog";
+import Blog from "./pages/customer-view/Blog"; 
 import ClientLayout from './components/customer-view/common/Layout'
 import AdminLayout from "./components/admin-view/common/Layout";
 import DisplayOldFullEvent from "./pages/customer-view/DisplayOldFullEvent";
@@ -38,6 +38,13 @@ import DetailedOrderPage from "./pages/admin-view/order/DetailedOrderPage";
 import NotFound from "./pages/NotFound";
 import UnauthPage from "./pages/UnAuthPage";
 import RouteGuard from "./components/auth-view/Common/RouterGuard";
+import FeedBack from "./pages/customer-view/FeedBack";
+import DeliveryMethodPage from "./pages/customer-view/Delivery";
+import AdminDeliveryPage from "./pages/admin-view/AdminDeliveryPage";
+import FeedbackList from "./pages/admin-view/customer-relationship/Feedbacks";
+import ClientFAQ from "./pages/customer-view/FAQ";
+import AdminFAQPage from "./pages/admin-view/customer-relationship/FAQ";
+
 
 function App() {
     return (
@@ -57,6 +64,7 @@ function App() {
                     <Route path='home' element={<Home />} />
                     <Route path='blog' element={<Blog />} />
                     <Route path='products' element={<ItemList />} />
+                    <Route path='contact' element={<FeedBack />} />
                 </Route>
                 <Route path='/client/DisplayOldFullEvent/:id' element={<DisplayOldFullEvent />} />
                 <Route path="/client/cart" element={<OGcart />} /> 
@@ -67,6 +75,10 @@ function App() {
                 <Route path="/client/my-orders" element={<MyOrders />} />
                 <Route path="/client/detailedMyOrders/:id" element={<DetailedMyOrders />} />
                 <Route path="/client/profile" element={<Profile />} />
+                <Route path="/client/feedback" element={<FeedBack />} />
+                <Route path="/client/updateprofile" element={<ProfileUpdate />} />
+                <Route path="/client/faq" element={<ClientFAQ />} />
+                <Route path="/client/delivery" element={<DeliveryMethodPage />} />
                 
 
  
@@ -107,6 +119,11 @@ function App() {
                     {/*  Order Management Routes  */}
                     <Route path="placedOrders" element={<PlacedOrders />} />
                     <Route path="deletedOrders" element={<DeletedOrders />} />
+
+
+                    <Route path="delivery" element={<AdminDeliveryPage />} />
+                    <Route path="feedback" element={<FeedbackList />} /> 
+                    <Route path="faq" element={<AdminFAQPage />} />
                     
                 </Route>
                 <Route path='/admin/DisplayOldFullEvent/:id' element={<DisplayOldFullEventAdmin />} />

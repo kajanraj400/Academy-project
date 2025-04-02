@@ -5,25 +5,41 @@ import logo from '../../../assets/Logo.png';
 import Cookies from 'js-cookie';
 import axios from 'axios';
 import "./css/profile.css";
+import Swal from "sweetalert2";
 
 const Profile = () => {
   const navigate = useNavigate();
   const userSession = Cookies.get('user') ? JSON.parse(Cookies.get('user')) : {};
   const myemail = userSession.user?.email || "";
 
-  function deleteaccount(email) {
-    const confirmDelete = window.confirm("Are you sure you want to delete Your Account ?");
-    if (confirmDelete) {
-      axios.post("http://localhost:5000/deleteaccount", { myemail: email })
-        .then((result) => {
-          if (result.data.message === "UserDeleted") {
-            Cookies.remove("user");
-            navigate('/');
-          }
-        }) 
-        .catch((err) => console.error("Delete Error:", err));
-    }
-  }
+  const deleteAccount = (email) => {  
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You Want to delete your Account!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "Yes, delete it!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        axios
+          .post("http://localhost:5000/deleteaccount", { myemail: email })
+          .then((res) => {
+            if (res.data.message === "UserDeleted") {
+              Cookies.remove("user");
+              Swal.fire("Deleted!", "Your account has been deleted.", "success").then(() => {
+                navigate("/");
+              });
+            }
+          })
+          .catch((err) => {
+            console.error("Delete Error:", err);
+            Swal.fire("Error!", "Something went wrong. Please try again.", "error");
+          });
+      }
+    });
+  };
 
   return (
     <div className="profile-container">
@@ -52,9 +68,9 @@ const Profile = () => {
           </table>
 
           <button onClick={() => navigate('/client/updateprofile')} className="edit-button">Edit Profile</button>
-          <button onClick={() => deleteaccount(myemail)} className="delete-button">Delete Account</button>
+          <button onClick={() => deleteAccount(myemail)} className="delete-button">Delete Account</button>
           <button className="change-password-button">Change Password</button>
-        </div>
+        </div> 
 
         <div className="orders-container">
           <h1>Customer Orders & Photography Bookings</h1>

@@ -96,6 +96,21 @@ const SideBar = () => {
                             <span className="text-2xl mr-6">Order Management</span>
                         </div>
                     </Link>
+
+
+
+                    <Link to="/admin/delivery" onClick={() => setIsOpen(false)}>
+                        <div className="flex items-center gap-2 hover:bg-gray-100 mt-6 py-1 hover:cursor-pointer">
+                            <span className="text-2xl mr-6">Delivery Management</span>
+                        </div>
+                    </Link>
+
+
+                    <Link to="/admin/feedback" onClick={() => setIsOpen(false)}>
+                        <div className="flex items-center gap-2 hover:bg-gray-100 mt-6 py-1 hover:cursor-pointer">
+                            <span className="text-2xl mr-6">Feedback Management</span>
+                        </div>
+                    </Link>
             </SheetContent>
         </Sheet>
     </div>

@@ -10,7 +10,7 @@ export const validateProductName = (name) => {
 
   
   // Regex to check if the name contains at least one alphabet
-  const regex = /^(?![0-9]*$)[a-zA-Z0-9 ]+$/;
+  const regex = /^(?![0-9]$)[a-zA-Z0-9 _\-.,@#$%^&()!]+$/;
 
   if (!regex.test(name)) {
     return "Product name must contain at least one letter and cannot be only numbers.";

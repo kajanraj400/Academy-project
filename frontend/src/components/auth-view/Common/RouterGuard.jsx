@@ -10,7 +10,7 @@ const RouteGuard = () => {
 
   useEffect(() => {
     if (userSession == null) {
-        if (location.pathname.includes('/admin') || location.pathname === '/client') {
+        if (location.pathname.includes('/admin') || location.pathname.includes('/client')) {
             navigate('/auth/login');
         }
     } else {

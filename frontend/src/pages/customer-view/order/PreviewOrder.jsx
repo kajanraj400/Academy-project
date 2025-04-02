@@ -6,12 +6,14 @@ import { toast, ToastContainer } from "react-toastify"; //  Add toast import
 const PreviewOrder = () => {
   const [order, setOrder] = useState(null);
   const navigate = useNavigate();
-  const userId = "USR001";
 
   const userData = Cookies.get('user');
   const user = userData ? JSON.parse(userData) : null;
   const email = user && user.user ? user.user.email : null;
 
+  const userId = email;
+
+   
   const handleChange = () => {
     navigate('/client/payment');
   }
@@ -23,7 +25,7 @@ const PreviewOrder = () => {
 
     if (cart.length === 0 || !design || !paymentSlip) {
       toast.error("❌ Order details missing! Complete all steps.", { position: "top-center" });
-      navigate("/client/products");
+      navigate("/client/products"); 
       return; 
     }
 
@@ -74,7 +76,7 @@ const PreviewOrder = () => {
       });
 
       setTimeout(() => {
-        navigate("/client/products");
+        navigate("/client/delivery");
       }, 3000);
     } catch (error) {
       console.error("Error confirming order:", error);

@@ -58,7 +58,6 @@ const DetailedMyOrders = () => {
 
         <div className="border-b border-[#32C5FF] pb-4 mb-4 text-gray-900">
           <p className="text-lg font-semibold"><strong>Order ID:</strong> {order._id}</p>
-          <p className="text-lg"><strong>User ID:</strong> {order.userId}</p>
           <p className="text-lg"><strong>Email:</strong> {order.email}</p>
         </div>
 

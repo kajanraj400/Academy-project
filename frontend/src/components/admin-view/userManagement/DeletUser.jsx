@@ -61,7 +61,7 @@ function DeleteUser() {
 
   
 return (<>     
-       <nav className="bg-blue-500 p-4 shadow-lg mt-10">
+       <nav className="bg-blue-500 p-4 shadow-lg mt-10 w-10/12 mx-auto">
                    <div className="container mx-auto flex justify-between items-center">
                      <h1 className="text-white text-xl font-bold">User Management</h1>
                      <div className="space-x-6 flex items-center">
@@ -69,7 +69,7 @@ return (<>
                            Current customers
                        </Link>
                        <Link to="/admin/delet-user" className="text-white hover:text-gray-200">
-                           Past customers
+                           Deleted customers
                        </Link>
                      </div>
                    </div>

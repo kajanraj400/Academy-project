@@ -21,31 +21,33 @@ const ItemCard = ({
     item.sizes && item.sizes.some((size) => size.size.trim() !== "");
 
   const addToCart = () => {
-    setClickedItem(item.id);
+  setClickedItem(item.id);
 
-    const cartItems = JSON.parse(localStorage.getItem("cart")) || [];
+  const cartItems = JSON.parse(localStorage.getItem("cart")) || [];
 
-    const newItem = {
-      name: item.name,
-      selectedSize:
-        selectedSize || (item.sizes.length > 0 ? item.sizes[0].size : ""),
-      price: getPriceForSize(item, selectedSize),
-    };
-
-    cartItems.push(newItem);
-    localStorage.setItem("cart", JSON.stringify(cartItems));
-
+  const newItem = {
+    id: item.id,  
+    name: item.name,
+    image: item.image,
+    price: getPriceForSize(item, selectedSize),
     
-    toast.success("Item added to cart!");
-
-    
-    window.dispatchEvent(new Event("storage"));
-
-    
-    setTimeout(() => {
-      setClickedItem(null);
-    }, 1500); 
+    ...(hasValidSizes && { 
+      selectedSize: selectedSize || "" 
+    })
   };
+
+  cartItems.push(newItem);
+  localStorage.setItem("cart", JSON.stringify(cartItems));
+
+  toast.success(
+    `Added ${item.name}${
+      hasValidSizes ? (selectedSize ? ` (Size: ${selectedSize})` : "") : ""
+    } to cart!`
+  );
+
+  window.dispatchEvent(new Event("storage"));
+  setTimeout(() => setClickedItem(null), 1500);
+};
 
   return (
     <div className="flex flex-col md:flex-row bg-gradient-to-r from-blue-50 to-purple-50 shadow-2xl rounded-xl overflow-hidden p-4 md:p-6 hover:shadow-3xl transition-shadow duration-300">

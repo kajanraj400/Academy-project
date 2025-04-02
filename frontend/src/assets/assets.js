@@ -11,6 +11,7 @@ import admin_menu_icon from './menu_icon_admin.png';
 import backward from './backward.png';
 import owner from './owner.jpg';
 
+
 export const assets = {
     logo,
     cross_icon,

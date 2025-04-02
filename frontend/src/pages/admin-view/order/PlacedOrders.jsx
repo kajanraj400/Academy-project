@@ -97,7 +97,7 @@ const PlacedOrders = () => {
         <Navbar />
         <ToastContainer />
       <h1 className="text-4xl font-bold text-center text-blue-900 mb-10 mt-10 drop-shadow underline">
-        Admin Order Management
+        Order Management
       </h1>
 
       <div className="mt-4 flex flex-wrap justify-center gap-4">
@@ -128,7 +128,7 @@ const PlacedOrders = () => {
           <thead>
             <tr className="bg-[#f0f0f0] text-black text-sm uppercase">
               <th className="border p-2">Order ID</th>
-              <th className="border p-2">User ID</th>
+              <th className="border p-2">User Email</th>
               <th className="border p-2">Product</th>
               <th className="border p-2">Quantity</th>
               <th className="border p-2">Total</th>
@@ -141,7 +141,7 @@ const PlacedOrders = () => {
               filteredOrders.map((order) => (
                 <tr key={order._id} className="text-center text-sm hover:bg-gray-50">
                   <td className="border p-2">{order._id}</td>
-                  <td className="border p-2">{order.userId}</td>
+                  <td className="border p-2">{order.email}</td>
                   <td className="border p-2">
                     {order.items.map((item, index) => (
                       <div key={index}>

@@ -11,6 +11,8 @@ const itemsRoutes = require("./routes/itemRoute");
 const itemCartRoute = require("./routes/itemCartRoute"); 
 const path = require("path");
 const orderRouter = require('./routes/orderRoutes');
+const deliveryRoutes = require('./routes/deliveryRoutes');
+const feedbackRoutes = require('./routes/CustomerRelation');
 
 
 mongoose.connect(
@@ -50,6 +52,8 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use("/cart", itemCartRoute);
 app.use("/items", itemsRoutes); 
 app.use('/api', router);
+app.use("/deliveries", deliveryRoutes);
+app.use("/pro", feedbackRoutes);
 app.use(userRoutes);
 app.use("/", orderRouter);
 

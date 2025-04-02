@@ -1,11 +1,30 @@
 import { useEffect, useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
-import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
+
 
 const UpComingEvents = () => {
     const [bookings, setBookings] = useState([]);
     const [selectedBooking, setSelectedBooking] = useState(null);
+    const [isDeleteDialogOpen, setDeleteDialogOpen] = useState(false); 
+    const [bookingToDelete, setBookingToDelete] = useState(null); // To store the booking that the user wants to delete
+
+    const handleDeleteClick = (book) => {
+        setBookingToDelete(book); // Store the booking to delete
+        setDeleteDialogOpen(true); // Open the delete confirmation dialog
+    };
+
+    const handleDeleteConfirm = () => {
+        if (bookingToDelete) {
+            deleteEvent(bookingToDelete.email, bookingToDelete._id);
+            setDeleteDialogOpen(false); // Close the dialog after confirming
+        }
+    };
+
+    const handleDeleteCancel = () => {
+        setDeleteDialogOpen(false); // Close the dialog when canceled
+    };
 
     useEffect(() => {
         fetch("http://localhost:5000/api/getUpcomingBookings", {
@@ -16,6 +35,28 @@ const UpComingEvents = () => {
         .then(data => setBookings(data || []))
         .catch(() => toast.error("Failed to fetch upcoming bookings"));
     }, []);
+
+      
+      const deleteEvent = (email, id) => {
+        fetch(`http://localhost:5000/api/updatebookings/${id}/${email}`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ status: "Canceled" }),
+        })
+          .then((res) => {
+            if (res.ok) {
+              toast.success("Event deleted successfully!");
+              setBookings((prev) => prev.filter((booking) => booking._id !== id));
+            } else {
+              toast.error("Failed to delete event.");
+            }
+          })
+          .catch(() => toast.error("Something went wrong!"));
+      };
+
+    
+    
+
 
     return (
       <div>
@@ -76,6 +117,12 @@ const UpComingEvents = () => {
                                                             {selectedBooking.drone === "true" ? "Drone Photography, " : ""}
                                                             {selectedBooking.live === "true" ? "Live Streaming" : ""}
                                                         </p>
+                                                        <button 
+                                                            className="bg-red-500 hover:bg-red-600 text-white font-semibold px-4 py-2 ml-40 mt-8 rounded-lg shadow-md transition duration-300 ease-in-out"
+                                                            onClick={() => handleDeleteClick(book)}
+                                                        >
+                                                            Delete
+                                                        </button>
                                                     </div>
                                                 </DialogContent>
                                             )}
@@ -88,6 +135,23 @@ const UpComingEvents = () => {
                 </table>
             )}
         </div>
+
+        {isDeleteDialogOpen && bookingToDelete && (
+                <Dialog open={isDeleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+                    <DialogContent className="w-[500px] bg-white rounded-lg shadow-xl">
+                        <DialogHeader>
+                            <DialogTitle className="text-lg">Confirm Deletion</DialogTitle>
+                        </DialogHeader>
+                        <div className="p-4">
+                            <p className="mb-4">Are you sure you want to delete this event?</p>
+                            <DialogFooter>
+                                <Button variant="outline" onClick={handleDeleteCancel}>Cancel</Button>
+                                <Button className="bg-red-500 text-white" onClick={handleDeleteConfirm}>Yes, Delete</Button>
+                            </DialogFooter>
+                        </div>
+                    </DialogContent>
+                </Dialog>
+            )}
       </div>
     );
 };

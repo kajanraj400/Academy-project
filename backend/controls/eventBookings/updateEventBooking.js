@@ -5,7 +5,7 @@ const updateEventBooking = async (req, res) => {
     const bookingId = req.params._id;
     const to = req.params.email;
     const { status, clientName, eventDate, eventType, eventLocation } = req.body;
-
+ 
     try { 
         const updateBooking = await Booking.findByIdAndUpdate(
             bookingId,

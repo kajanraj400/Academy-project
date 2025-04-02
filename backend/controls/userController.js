@@ -1,5 +1,6 @@
 const bcrypt = require('bcryptjs');
 const { UserModel, DeletedUserModel ,AdminUserModel } = require('../models/usertable')
+const sendEmail = require('../config/mailService');
 
 
 //--------------- Login details ------------------- //
@@ -26,6 +27,83 @@ const loginuser = async (req, res) => {
         res.status(500).json({ error: "Server error. Please try again." });
     }
 };
+
+
+//-------------- checkregister -----------//
+const checkregister = async (req, res) => {
+    try {
+        const { email } = req.body;
+        const userExists = await UserModel.findOne({ email });
+        const deleteuser = await DeletedUserModel.findOne({ email });
+
+        if (userExists) {
+            return res.json({ message: "EmailAlreadyExists" }); 
+        }
+
+        if (deleteuser) {
+            return res.json({ message: "Alreadydeleteuser" });
+        }
+
+        console.log("New user");
+        return res.json({ message: "newuser" });
+
+    } catch (err) {
+        console.error("Signup error:", err);
+        return res.status(400).json({ error: "Error checking user. Please try again." });
+    }
+};
+
+
+const otpStore = {};
+
+// --------- Sent OTP -------//
+const SentOTP = async(req, res) => {
+    const { email } = req.body;
+    const otp = Math.floor(10000 + Math.random() * 90000); 
+
+    if (!otpStore[email]) {
+        otpStore[email] = {};
+    }
+
+    otpStore[email].otp = otp;
+
+    setTimeout(() => {
+        if (otpStore[email]) { 
+            delete otpStore[email]; 
+        }
+    }, 1000 * 60 * 1);
+
+    console.log("otpStore Object ", otpStore);
+
+   
+    let to = email;
+    let emailSubject = `Your OTP Delivered Successfully.`;
+    let emailText = `Your OTP Code below to verify your identity : ${otp}.
+    
+        This OTP will expire in 5 minutes.`;
+    
+    if (emailSubject && emailText) {
+        await sendEmail(to, emailSubject, emailText);
+    }
+
+    res.json({ otp });
+};
+
+//------------------ Verify OTP -------------//
+const verifyOTP = async (req, res) => {
+    const { email, otp } = req.body;
+    console.log("Data Body Email  :", email);
+    console.log("Data Body OTP  :", otp);
+
+    if (otpStore[email] && otpStore[email].otp == otp) {
+        delete otpStore[email]; 
+        res.json({ message: "OTP Verified" });
+    } else {
+        res.json({ message: "Invalid OTP" });
+    }
+};
+
+
 
 //--------------- Signup details ------------------- //
 const signupuser = async (req, res) => {
@@ -95,7 +173,7 @@ const updateprofile = async (req, res) => {
 //--------------- Display user data ------------------- //
 const displayuser = async (req, res) => {
     try {
-        const users = await UserModel.find(); 
+        const users = await UserModel.find({role:'customer'}); 
         res.json(users);
     } catch (err) {
         console.error("Database error:", err);
@@ -236,4 +314,4 @@ const displayadmin = async (req, res) => {
 
 
  
-module.exports = { loginuser, signupuser, updateuserpw, displayuser , deleteuser , displaydeletuser ,addAdmin, displayadmin , deleteaccount , updateprofile};
+module.exports = { loginuser, signupuser, updateuserpw, displayuser , deleteuser , displaydeletuser ,addAdmin, displayadmin , deleteaccount , updateprofile , checkregister , SentOTP , verifyOTP};
