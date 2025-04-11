@@ -11,14 +11,23 @@ const OldEventUpload = () => {
         
     });
     const [image, setImage] = useState([]);
+    const [isSubmit, setIsSubmit] = useState(false);
 
 
     const onSubmit = async(e) => {
         e.preventDefault();
-        if (image.length === 0) {
-            toast.error("Please upload at least one image.");
+        if (image.length < 5 ) {
+            toast.error("Please upload at least five image.");
             return;
         }
+
+        if (formDetails.description.length < 50) {
+            toast.error("Description must be at least 50 characters.");
+            return;
+        }
+
+        setIsSubmit(true);
+    
 
         try {
             const toastId = toast.loading("Wait until upload details.");
@@ -74,10 +83,12 @@ const OldEventUpload = () => {
                 } else{
                     toast.error("Details submit failed.");
                 }
+                setIsSubmit(false);
             }).catch(error => {
                 toast.dismiss(toastId);
                 toast.error("Failed to submit details. Server unreachable.");
                 console.error("Error submitting form:", error);
+                setIsSubmit(false);
             });
         } catch (error) {
             console.log(error);
@@ -193,6 +204,7 @@ const OldEventUpload = () => {
                                 className="hidden"
                                 onChange={handleImageChange}
                                 multiple
+                                disabled={isSubmit}
                             />
                         </label>
                     </div>
@@ -202,8 +214,9 @@ const OldEventUpload = () => {
                         <button
                             type="submit"
                             className="px-5 py-2 bg-green-500 text-white rounded-md w-9/12 hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-400"
+                            disabled={isSubmit}
                         >
-                            Submit
+                            {isSubmit ? 'Uploading...' : 'Upload'}
                         </button>
                     </div>
 

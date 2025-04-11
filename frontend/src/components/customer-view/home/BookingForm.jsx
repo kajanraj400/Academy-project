@@ -342,7 +342,7 @@ function BookingForm() {
                                 <button 
                                     type='submit' 
                                     className={`w-full p-3 rounded-lg transition ${
-                                        isFormComplete() && !isSubmitting ? 'bg-blue-600 text-white hover:bg-blue-700' : 'bg-blue-400 cursor-not-allowed'
+                                        isFormComplete() && !isSubmitting ? 'bg-blue-600 text-white hover:bg-blue-700' : 'bg-blue-500 cursor-not-allowed'
                                     }`} 
                                     disabled={!isFormComplete() || isSubmitting} 
                                     title={!isFormComplete() ? 'Please fill all fields before booking' : isSubmitting ? 'Processing...' : ''}
@@ -355,7 +355,7 @@ function BookingForm() {
                     </div>
                 )}
             </div>
-        </div>
+        </div> 
         );
 }
 

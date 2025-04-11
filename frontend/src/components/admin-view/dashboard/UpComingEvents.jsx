@@ -61,7 +61,7 @@ const UpComingEvents = () => {
     return (
       <div>
         <h1 className="text-4xl mt-8 mb-8 text-center text-blue-900 underline font-bold">Upcoming Event Details</h1>        
-        <div className="w-full bg-black/10 p-4 mt-10">
+        <div className="w-10/12 bg-black/10 p-4 mt-10 mx-auto">
             <ToastContainer position="top-center" autoClose={3000} />
 
 

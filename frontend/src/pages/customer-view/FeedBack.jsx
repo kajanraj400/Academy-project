@@ -50,6 +50,16 @@ const FeedBack = () => {
       return;
     }
 
+    if(subject.length<15){
+      window.alert("Subject must Be 15 Characters")
+      return;
+    }
+
+    if(message.length<15){
+      window.alert("Message must Be 15 Characters")
+      return;
+    }
+
     const feedback = { date: currentDate, type, subject, message, status: "normal" };
     await createFeedback(feedback);
   };

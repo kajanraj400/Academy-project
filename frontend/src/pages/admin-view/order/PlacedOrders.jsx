@@ -88,7 +88,11 @@ const PlacedOrders = () => {
     )
     .sort((a, b) => {
       if (sortBy === "date") return new Date(b.orderDate) - new Date(a.orderDate);
-      if (sortBy === "price") return b.total - a.total;
+      if (sortBy === "price") {
+        const totalA = a.items.reduce((acc, item) => acc + item.total, 0);
+        const totalB = b.items.reduce((acc, item) => acc + item.total, 0);
+        return totalB - totalA; // Sorting in descending order
+      }
       return 0;
     });
 

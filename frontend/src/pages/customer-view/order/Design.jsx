@@ -121,7 +121,7 @@ const Design = () => {
             {uploading ? "Uploading..." : "Next"}
             </button>
         </div>
-        </div>
+        </div> 
 
   );
 };

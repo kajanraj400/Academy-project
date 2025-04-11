@@ -34,7 +34,7 @@ const Terms = () => {
         <ul className="list-disc pl-5 space-y-1">
           <li>🏦 <strong>BOC Account Number:</strong> 234559658584</li>
           <li>💵 After making the advance payment, please upload a <strong>clear photo</strong> of the payment slip.</li>
-          <li>📌 Make sure to <strong>write your User ID</strong> on the slip before uploading it. <br /> (Example: <code className="text-sm text-gray-600">USER123</code>)</li>
+          <li>📌 Make sure to <strong>write your Email</strong> on the slip before uploading it. <br /> (Example: <code className="text-sm text-gray-600">abc@gmail.com</code>)</li>
         </ul>
 
         <p>
@@ -42,7 +42,7 @@ const Terms = () => {
         </p>
 
         <p>
-          Once your order is fully confirmed, you will receive a confirmation notification. <br />
+          Once your order is fully confirmed, You will recive a order process notification <br />
           <strong className="text-red-500">After that, no changes can be made</strong> to the design or order details.
         </p>
 

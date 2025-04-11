@@ -30,6 +30,11 @@ const ClientFAQ = () => {
   };
 
   const submitQuestion = async () => {
+    if(answer.length<15){
+      window.alert("Question must Be 15 Characters")
+      return;
+    }
+
     try {
       const result = await axios.post("http://localhost:5000/pro/submitfaq", { question, category });
       if (result.data.message === "faqsubmit") {

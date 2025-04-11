@@ -44,7 +44,8 @@ const AdminLayout = () => {
     };
 
     return (
-        <div className="bg-gray-200">
+        <div className="bg-blue-200">
+            {/* <div className="bg-[url('/adminBG.jpg')] bg-cover bg-center h-screen"></div> */}
             <div className="w-full bg-blue-950 h-auto sticky z-50 shadow-lg">
                 <header>
                     <h1 className="text-center text-white text-5xl p-4">ProShots Photography Studio</h1>

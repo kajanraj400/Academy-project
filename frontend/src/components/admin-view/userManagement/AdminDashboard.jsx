@@ -128,8 +128,8 @@ function AdminDashboard() {
             <th style={{ padding: '15px', border: '1px solid #ddd', textAlign: 'left' }}>Number of Photoshoots</th>
             <th style={{ padding: '15px', border: '1px solid #ddd', textAlign: 'left' }}>Number of Orders</th>
             <th style={{ padding: '15px', border: '1px solid #ddd', textAlign: 'center' }}>View Details</th>
-            <th style={{ padding: '15px', border: '1px solid #ddd', textAlign: 'left' }}>Reason</th>
-            <th style={{ padding: '15px', border: '1px solid #ddd', textAlign: 'left' }}>Add Admin</th>
+            <th style={{ padding: '15px', border: '1px solid #ddd', textAlign: 'center' }}>Reason</th>
+            {/* <th style={{ padding: '15px', border: '1px solid #ddd', textAlign: 'left' }}>Add Admin</th> */}
           </tr>
         </thead>
         <tbody>
@@ -171,11 +171,11 @@ function AdminDashboard() {
                   </button>
                 </form>
               </td>
-              <td>
+              {/* <td>
                 <button style={{ padding: '10px 20px', backgroundColor: '#4CAF50', color: '#fff', border: 'none', borderRadius: '5px', cursor: 'pointer', transition: 'background-color 0.3s' }}>
                   Add Admin
                 </button>
-              </td>
+              </td> */}
             </tr>
           ))}
         </tbody>

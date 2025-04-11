@@ -28,7 +28,7 @@ const ClientHeader = () => {
                     <hr className="w-2/4 border-none bg-gray-700 h-[1.5px] hidden" />
                 </NavLink>
                 <NavLink to='/client/contact' className="flex flex-col items-center gap-1">
-                    <p className="text-base">CONTACT</p>
+                    <p className="text-base">FEEDBACK</p>
                     <hr className="w-2/4 border-none bg-gray-700 h-[1.5px] hidden" />
                 </NavLink>
                 <NavLink to='/client/about' className="flex flex-col items-center gap-1">
@@ -66,7 +66,7 @@ const ClientHeader = () => {
                     <NavLink onClick={() => setVisible(false)} className='py-2 pl-6 border bg-gray-400' to='/client/home'>HOME</NavLink>
                     <NavLink onClick={() => setVisible(false)} className='py-2 pl-6 border bg-gray-400' to='/client/blog'>BLOG</NavLink>
                     <NavLink onClick={() => setVisible(false)} className='py-2 pl-6 border bg-gray-400' to='/client/products'>PRODUCTS</NavLink>
-                    <NavLink onClick={() => setVisible(false)} className='py-2 pl-6 border bg-gray-400' to='/client/contact'>CONTACT</NavLink>
+                    <NavLink onClick={() => setVisible(false)} className='py-2 pl-6 border bg-gray-400' to='/client/contact'>FEEDBACK</NavLink>
                     <NavLink onClick={() => setVisible(false)} className='py-2 pl-6 border bg-gray-400' to='/client/about'>ABOUT</NavLink>
                 </div>
             </div>

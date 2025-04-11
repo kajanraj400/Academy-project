@@ -64,7 +64,7 @@ const ProfileUpdate = () => {
           Cookies.set("user", JSON.stringify({ user: newprofile, expirationTime }), { expires: 1 });
 
           setTimeout(() => { navigate('/client/profile'); }, 3000);
-        }
+        } 
       })
       .catch((err) => {
         console.error("Profile Update Error: ", err);

@@ -11,6 +11,7 @@ const EventBookings = () => {
     const [sortOrder, setSortOrder] = useState("default");
     const [sortedBookings, setSortedBookings] = useState([]);
     const [searchQuery, setSearchQuery] = useState("");
+    const [isProcessing, setIsProcessing] = useState(false);
 
     const handleSearch = (e) => {
         setSearchQuery(e.target.value);
@@ -75,6 +76,7 @@ const EventBookings = () => {
 
     const confirmActionHandler = () => {
         if (!confirmAction) return;
+        setIsProcessing(true);
 
         const { type, id, clientName, email, eDate, eType, location } = confirmAction;
         const status = type === "accept" ? "Accepted" : "Rejected";
@@ -93,7 +95,10 @@ const EventBookings = () => {
                 toast.error("Unable to update");
             }
         }).catch(() => toast.error("Error updating booking"))
-        .finally(() => setConfirmAction(null));
+        .finally(() => {
+            setConfirmAction(null) ;
+            setIsProcessing(false);
+        });
     };
 
     useEffect(() => {
@@ -153,7 +158,14 @@ const EventBookings = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {sortedBookings.map((book) => {
+                    {sortedBookings.length === 0 ? (
+                        <tr>
+                            <td colSpan="4" className="text-center text-red-500 text-lg font-bold p-4">
+                                No Bookings Matched!
+                            </td>
+                        </tr>
+                    ) : (
+                        sortedBookings.map((book) => { 
                             const formattedDate = new Date(book.eventDate).toISOString().split("T")[0];
                             return (
                                 <tr key={book._id} className="cursor-pointer hover:bg-gray-100">
@@ -219,7 +231,8 @@ const EventBookings = () => {
                                     
                                 </tr>
                             );
-                        })}
+                        })
+                      )}
                     </tbody>
                 </table>
             )}
@@ -245,7 +258,9 @@ const EventBookings = () => {
                         </div>
                         <DialogFooter className="flex justify-end gap-4 p-5 border-t border-gray-200">
                             <Button className="bg-gray-200 hover:bg-gray-300 text-gray-700 font-medium px-4 py-2 rounded-lg transition-all" 
-                                onClick={() => setConfirmAction(null)}>
+                                onClick={() => setConfirmAction(null)}
+                                disabled={isProcessing}
+                            >
                                 Cancel
                             </Button>
                             <Button className={`px-4 py-2 font-medium rounded-lg transition-all ${
@@ -253,7 +268,9 @@ const EventBookings = () => {
                                     ? "bg-green-600 hover:bg-green-700 text-white"
                                     : "bg-red-600 hover:bg-red-700 text-white"
                                 }`} 
-                                onClick={confirmActionHandler}>
+                                onClick={confirmActionHandler}
+                                disabled={isProcessing}
+                            >
                                 {confirmAction.type === "accept" ? "Accept" : "Reject"}
                             </Button>
                         </DialogFooter>

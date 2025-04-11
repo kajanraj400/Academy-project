@@ -1,5 +1,3 @@
-
-
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { color, motion } from "framer-motion";
@@ -48,7 +46,7 @@ const Forgotpassword = () => {
       return;
     }
 
-    toast.loading("Updating password...");
+    // toast.loading("Updating password...");
     axios.post("http://localhost:5000/forgotpassword", { email, password })
       .then(({ data }) => {
         const { message } = data;
