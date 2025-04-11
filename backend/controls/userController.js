@@ -71,7 +71,7 @@ const SentOTP = async(req, res) => {
         if (otpStore[email]) { 
             delete otpStore[email]; 
         }
-    }, 1000 * 60 * 1);
+    }, 1000 * 60 * 5);
 
     console.log("otpStore Object ", otpStore);
 
