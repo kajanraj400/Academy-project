@@ -230,12 +230,14 @@ const ListForm = () => {
       : "Sizes and Prices";
 
   return (
-    <div className="min-h-screen bg-gradient-to-r from-blue-50 to-purple-50">
+    <div className="min-h-screen">
       <Navbar />
       <div className="flex flex-col items-center p-6">
-        <h1 className="text-4xl mt-8 mb-8 text-center text-blue-900 underline font-bold">
+        <h1 className="text-4xl mt-8 mb-8 text-center text-white underline font-bold">
           {location.state?.item ? "Update Product" : "Add New Product"}
         </h1>
+        <div className="w-[35%] mx-auto">
+        <div className="cardShape">
         <form
           onSubmit={handleSubmit}
           className="bg-white shadow-xl rounded-lg p-8 w-full max-w-lg border border-gray-200"
@@ -398,6 +400,8 @@ const ListForm = () => {
             )}
           </div>
         </form>
+        </div>
+        </div>
       </div>
       <ToastContainer
         position="top-right"

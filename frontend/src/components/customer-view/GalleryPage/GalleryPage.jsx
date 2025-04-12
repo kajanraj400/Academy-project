@@ -159,7 +159,15 @@ const GalleryPage = () => {
 
   return (
     <div className="container">
-      <ToastContainer />
+      <ToastContainer
+              position="top-right"
+              autoClose={3000}
+              style={{
+                  zIndex: 9999,  // Make sure the toast is on top of the header
+                  marginTop: '70px', // Add some margin to push the toast down below the header
+                  backgroundColor: 'white !important',
+              }}
+      />
 
       {/* Images/Videos view buttons */}
       {error && (

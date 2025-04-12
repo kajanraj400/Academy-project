@@ -65,6 +65,7 @@ function AdminDeliveryPage() {
         </select>
       </div>
 
+      <div className="relative z-0 cardShape rounded-xl">
       <table className="w-full border-collapse border">
         <thead>
           <tr className="bg-gray-100">
@@ -124,6 +125,7 @@ function AdminDeliveryPage() {
           ))}
         </tbody>
       </table>
+      </div>
     </div>
   );
 }

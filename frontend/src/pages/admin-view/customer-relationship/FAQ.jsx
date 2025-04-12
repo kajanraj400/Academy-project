@@ -80,7 +80,9 @@ const AdminFAQPage = () => {
       </div>
   </div>
   </nav>
-      <div style={{ maxWidth: "800px", margin: "20px auto", padding: "20px", backgroundColor: "#F8F9FA", borderRadius: "10px", boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)" }}>
+
+    <div className="relative w-6/12 z-0 cardShape rounded-xl">
+      <div style={{ padding: "20px", backgroundColor: "#F8F9FA", borderRadius: "10px", boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)" }}>
       
       <h1 className="text-center text-blue-600 mb-10 text-2xl font-bold underline">
         Admin FAQ Management
@@ -131,6 +133,7 @@ const AdminFAQPage = () => {
           ) : (
             <p style={{ textAlign: "center", fontSize: "18px", color: "#777" }}>No FAQs available.</p>
           )}
+        </div>
         </div>
       </div>
     </>

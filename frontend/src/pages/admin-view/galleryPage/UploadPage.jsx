@@ -65,7 +65,7 @@ const UploadPage = () => {
 
   return (
     <div className="flex flex-col items-center p-8 min-h-screen">
-      <h1 className="text-5xl font-bold text-indigo-700 mb-12 mt-10 text-center underline">
+      <h1 className="text-5xl font-bold text-white mb-12 mt-10 text-center underline">
         Upload Your Files
       </h1>
 
@@ -155,14 +155,12 @@ const UploadPage = () => {
 
       <ToastContainer
         position="top-right"
-        autoClose={5000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
+        autoClose={3000}
+        style={{
+            zIndex: 9999,  // Make sure the toast is on top of the header
+            marginTop: '70px', // Add some margin to push the toast down below the header
+            backgroundColor: 'white !important',
+        }}
       />
     </div>
   );

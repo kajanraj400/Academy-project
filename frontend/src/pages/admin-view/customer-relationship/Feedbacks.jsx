@@ -98,8 +98,10 @@ const FeedbackList = () => {
             </div>
         </div>
         </nav>
-      <div className="bg-white w-8/12 rounded-xl mx-auto">
-        <h1 className="text-center text-blue-600 mb-10 mt-10 text-2xl font-bold underline">
+
+      <div className="relative w-10/12 z-0 cardShape rounded-xl">
+      <div className="bg-white rounded-xl mx-auto">
+        <h1 className="text-center text-blue-600 mb-10 pt-10 text-2xl font-bold underline">
           FeedBack Management
         </h1>
 
@@ -151,7 +153,7 @@ const FeedbackList = () => {
                   <td className="border p-2">
                     <button
                       onClick={() => deleteFeedback(feedback._id)}
-                      className="bg-red-500 ml-32 text-white p-2 rounded-md hover:bg-red-600 transition"
+                      className="bg-red-500 mx-auto px-5 text-white p-2 rounded-md hover:bg-red-600 transition"
                     >
                       Delete
                     </button>
@@ -161,6 +163,7 @@ const FeedbackList = () => {
             )}
           </tbody>
         </table>
+      </div>
       </div>
       </div>
     </div>

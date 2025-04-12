@@ -29,12 +29,13 @@ const DeletedOrders = () => {
   return (
     <div className="p-10">
       <Navbar />
-      <h1 className="text-4xl font-bold text-center underline text-blue-900 mt-10 mb-10">Deleted Orders (Recovery)</h1>
+      <h1 className="text-4xl font-bold text-center underline text-white mt-10 mb-10">Deleted Orders (Recovery)</h1>
 
       <div className="mt-6">
         {deletedOrders.length > 0 ? (
           deletedOrders.map((order) => (
-            <div key={order._id} className="p-4 my-8 border-blue-400 border-2 rounded-lg shadow-md bg-gray-200">
+            <div key={order._id} className="my-8 relative z-0 cardShape rounded-xl">
+            <div className="p-4 border-blue-400 border-2 rounded-lg shadow-md bg-gray-200">
               <p><strong>Order ID:</strong> {order._id}</p>
               <p><strong>User Email:</strong> {order.email}</p>
               <table className="w-2/6 border border-gray-300 shadow-md rounded-lg overflow-hidden">
@@ -59,6 +60,7 @@ const DeletedOrders = () => {
                 </table>
 
               <p><strong>Deleted At:</strong> {new Date(order.deletedAt).toLocaleString()}</p>
+            </div>
             </div>
           ))
         ) : (

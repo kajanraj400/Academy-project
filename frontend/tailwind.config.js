@@ -7,6 +7,15 @@ export default {
   ],
   theme: {
   	extend: {
+		keyframes: {
+			zoom: {
+			  '0%, 100%': { transform: 'scale(1)' },
+			  '50%': { transform: 'scale(1.1)' }
+			}
+		},
+		animation: {
+			'zoom-bg': 'zoom 10s ease-in-out infinite'
+		},
   		borderRadius: {
   			lg: 'var(--radius)',
   			md: 'calc(var(--radius) - 2px)',

@@ -108,19 +108,17 @@ const OldEventUpload = () => {
     }
 
     return (
-        <div className="flex items-center justify-center">
-            <div className="w-9/12 bg-black/10 h-auto m-4 p-7 rounded-2xl">
-                <ToastContainer
+        <div className="flex items-center justify-center mt-5">
+            <div className="relative z-0 cardShape rounded-xl w-9/12">
+            <div className="bg-white/85 h-auto p-7 rounded-2xl">
+            <ToastContainer
                     position="top-center"
-                    hideProgressBar={false}
-                    closeOnClick={true}
-                    pauseOnHover={false}
-                    draggable={true}
-                    progress={undefined}
-                    newestOnTop={true}
-                    rtl={false}
-                    style={{ zIndex: 9999, position: 'fixed', top: 0 }}
-                />
+                    autoClose={3000}
+                    style={{
+                        zIndex: 9999,  // Make sure the toast is on top of the header
+                        backgroundColor: 'white !important',
+                    }}
+            />
                 <form onSubmit={onSubmit}>
                     <h1 className="text-4xl mt-8 mb-8 text-center text-blue-900 underline font-bold">Upload Old Event Details Here...</h1>
                     <input 
@@ -221,6 +219,7 @@ const OldEventUpload = () => {
                     </div>
 
                 </form>
+            </div>
             </div>
         </div>
     )

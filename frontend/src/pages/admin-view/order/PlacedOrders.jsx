@@ -100,11 +100,11 @@ const PlacedOrders = () => {
     <div className="p-10">
         <Navbar />
         <ToastContainer />
-      <h1 className="text-4xl font-bold text-center text-blue-900 mb-10 mt-10 drop-shadow underline">
+      <h1 className="text-4xl font-bold text-center text-white mb-10 mt-10 drop-shadow underline">
         Order Management
       </h1>
 
-      <div className="mt-4 flex flex-wrap justify-center gap-4">
+      <div className="mt-4 mb-6 flex flex-wrap justify-center gap-4">
         <input
           type="text"
           className="p-2 border rounded w-64"
@@ -127,10 +127,11 @@ const PlacedOrders = () => {
         </select>
       </div>
 
-      <div className="mt-6 overflow-x-auto">
+      <div className="mt-6 relative z-0 cardShape rounded-xl">
+      <div className="overflow-x-auto bg-white">
         <table className="w-full border-collapse border border-gray-300 rounded-lg shadow-lg">
           <thead>
-            <tr className="bg-[#f0f0f0] text-black text-sm uppercase">
+            <tr className="bg-blue-200 text-black text-sm uppercase">
               <th className="border p-2">Order ID</th>
               <th className="border p-2">User Email</th>
               <th className="border p-2">Product</th>
@@ -143,7 +144,7 @@ const PlacedOrders = () => {
           <tbody>
             {filteredOrders.length > 0 ? (
               filteredOrders.map((order) => (
-                <tr key={order._id} className="text-center text-sm hover:bg-gray-50">
+                <tr key={order._id} className="text-center text-sm hover:bg-black/25">
                   <td className="border p-2">{order._id}</td>
                   <td className="border p-2">{order.email}</td>
                   <td className="border p-2">
@@ -199,6 +200,7 @@ const PlacedOrders = () => {
             )}
           </tbody>
         </table>
+      </div>
       </div>
     </div>
   );

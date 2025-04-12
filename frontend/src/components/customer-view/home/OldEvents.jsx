@@ -66,14 +66,14 @@ const OldEvents = () => {
 
 
     return (
-        <div className='w-10/12 mx-auto'>
+        <div className='w-10/12 mx-auto my-7'>
             {location.pathname == '/client/blog' ? 
                 <div>
-                    <p className="hidden md:block text-center text-lg cursor-pointer">
+                    <p className="hidden md:flex justify-center items-center gap-4 flex-wrap py-4 bg-white shadow-md rounded-xl">
                         {["All", "Wedding", "Pre-Wedding", "Engagement", "BirthDay", "School Event", "Mehndi", "Other"].map((category, index) => (
                         <span 
                             key={index} 
-                            className={`mx-4 ${selectedCategory === category ? "text-red-600 font-bold" : "hover:text-red-600"}`} 
+                            className={`text-base md:text-lg px-3 rounded-full transition-all duration-300 cursor-pointer  ${selectedCategory === category ? "bg-red-100 text-red-600 font-semibold shadow-md" : "text-gray-600 hover:text-red-500 hover:bg-gray-100 cursor-pointer"}`} 
                             onClick={handleFilter}
                         >
                             {category}
@@ -86,7 +86,7 @@ const OldEvents = () => {
                     <div className="block md:hidden">
                         <div className="flex items-center gap-2 hover:bg-gray-200 py-1 hover:cursor-pointer" onClick={() => setVisibleSort(!visibleSort)}>
                             <span className="text-2xl font-semibold mr-5 ml-5">Filter Category</span>
-                            <img src={assets.adminDropdown} alt="" className={`w-6 h-auto transition-transform duration-300 ${visibleSort ? "rotate-90" : ""}`} />
+                            <img src={assets.adminDropdown} alt="" className={`w-6 h-auto transition-transform duration-300 ${visibleSort ? "rotate-0" : "-rotate-90"}`} />
                         </div>
 
                         { visibleSort && 
@@ -114,7 +114,7 @@ const OldEvents = () => {
                         const imageUrl = Events.EventURLs?.[0]?.url;
 
                         return (
-                            <div key={idx} className="h-auto shadow-lg hover:shadow-xl p-[2.5px] hover:border-2 hover:border-gray-400 hover:rounded-lg flex flex-col justify-between"
+                            <div key={idx} className="h-auto bg-white rounded-lg shadow-lg hover:shadow-xl p-[2.5px] hover:border-2 hover:border-gray-400 hover:rounded-lg flex flex-col justify-between"
                                 onClick={() => handleNavigation(Events._id)}
                             >
                                 {imageUrl ? (

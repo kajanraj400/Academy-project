@@ -336,7 +336,6 @@ function BookingForm() {
                                     <label htmlFor='terms' className='ml-2'>I agree to the Terms and Conditions</label>
                                 </div>
 
-                                <Toaster position='center' />
                                 
 
                                 <button 

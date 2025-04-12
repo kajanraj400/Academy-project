@@ -60,7 +60,8 @@ function DeleteUser() {
   }
 
   
-return (<>     
+return (
+    <div className='w-11/12 mx-auto'>     
        <nav className="bg-blue-500 p-4 shadow-lg mt-10 w-10/12 mx-auto">
                    <div className="container mx-auto flex justify-between items-center">
                      <h1 className="text-white text-xl font-bold">User Management</h1>
@@ -78,7 +79,7 @@ return (<>
 
 
 
-      <h1 className='text-4xl mt-8 mb-8 text-center text-blue-900 underline font-bold'>Deleted Customers</h1>
+      <h1 className='text-4xl mt-8 mb-8 text-center text-white underline font-bold'>Deleted Customers</h1>
       <div style={{ display: 'flex', justifyContent: 'center', padding: '10px' }}>
       <div style={{ display: 'flex', justifyContent: 'center', padding: '10px' }}>
         <input
@@ -92,9 +93,10 @@ return (<>
 
     </div>
 
-  <h2>Total Customers Removed: {searchResults.length}</h2>
+  <h2 className='text-gray-600 font-bold text-xl ml-5'>Total Customers Removed: {searchResults.length}</h2>
 
-<table style={{ width: '100%', borderCollapse: 'collapse', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)', marginTop: '20px' }}>
+  <div className="relative z-0 cardShape rounded-xl">
+  <table className="w-full border-collapse border border-gray-300 bg-white rounded-xl relative z-10">
   <thead style={{ backgroundColor: '#f4f4f4', color: '#333' }}>
     <tr>
       <th style={{ padding: '15px', border: '1px solid #ddd', textAlign: 'left' }}>Name</th>
@@ -124,9 +126,9 @@ return (<>
     ))}
   </tbody>
 </table>
+</div>
 
-
-    </>
+    </div>
   );
 }
 

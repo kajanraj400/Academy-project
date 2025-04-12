@@ -6,6 +6,7 @@ import Swal from 'sweetalert2';
 import React from 'react';
 import { assets } from "@/assets/assets";
 import { useNavigate } from 'react-router-dom';
+import { ToastContainer } from "react-toastify";
 
 const AdminLayout = () => {
     const [visible, setVisible] = useState(false);
@@ -44,11 +45,10 @@ const AdminLayout = () => {
     };
 
     return (
-        <div className="bg-blue-200">
-            {/* <div className="bg-[url('/adminBG.jpg')] bg-cover bg-center h-screen"></div> */}
+        <div className="">
             <div className="w-full bg-blue-950 h-auto sticky z-50 shadow-lg">
                 <header>
-                    <h1 className="text-center text-white text-5xl p-4">ProShots Photography Studio</h1>
+                    <h1 className="text-center text-gray-300 text-5xl p-4">ProShots Photography Studio</h1>
                     <SideBar />
                     <div className="absolute top-1 right-4">
                         <img src={assets.logout} alt="Logout" className="h-[70px] cursor-pointer" onClick={logout} />
@@ -56,14 +56,26 @@ const AdminLayout = () => {
                 </header>
             </div>
 
-            <div className="min-h-screen">
-                <main>
+            <div className="relative min-h-screen overflow-hidden">
+                {/* Background Image with zoom effect */}
+                {
+                    !location.pathname.includes('/admin/oldEventDelete') &&
+                    !location.pathname.includes('/admin/product-list') &&
+                    (
+                        <div className="absolute inset-0 before:content-[''] before:absolute before:inset-0 before:bg-[url('/adminBG.jpg')] before:bg-cover before:bg-center before:animate-zoom-bg before:scale-110 before:z-0">
+                        <div className="relative z-10 mb-10 px-6 py-4 bg-white/5 backdrop-blur-sm rounded-2xl shadow-lg w-full h-full"></div>
+                        </div>
+                    )  
+                }
+
+                {/* Your content above background */}
+                <main className="relative z-10 mb-10 min-h-screen">
                     <Outlet />
                 </main>
             </div>
 
             { !location.pathname.includes('/admin/gallery') &&
-                <div className="w-full bg-black h-24 mt-10">
+                <div className="w-full bg-black h-24">
                     <footer className="flex items-center justify-center h-full text-center text-white">
                         <div>
                             <p className="text-lg mt-2">© {new Date().getFullYear()} All rights reserved. | Made by ProShots</p>

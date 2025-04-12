@@ -14,7 +14,7 @@ const ClientLayout = () => {
             <header className="absolute z-10 w-full bg-black/50 backdrop-blur-sm">
             <ClientHeader />
         </header>
-        }
+        } 
         <main className="relative z-1">
             <Outlet />
         </main>

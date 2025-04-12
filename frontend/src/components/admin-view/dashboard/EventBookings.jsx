@@ -119,12 +119,20 @@ const EventBookings = () => {
     }
 
     return (
-        <div className="w-9/12 mx-auto p-4">
-            <ToastContainer position="top-center" autoClose={3000} />
+        <div className="w-9/12 mx-auto p-4 mb-4">
+            <ToastContainer
+                    position="top-right"
+                    autoClose={3000}
+                    style={{
+                        zIndex: 9999,  // Make sure the toast is on top of the header
+                        marginTop: '60px', // Add some margin to push the toast down below the header
+                        backgroundColor: 'white !important',
+                    }}
+            />
             
-            <h1 className="text-4xl mt-8 mb-8 text-center text-blue-900 underline font-bold">Event Booking Details</h1>
+            <h1 className="text-4xl mt-8 mb-8 text-center text-white underline font-bold">Event Booking Details</h1>
 
-            <div className="flex justify-between items-center mb-10 w-8/12 m-auto">
+            <div className="flex justify-between items-center mb-10 w-10/12 m-auto">
                 <input
                     type="text"
                     value={searchQuery}
@@ -148,7 +156,8 @@ const EventBookings = () => {
             {bookings.length === 0 ? (
                 <p className="text-4xl text-center text-red-600">No bookings available.</p>
             ) : (
-                <table className="w-full border-collapse border border-gray-300">
+                <div className="relative z-0 cardShape rounded-xl">
+                <table className="w-full border-collapse border border-gray-300 bg-white rounded-xl relative z-10">
                     <thead>
                         <tr className="bg-blue-200">
                             <th className="border border-gray-400 p-2 text-center">Name</th>
@@ -168,7 +177,7 @@ const EventBookings = () => {
                         sortedBookings.map((book) => { 
                             const formattedDate = new Date(book.eventDate).toISOString().split("T")[0];
                             return (
-                                <tr key={book._id} className="cursor-pointer hover:bg-gray-100">
+                                <tr key={book._id} className="cursor-pointer hover:bg-gray-300">
                                     <td className="border border-gray-400 p-2 text-center">{book.clientName}</td>
                                     <td className="border border-gray-400 p-2 text-center">{book.eventType}</td>
                                     <td className="border border-gray-400 p-2 text-center">{formattedDate}</td>
@@ -183,48 +192,66 @@ const EventBookings = () => {
                                             </button>
                                             </DialogTrigger>
                                             {selectedBooking && selectedBooking._id === book._id && (
-                                                <DialogContent className="w-[500px] bg-white rounded-lg shadow-xl">
-                                                    <DialogHeader>
-                                                        <DialogTitle className="text-lg">{selectedBooking.clientName}'s Booking Details</DialogTitle>
-                                                    </DialogHeader>
-                                                    <div className="p-4">
-                                                        <p><strong>Email:</strong> {selectedBooking.email}</p>
-                                                        <p><strong>Phone:</strong> {selectedBooking.phoneNumber}</p>
-                                                        <p><strong>Address:</strong> {selectedBooking.address}</p>
-                                                        <p><strong>Event Type:</strong> {selectedBooking.eventType}</p>
-                                                        <p><strong>Event Date:</strong> {selectedBooking.eventDate}</p>
-                                                        <p><strong>Location:</strong> {selectedBooking.location}</p>
-                                                        <p><strong>Duration:</strong> {selectedBooking.duration}</p>
-                                                        <p><strong>Guest Count:</strong> {selectedBooking.guestCount}</p>
-                                                        <p><strong>Budget:</strong> {selectedBooking.budgetRange}</p>
-                                                        <p><strong>Know Us:</strong> {selectedBooking.knowUs}</p>
-                                                        <p><strong>Services:</strong> {selectedBooking.videography === "true" ? "Videography, " : ""}
-                                                            {selectedBooking.drone === "true" ? "Drone Photography, " : ""}
-                                                            {selectedBooking.live === "true" ? "Live Streaming" : ""}
-                                                        </p>
-                                                    </div>
-                                                    <div className="flex justify-end gap-4 p-4 border-t border-gray-200">
-                                                        <Button 
-                                                            className="bg-red-600 hover:bg-red-700 text-white font-semibold px-4 py-2 rounded-lg transition-all duration-200" 
-                                                            onClick={() => handleReject(
-                                                                selectedBooking._id, selectedBooking.clientName, selectedBooking.email, 
-                                                                selectedBooking.eventDate, selectedBooking.eventType, selectedBooking.location
-                                                            )}
-                                                        >
-                                                            Reject
-                                                        </Button>
-                                                        <Button 
-                                                            className="bg-green-600 hover:bg-green-700 text-white font-semibold px-4 py-2 rounded-lg transition-all duration-200" 
-                                                            onClick={() => handleAccept(
-                                                                selectedBooking._id, selectedBooking.clientName, selectedBooking.email, 
-                                                                selectedBooking.eventDate, selectedBooking.eventType, selectedBooking.location
-                                                            )}
-                                                        >
-                                                            Accept
-                                                        </Button>
-                                                    </div>
-
-                                                </DialogContent>
+                                                <DialogContent className="max-h-[80vh] overflow-y-auto w-[600px] bg-gray-50 rounded-2xl shadow-2xl p-6 space-y-6">
+                                                <DialogHeader>
+                                                  <DialogTitle className="text-2xl font-bold text-gray-800 text-center">
+                                                    {selectedBooking.clientName}'s Booking
+                                                  </DialogTitle>
+                                                </DialogHeader>
+                                              
+                                                {/* Client Information Box */}
+                                                <div className="bg-white rounded-xl shadow p-4 space-y-1 border border-gray-200">
+                                                  <h3 className="text-lg font-semibold mb-2 text-blue-600">Client Information</h3>
+                                                  <p><strong>Email:</strong> {selectedBooking.email}</p>
+                                                  <p><strong>Phone:</strong> {selectedBooking.phoneNumber}</p>
+                                                  <p><strong>Address:</strong> {selectedBooking.address}</p>
+                                                </div>
+                                              
+                                                {/* Event Details Box */}
+                                                <div className="bg-white rounded-xl shadow p-4 space-y-1 border border-gray-200">
+                                                  <h3 className="text-lg font-semibold mb-2 text-green-600">Event Details</h3>
+                                                  <p><strong>Type:</strong> {selectedBooking.eventType}</p>
+                                                  <p><strong>Date:</strong> {selectedBooking.eventDate}</p>
+                                                  <p><strong>Location:</strong> {selectedBooking.location}</p>
+                                                  <p><strong>Duration:</strong> {selectedBooking.duration}</p>
+                                                </div>
+                                              
+                                                {/* Preferences Box */}
+                                                <div className="bg-white rounded-xl shadow p-4 space-y-1 border border-gray-200">
+                                                  <h3 className="text-lg font-semibold mb-2 text-purple-600">Preferences</h3>
+                                                  <p><strong>Guest Count:</strong> {selectedBooking.guestCount}</p>
+                                                  <p><strong>Budget:</strong> {selectedBooking.budgetRange}</p>
+                                                  <p><strong>Heard From:</strong> {selectedBooking.knowUs}</p>
+                                                  <p><strong>Services:</strong> 
+                                                    {selectedBooking.videography === "true" && " Videography"}
+                                                    {selectedBooking.drone === "true" && ", Drone"}
+                                                    {selectedBooking.live === "true" && ", Live Streaming"}
+                                                  </p>
+                                                </div>
+                                              
+                                                {/* Action Buttons */}
+                                                <div className="flex justify-end gap-4 pt-4 border-t border-gray-300">
+                                                  <Button 
+                                                    className="bg-red-600 hover:bg-red-700 text-white font-semibold px-4 py-2 rounded-lg"
+                                                    onClick={() => handleReject(
+                                                      selectedBooking._id, selectedBooking.clientName, selectedBooking.email, 
+                                                      selectedBooking.eventDate, selectedBooking.eventType, selectedBooking.location
+                                                    )}
+                                                  >
+                                                    Reject
+                                                  </Button>
+                                                  <Button 
+                                                    className="bg-green-600 hover:bg-green-700 text-white font-semibold px-4 py-2 rounded-lg"
+                                                    onClick={() => handleAccept(
+                                                      selectedBooking._id, selectedBooking.clientName, selectedBooking.email, 
+                                                      selectedBooking.eventDate, selectedBooking.eventType, selectedBooking.location
+                                                    )}
+                                                  >
+                                                    Accept
+                                                  </Button>
+                                                </div>
+                                              </DialogContent>
+                                              
                                             )}
                                         </Dialog>
                                     </td>
@@ -235,6 +262,7 @@ const EventBookings = () => {
                       )}
                     </tbody>
                 </table>
+                </div>
             )}
 
             {confirmAction && (

@@ -156,7 +156,7 @@ const ItemList = () => {
       {/* Main Content */}
       <div className="max-w-6xl mx-auto px-3">
         <h1 className="text-4xl mt-8 mb-8 text-center text-blue-900 underline font-bold">
-          Product List
+          Product List 
         </h1>
 
         {/* Search Bar */}
