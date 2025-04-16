@@ -376,7 +376,7 @@ const ListForm = () => {
               }`}
             >
               {isSubmitting ? (
-                <FaSpinner className="animate-spin" />
+                <FaSpinner className="animate-spin" style={{ animation: "spinnerMine 1s linear infinite" }}/> 
               ) : (
                 <>
                   <FaSave />{" "}

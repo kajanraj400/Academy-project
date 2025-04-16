@@ -20,7 +20,7 @@
   border-radius: 10px;
   overflow: hidden;
   margin: 0 auto;
-  padding: 0.5em;
+  padding: 0.2em;
   z-index: 1;
 }
 
@@ -59,6 +59,16 @@
   --angle: 360deg;
   }
 }
+
+@keyframes spinnerMine {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
 
 /* You can add this in App.css or a global stylesheet if needed */
 .react-calendar__tile.event-day {

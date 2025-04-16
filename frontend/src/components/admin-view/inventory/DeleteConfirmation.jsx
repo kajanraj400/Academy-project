@@ -3,7 +3,7 @@ import React from "react";
 const DeleteConfirmation = ({
   deleteItemId,
   deleteItemName,
-  handleDelete,
+  handleDelete, 
   setDeleteItemId,
 }) => {
   return (

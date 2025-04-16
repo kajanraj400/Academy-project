@@ -156,7 +156,7 @@ const EventBookings = () => {
             {bookings.length === 0 ? (
                 <p className="text-4xl text-center text-red-600">No bookings available.</p>
             ) : (
-                <div className="relative z-0 cardShape rounded-xl">
+                <div className="relative z-0 cardShape rounded-xl"> 
                 <table className="w-full border-collapse border border-gray-300 bg-white rounded-xl relative z-10">
                     <thead>
                         <tr className="bg-blue-200">

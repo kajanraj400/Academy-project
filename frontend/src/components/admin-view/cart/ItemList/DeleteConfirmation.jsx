@@ -22,7 +22,7 @@ const DeleteConfirmation = ({
             disabled={isDeleting}
           >
             {isDeleting ? (
-              <FaSpinner className="animate-spin mr-2" />
+              <FaSpinner className="w-5 h-5 mr-2"   style={{ animation: "spinnerMine 1s linear infinite" }} />
             ) : (
               <FaTrash className="mr-2" />
             )}

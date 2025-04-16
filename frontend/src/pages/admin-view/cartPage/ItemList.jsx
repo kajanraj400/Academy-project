@@ -182,7 +182,7 @@ const ItemList = () => {
                       animate={{
                         rotate: [0, 10, -10, 0],
                       }}
-                      transition={{
+                      transition={{ 
                         repeat: Infinity,
                         repeatType: "reverse",
                         duration: 2,

@@ -116,11 +116,11 @@ function AdminDashboard() {
         />
       </div>
 
-      <h2 className='text-gray-600 font-bold text-xl ml-5'>Total number of customers: {searchResults.length}</h2>
+      <h2 className='inline-block text-blue-600 bg-white bg-w-cover font-bold text-xl ml-5 py-3 px-5'>Total number of customers: {searchResults.length}</h2>
 
       <div className="relative z-0 cardShape rounded-xl">
       <table className="w-full border-collapse border border-gray-300 bg-white rounded-xl relative z-10">
-        <thead style={{ backgroundColor: '#f4f4f4', color: '#333' }}>
+        <thead style={{ color: '#333' }} className='bg-blue-50'>
           <tr>
             <th style={{ padding: '15px', border: '1px solid #ddd', textAlign: 'left' }}>Name</th>
             <th style={{ padding: '15px', border: '1px solid #ddd', textAlign: 'left' }}>Email</th>
@@ -203,6 +203,7 @@ function AdminDashboard() {
             position: fixed;
             top: 0;
             left: 0;
+            z-index: 50;
             width: 100%;
             height: 100%;
             background-color: rgba(0, 0, 0, 0.5);
