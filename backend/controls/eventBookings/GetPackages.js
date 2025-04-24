@@ -1,13 +1,13 @@
-const uploadOldEventsSchema = require('../../models/uploadOldEventSchema');
+const getPackages = require('../../models/Package');
 
 
-const getOldEvents = async(req, res) => {
+const getAllPackages = async(req, res) => {
     try {
-        const oldEvents = await uploadOldEventsSchema.find();
+        const AllPackages = await getPackages.find();
 
         res.status(200).json({
             success: true,
-            data: oldEvents
+            data: AllPackages
         })
     } catch (error) { 
         console.log(error);
@@ -18,4 +18,4 @@ const getOldEvents = async(req, res) => {
     }
 }
 
-module.exports = getOldEvents;
+module.exports = getAllPackages;
