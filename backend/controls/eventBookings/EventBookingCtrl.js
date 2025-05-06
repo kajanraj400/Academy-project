@@ -12,7 +12,7 @@ const EventBookings = async(req, res) => {
             return res.status(400).json({
                 success: false,
                 message: 'You have already booked for the same event.'
-            });
+            }); 
         }
 
         const newBooking = new Booking({ userEmail, clientName, phoneNumber, email:userEmail, address, eventType, eventDate, location, duration, guestCount, budgetRange, knowUs, videography, drone, live, terms, status});

@@ -16,3 +16,4 @@ const getUpcomingEvents = async(req, res) => {
 }
 
 module.exports = getUpcomingEvents;
+ 

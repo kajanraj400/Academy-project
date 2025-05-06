@@ -5,7 +5,7 @@ import ClientLayout from './components/customer-view/common/Layout'
 import AdminLayout from "./components/admin-view/common/Layout";
 import DisplayOldFullEvent from "./pages/customer-view/DisplayOldFullEvent";
 import DisplayOldFullEventAdmin from "./pages/admin-view/oldEvent/DisplayOldFullEvent";
-import WelcomePage from "./components/Welcome";
+import WelcomePage from "./components/welcome-view/Welcome";
 import Login from "./components/auth-view/views/Login";
 import Signup from "./components/auth-view/views/Signup";
 import Forgotpassword from "./components/auth-view/views/Forgotpassword";
@@ -49,6 +49,18 @@ import Packages from "./components/customer-view/home/Packages";
 import DeletePackages from "./components/admin-view/dashboard/deletePackages";
 import MyBookings from "./components/customer-view/home/MyBookings";
 import ColorSetUp from "./components/customer-view/common/ColorSetUp";
+import BookingReport from "./components/admin-view/dashboard/BookingReport";
+import BookingAnalytics from "./components/admin-view/dashboard/BookingAnalytics";
+import ContactPage from "./components/welcome-view/Contact";
+import BlogHome from "./components/welcome-view/Blog";
+import LiveChat from "./components/customer-view/livechat/LiveChat";
+import AdminChat from "./components/admin-view/livechat/AdminChat";
+import AdminviewProfile from "./components/admin-view/userManagement/AdminViewUser";
+import ChangePassword from "./components/admin-view/userManagement/ChangePassword";
+import CompareOrderReport from "./pages/admin-view/order/CompareOrderReport";
+import OrderReport from "./pages/admin-view/order/OrderReport";
+import FaqAndFeedbackReport from "./pages/admin-view/customer-relationship/FaqAndFeedbackReport";
+
 
 
 function App() {
@@ -71,6 +83,7 @@ function App() {
                     <Route path='products' element={<ItemList />} />
                     <Route path='contact' element={<FeedBack />} />
                     <Route path='package' element={<Packages />} />
+                    <Route path="/client/liveChat" element={<LiveChat />} /> 
                 </Route>
                 <Route path='/client' element={<ColorSetUp />}>
                     <Route path='/client/DisplayOldFullEvent/:id' element={<DisplayOldFullEvent />} />
@@ -87,6 +100,7 @@ function App() {
                     <Route path="/client/faq" element={<ClientFAQ />} />
                     <Route path="/client/delivery" element={<DeliveryMethodPage />} />
                     <Route path="/client/myBookings" element={<MyBookings />} /> 
+                    <Route path="/client/changepassword" element={<ChangePassword />} />
                 </Route>
                 
 
@@ -103,6 +117,9 @@ function App() {
                     {/*  Booking Management Routes  */}
                     <Route path="upcomingEvents" element={<UpComingEvent />} />
                     <Route path="eventBookings" element={<EventBooking />} />
+                    <Route path="bookingsReport" element={<BookingReport />} />
+                    <Route path="booking-analytics" element={<BookingAnalytics />} />
+
 
                     {/* Package Management Routes */}
                     <Route path="newPackages" element={<AddPackages />} />
@@ -113,7 +130,8 @@ function App() {
                     <Route path="delet-user" element={<DeleteUser />} />
                     <Route path="adddAdmin" element={<AddAdmin />} />
                     <Route path="profile" element={<Profile/>}/>
-                    <Route path="updateprofile" element={<ProfileUpdate/>}/>
+                    <Route path="updateprofile" element={<ProfileUpdate />}/>
+                    <Route path="userdetails/:id" element={<AdminviewProfile />}/>
 
 
                     {/*  Gallery Page Routes  */}
@@ -132,15 +150,27 @@ function App() {
                     {/*  Order Management Routes  */}
                     <Route path="placedOrders" element={<PlacedOrders />} />
                     <Route path="deletedOrders" element={<DeletedOrders />} />
+                    <Route path="OrderReport" element={<OrderReport /> } />
+                    <Route path="compareOrderReport" element={<CompareOrderReport />} />
 
 
                     <Route path="delivery" element={<AdminDeliveryPage />} />
                     <Route path="feedback" element={<FeedbackList />} /> 
                     <Route path="faq" element={<AdminFAQPage />} />
+                    <Route path="FaqAndFeedbackReport" element={<FaqAndFeedbackReport />} />
+
+                    <Route path="liveChat" element={<AdminChat />} />
                     
                 </Route>
                 <Route path='/admin/DisplayOldFullEvent/:id' element={<DisplayOldFullEventAdmin />} />
                 <Route path="/admin/detailedOrder/:id" element={<DetailedOrderPage />} />
+
+
+                <Route path="/common/contact" element={<ContactPage />} />
+                <Route path="/common/blog" element={<BlogHome />} />
+
+
+
 
 
                 <Route path="*" element={<NotFound />} />

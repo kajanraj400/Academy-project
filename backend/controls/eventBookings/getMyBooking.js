@@ -15,4 +15,4 @@ const getMyBookings = async(req, res) => {
     }
 }
 
-module.exports = getMyBookings;
+module.exports = getMyBookings;  

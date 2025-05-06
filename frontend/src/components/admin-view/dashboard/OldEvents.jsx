@@ -72,66 +72,107 @@ const OldEvents = () => {
     }, []);
 
     return (
-        <div className='w-10/12 mx-auto'>
-            <ToastContainer 
-                position = "top-center"
-                autoClose = {4000}
-                hideProgressBar = {false}
-                closeOnClick = {true}
-                pauseOnHover = {false}
-                draggable = {true}
-                progress = {undefined}
-                newestOnTop = {true}
-                rtl = {false}
-                style={{ zIndex: 9999, position: 'fixed', top: 0 }} 
-            />
-
-            <h1 className="text-4xl mt-8 mb-8 text-center text-blue-900 underline font-bold">PAST EVENT DETAILS</h1>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 m-5 gap-y-20">
-                {OldEvent.length > 0 ? (
-                    OldEvent.map((Events, idx) => {
-                        const imageUrl = Events.EventURLs?.[0]?.url;
-
-                        return (
-                            <div key={idx} onClick={() => handleNavigate(Events._id)} className="bg-gray-200 rounded-lg h-auto shadow-lg hover:shadow-xl p-[1.5px] hover:border-2 hover:border-gray-400 hover:rounded-lg flex flex-col justify-between">
-
-                                {imageUrl ? (
-                                    <img
-                                        src={imageUrl}
-                                        alt="Event Image"
-                                        className="w-full h-48 object-cover rounded-lg"
-                                    />
-                                    
-                                ) : (
-                                    <div className="w-full h-48 bg-gray-200 flex items-center justify-center text-gray-500">
-                                        No Image Available
-                                    </div>
-                                )}
-                                <h2 className="text-center text-2xl text-blue-900 font-semibold mt-4 mb-5 font-[Noto Sans JP]">
-                                    {Events.Place}
-                                </h2>
-                                <h2 className="text-center text-lg text-gray-500 font-medium underline hover:text-red-600 hover:cursor-pointer mt-auto pb-4">
-                                    See More
-                                </h2>
-                                <button
-                                    type="button"
-                                    className="bg-red-500 text-white rounded-full px-1 py-2 hover:bg-red-700"
-                                    onClick={(e) => {
-                                        e.stopPropagation();
-                                        handleEventRemove(Events._id, Events.Place);
-                                    }}
-                                >
-                                    Remove
-                                </button>
-                            </div>
-                        );
-                    })
-                ) : ( <h1>No Events are here!</h1>) }
+        <div className="container mx-auto px-4 py-8">
+          <ToastContainer 
+            position="top-center"
+            autoClose={4000}
+            hideProgressBar={false}
+            closeOnClick
+            pauseOnHover={false}
+            draggable
+            newestOnTop
+            rtl={false}
+            className="z-[9999] fixed top-4"
+            toastClassName="bg-white shadow-lg rounded-lg border border-gray-200"
+          />
+      
+          <h1 className="text-3xl md:text-4xl font-bold text-center text-blue-800 mb-10 pb-2 border-b-2 border-blue-100">
+            PAST EVENT DETAILS
+          </h1>
+      
+          {OldEvent.length > 0 ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+              {OldEvent.map((Events, idx) => {
+                const imageUrl = Events.EventURLs?.[0]?.url;
+      
+                return (
+                  <div 
+                    key={idx} 
+                    onClick={() => handleNavigate(Events._id)}
+                    className="group bg-white rounded-xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden flex flex-col cursor-pointer border border-gray-200 hover:border-blue-300"
+                  >
+                    {/* Image Container */}
+                    <div className="relative aspect-square overflow-hidden">
+                      {imageUrl ? (
+                        <img
+                          src={imageUrl}
+                          alt="Event"
+                          className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                        />
+                      ) : (
+                        <div className="w-full h-full bg-gray-100 flex items-center justify-center text-gray-400">
+                          <span>No Image Available</span>
+                        </div>
+                      )}
+                    </div>
+      
+                    {/* Event Details */}
+                    <div className="p-4 flex-grow flex flex-col">
+                      <h2 className="text-xl font-semibold text-blue-800 text-center mb-3 line-clamp-2">
+                        {Events.Place}
+                      </h2>
+                      
+                      <div className="mt-auto flex justify-between items-center">
+                        <button 
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleNavigate(Events._id);
+                          }}
+                          className="text-blue-600 hover:text-blue-800 font-medium underline transition-colors"
+                        >
+                          See More
+                        </button>
+                        
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleEventRemove(Events._id, Events.Place);
+                          }}
+                          className="px-3 py-1 bg-red-500 text-white rounded-full hover:bg-red-600 transition-colors text-sm"
+                        >
+                          Remove
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
             </div>
+          ) : (
+            <div className="text-center py-12">
+              <div className="inline-block bg-gray-100 rounded-full p-6 mb-4">
+                <svg 
+                  xmlns="http://www.w3.org/2000/svg" 
+                  className="h-12 w-12 text-gray-400" 
+                  fill="none" 
+                  viewBox="0 0 24 24" 
+                  stroke="currentColor"
+                >
+                  <path 
+                    strokeLinecap="round" 
+                    strokeLinejoin="round" 
+                    strokeWidth={2} 
+                    d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" 
+                  />
+                </svg>
+              </div>
+              <h2 className="text-xl font-medium text-gray-600">
+                No past events available
+              </h2>
+            </div>
+          )}
         </div>
-    );
-};
-
-export default OldEvents;
-
+      );
+    }
+      
+      export default OldEvents;

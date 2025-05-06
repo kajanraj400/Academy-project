@@ -1,20 +1,49 @@
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { assets } from "@/assets/assets";
+import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition';
+
 
 // Optional: React Icons for modern icons
-import { FaBars, FaImages, FaUsers, FaCalendarCheck, FaBlog, FaBoxOpen, FaClipboardList, FaTruck, FaComments, FaBox } from "react-icons/fa";
+import { FaBars, FaImages, FaUsers, FaCalendarCheck, FaBlog, FaBoxOpen, FaClipboardList, FaTruck, FaComments, FaBox, FaPaperPlane } from "react-icons/fa";
 
-const SideBar = () => {
-  const [isOpen, setIsOpen] = useState(false);
+const SideBar = ({ isOpen, setIsOpen }) => {
   const [visibleGallery, setVisibleGallery] = useState(false);
-
-  useEffect(() => {
+  const navigate = useNavigate();
+ 
+  useEffect(() => { 
     if (!isOpen) {
       setVisibleGallery(false);
     }
   }, [isOpen]);
+
+  const commands = [
+    {
+        command: 'open Content Management',
+        callback: () => {
+          setVisibleGallery(!visibleGallery);
+        },
+        isFuzzyMatch: true,
+        fuzzyMatchingThreshold: 0.8
+    },
+    {
+      command: 'close Content Management',
+      callback: () => {
+        setVisibleGallery(!visibleGallery);
+      },
+      isFuzzyMatch: true,
+      fuzzyMatchingThreshold: 0.8
+  },
+  ]
+
+  const {
+    transcript,
+    listening,
+    resetTranscript,
+    browserSupportsSpeechRecognition
+  } = useSpeechRecognition({ commands });
+      
 
   return (
     <div>
@@ -81,6 +110,7 @@ const SideBar = () => {
             <SidebarItem icon={<FaClipboardList />} text="Order Management" to="/admin/placedOrders" setIsOpen={setIsOpen} />
             <SidebarItem icon={<FaTruck />} text="Delivery Management" to="/admin/delivery" setIsOpen={setIsOpen} />
             <SidebarItem icon={<FaComments />} text="Feedback Management" to="/admin/feedback" setIsOpen={setIsOpen} />
+            <SidebarItem icon={<FaPaperPlane />} text="Livechat Management" to="/admin/liveChat" setIsOpen={setIsOpen} />
 
           </div>
         </SheetContent>

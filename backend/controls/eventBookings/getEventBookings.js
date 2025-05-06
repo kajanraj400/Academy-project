@@ -12,4 +12,4 @@ const getEventBookings = async(req, res) => {
     }
 }
 
-module.exports = getEventBookings;
+module.exports = getEventBookings; 

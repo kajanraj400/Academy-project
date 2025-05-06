@@ -15,11 +15,11 @@ const BookingSchema = new mongoose.Schema({
     },
     email: {
         type: String,
-        required: true
+        required: true 
     },
     address: {
         type: String,
-        required: true
+        required: true 
     },
     eventType: {
         type: String, 

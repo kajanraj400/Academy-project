@@ -10,6 +10,7 @@ import adminDropdown from './adminDropdown.png';
 import admin_menu_icon from './menu_icon_admin.png';
 import backward from './backward.png';
 import owner from './owner.jpg';
+import adminBG from './adminBG.jpg'
 
 
 export const assets = {
@@ -24,5 +25,6 @@ export const assets = {
     adminDropdown,
     admin_menu_icon,
     backward,
-    owner
+    owner,
+    adminBG
 }

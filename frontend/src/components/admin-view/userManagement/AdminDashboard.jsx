@@ -4,6 +4,7 @@ import axios from 'axios';
 import Cookies from 'js-cookie';
 import userprofile from '../../../assets/userimge.png';
 import logo from '../../../assets/Logo.png';
+import { ToastContainer, toast } from "react-toastify";
 
 function AdminDashboard() {
   const [user, setUser] = useState([]);
@@ -37,13 +38,16 @@ function AdminDashboard() {
     }
   }, [user]);
 
-  function deleteUser(e, email) {
+  function deleteUser(e, email ,name) {
     e.preventDefault();
     if (reason === "") return;
 
+      setShowConfirmModal(true);
+      setSelectedEmail(email);
+
     
-    setShowConfirmModal(true);
-    setSelectedEmail(email);
+    toast.success(`${name} deleted successfully!`);
+    
   }
 
   function handleConfirmDelete() {
@@ -87,6 +91,10 @@ function AdminDashboard() {
     }
   }
 
+  function ViewUser(e,id){
+    navigate(`/admin/userdetails/${id}`); 
+  }
+
   return (
     <div className='w-11/12 mx-auto'>
       <nav className="bg-blue-500 p-4 shadow-lg mt-10 w-10/12 m-auto">
@@ -126,8 +134,6 @@ function AdminDashboard() {
             <th style={{ padding: '15px', border: '1px solid #ddd', textAlign: 'left' }}>Email</th>
             <th style={{ padding: '15px', border: '1px solid #ddd', textAlign: 'left' }}>Address</th>
             <th style={{ padding: '15px', border: '1px solid #ddd', textAlign: 'left' }}>Phone Number</th>
-            <th style={{ padding: '15px', border: '1px solid #ddd', textAlign: 'left' }}>Number of Photoshoots</th>
-            <th style={{ padding: '15px', border: '1px solid #ddd', textAlign: 'left' }}>Number of Orders</th>
             <th style={{ padding: '15px', border: '1px solid #ddd', textAlign: 'center' }}>View Details</th>
             <th style={{ padding: '15px', border: '1px solid #ddd', textAlign: 'center' }}>Reason</th>
             {/* <th style={{ padding: '15px', border: '1px solid #ddd', textAlign: 'left' }}>Add Admin</th> */}
@@ -140,38 +146,36 @@ function AdminDashboard() {
               <td style={{ padding: '12px', border: '1px solid #ddd' }}>{ob.email}</td>
               <td style={{ padding: '12px', border: '1px solid #ddd' }}>{ob.address}</td>
               <td style={{ padding: '12px', border: '1px solid #ddd' }}>{ob.phone}</td>
-              <td style={{ padding: '12px', border: '1px solid #ddd' }}>10</td>
-              <td style={{ padding: '12px', border: '1px solid #ddd' }}>12</td>
               <td style={{ textAlign: 'center' }}>
                 <button style={{
                   padding: '10px 20px',
-                  backgroundColor: '#4CAF50',
+                  backgroundColor: '#007bffb7',
                   color: '#fff',
                   border: 'none',
                   borderRadius: '5px',
                   cursor: 'pointer',
                   transition: 'background-color 0.3s'
-                }}>
+                }}  onClick={(e) => ViewUser(e, ob._id)} >
                   View
                 </button>
               </td>
+              
               <td style={{ padding: '10px', border: '1px solid #ddd' }}>
-                <form style={{ display: 'flex', alignItems: 'center' }}>
-                  <input
-                    type="text"
-                    name="reason"
-                    onChange={(e) => setReason(e.target.value)}
-                    required
-                    style={{ padding: '8px', width: '70%', borderRadius: '4px', border: '1px solid #ccc', marginRight: '10px' }}
-                  />
-                  <button
-                    style={{ padding: '8px 15px', backgroundColor: '#f44336', color: '#fff', border: 'none', borderRadius: '5px', cursor: 'pointer', transition: 'background-color 0.3s' }}
-                    onClick={(e) => deleteUser(e, ob.email)}
-                  >
-                    Delete
-                  </button>
-                </form>
-              </td>
+              <form 
+                 onSubmit={
+                (e) => { e.preventDefault(); 
+                 deleteUser(e, ob.email) , ob.username }} style={{ display: 'flex', alignItems: 'center' }}>
+                 <input  type="text" name="reason" onChange={(e) => setReason(e.target.value)} required
+                  style={{ padding: '8px', width: '70%', borderRadius: '4px', border: '1px solid #ccc', marginRight: '10px' }}
+               />
+                 <button type="submit"
+                  style={{ padding: '8px 15px', backgroundColor: '#f44336', color: '#fff', border: 'none', borderRadius: '5px', cursor: 'pointer', transition: 'background-color 0.3s' }}
+                 >
+                 Delete
+              </button>
+             </form>
+</td>
+
               {/* <td>
                 <button style={{ padding: '10px 20px', backgroundColor: '#4CAF50', color: '#fff', border: 'none', borderRadius: '5px', cursor: 'pointer', transition: 'background-color 0.3s' }}>
                   Add Admin

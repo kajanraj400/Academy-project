@@ -8,6 +8,7 @@ const loginRegister = new mongoose.Schema({
     phone: String,
     password: String,
     address: String,
+    profileImage: String,
     role:{type:String ,default:"customer"}
 });
 
@@ -15,7 +16,7 @@ const loginRegister = new mongoose.Schema({
 const deletuser = new mongoose.Schema({
     username: String,
     email: String,
-    phone: String,
+    phone: String,  
     address: String,
     reason: String,
     removeby:String,

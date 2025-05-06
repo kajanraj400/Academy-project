@@ -13,6 +13,11 @@ const getTodayDate = () => {
     return today.toISOString().split("T")[0] + 1; // Ensures YYYY-MM-DD format
 };
   
+function speakMessage(message) {
+    const utterance = new SpeechSynthesisUtterance(message);
+    utterance.lang = 'en-US'; // You can change language here if needed
+    speechSynthesis.speak(utterance);
+  }
 
 
 function BookingForm() {
@@ -28,10 +33,7 @@ function BookingForm() {
     const [activeTab, setActiveTab] = useState("defaultBooking");
 
 
-    useEffect(() => {
-
-    }, [])
-
+    
     useEffect(() => {
         const userData = Cookies.get('user');
         const user = userData ? JSON.parse(userData) : null;
@@ -85,7 +87,8 @@ function BookingForm() {
             setIsSubmitting(false);
             return;
         } else {            
-            toast.success('Booking Successful!');          
+            toast.success('Booking Successful!');      
+            speakMessage("Your booking has been successfully added. A team member will reach out shortly with more details. Thank you!");
             setTimeout(() => {
                 setFormDetails({
                     clientName: '',
@@ -164,36 +167,28 @@ function BookingForm() {
     
 
     return (
-        <div>
-            <ToastContainer 
-                position = "top-center"
-                autoClose = {5000}
-                hideProgressBar = {false}
-                closeOnClick = {true}
-                pauseOnHover = {false}
-                draggable = {true}
-                progress = {undefined}
-                newestOnTop = {true}
-                rtl = {false}
-                style={{ zIndex: 9999, position: 'fixed', top: 0 }} 
-            />
-            <div className='flex justify-center items-center m-10'>
+        <div className="relative">
+            
+            
+            <div className="flex justify-center items-center py-12 px-4 sm:px-6">
                 {/* Button to Open Modal */}
                 {!isOpen && (
                     <button 
                         onClick={() => setIsOpen(true)} 
-                        className={`px-4 md:px-6 py-2 md:py-3 text-lg border-[1px] border-gray-500 hover:border-white ${getButtonColor()}`}>
+                        className={`px-6 py-3 text-lg font-medium rounded-lg border border-gray-300 hover:border-white transition-all duration-200 ${getButtonColor()} hover:shadow-lg transform hover:-translate-y-0.5`}
+                    >
                         BOOK FOR EVENT
                     </button>
                 )}
 
                 {/* Modal */}
                 {isOpen && (
-                    <div className='fixed inset-0 flex justify-center items-center bg-black bg-opacity-50 z-50 overflow-y-auto'>
-                        <div className='relative w-11/12 sm:w-3/4 lg:w-2/5 max-h-screen bg-white bg-opacity-15 backdrop-blur-md rounded-2xl shadow-lg m-5 p-7 overflow-y-auto'>
-                        
+                    <div className="fixed inset-0 flex justify-center items-center bg-black/50 z-50 overflow-y-auto p-4">
+                        <div className="relative w-full max-w-2xl bg-white/10 backdrop-blur-lg rounded-2xl shadow-xl m-4 p-6 sm:p-8 overflow-y-auto max-h-[97vh]">
+                            {/* Close Button */}
                             <button 
-                                onClick={() => {setIsOpen(false);
+                                onClick={() => {
+                                    setIsOpen(false);
                                     setFormDetails({
                                         clientName: '',
                                         phoneNumber: 0,
@@ -210,195 +205,266 @@ function BookingForm() {
                                         drone: false,
                                         live: false,
                                         terms: false
-                                    })
+                                    });
                                 }}
-                                className='absolute top-4 right-4 text-white text-2xl hover:text-red-500 transition'>
+                                className="absolute top-4 right-4 text-white hover:text-red-500 transition-colors text-2xl"
+                            >
                                 ✖
-                            </button>                   
- 
-                            <h2 className='flex text-lg sm:text-3xl text-white font-medium justify-center mb-4 sm:mb-6'>
+                            </button>
+
+                            {/* Modal Header */}
+                            <h2 className="text-2xl sm:text-3xl font-bold text-white text-center mb-6">
                                 Book Photography Service
                             </h2>
 
-                          <form onSubmit={onSubmit} className='space-y-4'>
-                              <Tabs.Root defaultValue="defaultBooking" value={activeTab} onValueChange={setActiveTab}>
-                                <Tabs.List className="flex gap-2 mb-4 justify-center text-white">
-                                    <Tabs.Trigger value="defaultBooking" className="px-4 py-2 rounded-lg bg-gray-700 data-[state=active]:bg-blue-600 mb-4">
-                                        Book For You
-                                    </Tabs.Trigger>
-                                    <Tabs.Trigger value="customClient" className="px-4 py-2 rounded-lg bg-gray-700 data-[state=active]:bg-blue-600 mb-4">
-                                        Book For Someone
-                                    </Tabs.Trigger>
-                                </Tabs.List>
-                                <Tabs.Content value="customClient" className="w-full space-y-4">
-                                    <input className='w-full p-2 border rounded-lg' 
-                                        onChange={(e) => {setFormDetails({...formDetails, clientName: e.target.value})}} 
-                                        type='text' 
-                                        name= 'clientName' 
-                                        placeholder='Enter Full Name' 
-                                        required 
-                                    />
+                            <form onSubmit={onSubmit} className="space-y-6">
+                                <Tabs.Root defaultValue="defaultBooking" value={activeTab} onValueChange={setActiveTab}>
+                                    <Tabs.List className="flex gap-4 mb-6 justify-center">
+                                        <Tabs.Trigger 
+                                            value="defaultBooking" 
+                                            className="px-5 py-2 rounded-lg bg-gray-700 text-white data-[state=active]:bg-blue-600 data-[state=active]:shadow-md transition-all"
+                                        >
+                                            Book For You
+                                        </Tabs.Trigger>
+                                        <Tabs.Trigger 
+                                            value="customClient" 
+                                            className="px-5 py-2 rounded-lg bg-gray-700 text-white data-[state=active]:bg-blue-600 data-[state=active]:shadow-md transition-all"
+                                        >
+                                            Book For Someone
+                                        </Tabs.Trigger>
+                                    </Tabs.List>
                                     
-                                    <input className='w-full p-2 border rounded-lg' 
-                                        onChange={(e) => {setFormDetails({...formDetails, phoneNumber: e.target.value})}} 
-                                        type='text'
-                                        name= 'phoneNumber'
-                                        placeholder='Enter Contact Number' 
-                                        required 
-                                    />
-                                    
-                                    <input className='w-full p-2 border rounded-lg' 
-                                        onChange={(e) => {setFormDetails({...formDetails, address: e.target.value})}} 
-                                        type='text' 
-                                        name= 'address'
-                                        placeholder='Enter Address' 
-                                        required 
-                                    />
-                                </Tabs.Content>
+                                    <Tabs.Content value="customClient" className="space-y-4">
+                                        <input 
+                                            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" 
+                                            onChange={(e) => setFormDetails({...formDetails, clientName: e.target.value})} 
+                                            type="text" 
+                                            name="clientName" 
+                                            placeholder="Enter Full Name" 
+                                            required 
+                                        />
+                                        
+                                        <input 
+                                            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" 
+                                            onChange={(e) => setFormDetails({...formDetails, phoneNumber: e.target.value})} 
+                                            type="tel"
+                                            name="phoneNumber"
+                                            placeholder="Enter Contact Number" 
+                                            required 
+                                        />
+                                        
+                                        <input 
+                                            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" 
+                                            onChange={(e) => setFormDetails({...formDetails, address: e.target.value})} 
+                                            type="text" 
+                                            name="address"
+                                            placeholder="Enter Address" 
+                                            required 
+                                        />
+                                    </Tabs.Content>
                                 </Tabs.Root>
 
-                                <div className='w-full grid grid-cols-1 sm:grid-cols-2 gap-4'>
-                                    <div className='flex flex-col'>
-                                        <label className='text-base sm:text-xl mb-1 ml-2' htmlFor='eventType'>Event Type</label>
-                                        <select className='w-full p-2 border rounded-lg' 
-                                            onChange={(e)=> {setFormDetails({...formDetails, eventType: e.target.value})}} 
-                                            name= 'eventType'
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                    {/* Event Type */}
+                                    <div className="space-y-1">
+                                        <label className="text-gray-100 font-medium ml-1" htmlFor="eventType">Event Type</label>
+                                        <select 
+                                            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                            onChange={(e) => setFormDetails({...formDetails, eventType: e.target.value})} 
+                                            name="eventType"
                                             value={formDetails.eventType}
                                         >
                                             <option value="" disabled>Select Event Type</option>
-                                            <option value='Wedding'>Wedding</option>
-                                            <option value='Pre-Wedding'>Pre-Wedding</option>
-                                            <option value='Engagement'>Engagement</option>
-                                            <option value='BirthDay'>BirthDay</option>
-                                            <option value='School Event'>School Event</option>
-                                            <option value='Mehndi'>Mehndi</option>
-                                            <option value='Other'>Other</option>
+                                            <option value="Wedding">Wedding</option>
+                                            <option value="Pre-Wedding">Pre-Wedding</option>
+                                            <option value="Engagement">Engagement</option>
+                                            <option value="BirthDay">BirthDay</option>
+                                            <option value="School Event">School Event</option>
+                                            <option value="Mehndi">Mehndi</option>
+                                            <option value="Other">Other</option>
                                         </select>
-
                                     </div>
 
-                                    <div className='flex flex-col'>
-                                        <label className='text-base sm:text-xl mb-1 ml-2' htmlFor='eventDate'>Event Date</label>
-                                        <input className='w-full p-2 border rounded-lg' 
-                                            type='date' 
-                                            onChange={(e)=> {setFormDetails({...formDetails, eventDate: e.target.value})}}  
-                                            name= 'eventDate'
-                                            min={todayDate}
+                                    {/* Event Date */}
+                                    <div className="space-y-1">
+                                        <label className="text-gray-100 font-medium ml-1" htmlFor="eventDate">Event Date</label>
+                                        <input 
+                                            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                            type="date" 
+                                            onChange={(e) => setFormDetails({...formDetails, eventDate: e.target.value})}  
+                                            name="eventDate"
+                                            min={new Date(Date.now() + 2*86400000).toISOString().split('T')[0]}
+
                                             required 
                                         />
                                     </div>
                                 </div>
 
-                                <input className='w-full p-2 border rounded-lg' 
-                                    type='text' 
-                                    onChange={(e)=> {setFormDetails({...formDetails, location: e.target.value})}} 
-                                    name= 'location' 
-                                    placeholder='Enter Event Location' 
-                                    required 
-                                />
-                                
-                                <input className='w-full p-2 border rounded-lg' 
-                                    type='number' 
-                                    onChange={(e)=> {setFormDetails({...formDetails, duration: e.target.value})}} 
-                                    name= 'duration'
-                                    min="1"
-                                    max="15"
-                                    placeholder='Enter Event Duration ( In hours )' 
-                                    required 
-                                />
-                                
-                                <input className='w-full p-2 border rounded-lg' 
-                                    type='number' 
-                                    onChange={(e)=> {setFormDetails({...formDetails, guestCount: e.target.value})}} 
-                                    name= 'guestCount'
-                                    min="0"
-                                    max="4000"
-                                    step="1"
-                                    placeholder='Enter Number of Guests' 
-                                    required 
-                                />
-                                
-                                <input className='w-full p-2 border rounded-lg' 
-                                    type='number' 
-                                    onChange={(e)=> {setFormDetails({...formDetails, budgetRange: e.target.value})}} 
-                                    name= 'budgetRange'
-                                    min="3000"
-                                    max="500000"
-                                    step="1"
-                                    placeholder='Enter Expected Budget' 
-                                    required 
-                                />
-                                
-                                <textarea className='w-full p-2 border rounded-lg' 
-                                    type='text' 
-                                    onChange={(e)=> {setFormDetails({...formDetails, knowUs: e.target.value})}}  
-                                    name= 'knowUs'
-                                    placeholder='How did you hear about us' 
-                                    required 
-                                />
+                                {/* Location */}
+                                <div className="space-y-1">
+                                    <label className="text-gray-100 font-medium ml-1" htmlFor="location">Event Location</label>
+                                    <input 
+                                        className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                        type="text" 
+                                        onChange={(e) => setFormDetails({...formDetails, location: e.target.value})} 
+                                        name="location" 
+                                        placeholder="Enter exact venue address" 
+                                        required 
+                                    />
+                                </div>
 
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                    {/* Duration */}
+                                    <div className="space-y-1">
+                                        <label className="text-gray-100 font-medium ml-1" htmlFor="duration">Duration (hours)</label>
+                                        <input 
+                                            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                            type="number" 
+                                            onChange={(e) => setFormDetails({...formDetails, duration: e.target.value})} 
+                                            name="duration"
+                                            min="1"
+                                            max="15"
+                                            placeholder="4" 
+                                            required 
+                                        />
+                                    </div>
 
-                                <fieldset className='border p-4 rounded-lg'>
-                                    <legend className='text-base sm:text-xl mb-2'>Additional Services:</legend>
-                                    <div>
-                                        <input type='checkbox' 
-                                            onChange={(e)=> {setFormDetails({...formDetails, videography: e.target.checked})}}  
-                                            name= 'videography'
-                                            checked= {formDetails.videography} 
-                                            id='videography' 
+                                    {/* Guest Count */}
+                                    <div className="space-y-1">
+                                        <label className="text-gray-100 font-medium ml-1" htmlFor="guestCount">Number of Guests</label>
+                                        <input 
+                                            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                            type="number" 
+                                            onChange={(e) => setFormDetails({...formDetails, guestCount: e.target.value})} 
+                                            name="guestCount"
+                                            min="0"
+                                            max="4000"
+                                            step="1"
+                                            placeholder="100" 
+                                            required 
                                         />
-                                        <label htmlFor='videography' className='ml-2'>Videography</label>
                                     </div>
-                                    <div>
-                                        <input type='checkbox' 
-                                            onChange={(e)=> {setFormDetails({...formDetails, drone: e.target.checked})}}  
-                                            name= 'drone'
-                                            checked= {formDetails.drone}
-                                            id='drone' 
+                                </div>
+
+                                {/* Budget */}
+                                <div className="space-y-1">
+                                    <label className="text-gray-100 font-medium ml-1" htmlFor="budgetRange">Budget Range (₹)</label>
+                                    <input 
+                                        className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                        type="number" 
+                                        onChange={(e) => setFormDetails({...formDetails, budgetRange: e.target.value})} 
+                                        name="budgetRange"
+                                        min="3000"
+                                        max="500000"
+                                        step="1"
+                                        placeholder="15000" 
+                                        required 
+                                    />
+                                </div>
+
+                                {/* How did you hear about us */}
+                                <div className="space-y-1">
+                                    <label className="text-gray-100 font-medium ml-1" htmlFor="knowUs">How did you hear about us?</label>
+                                    <textarea 
+                                        className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent min-h-[100px]"
+                                        onChange={(e) => setFormDetails({...formDetails, knowUs: e.target.value})}  
+                                        name="knowUs"
+                                        placeholder="Social media, friend recommendation, etc." 
+                                        required 
+                                    />
+                                </div>
+
+                                {/* Additional Services */}
+                                <fieldset className="border border-gray-300 p-4 rounded-lg space-y-3">
+                                    <legend className="text-gray-100 font-medium px-2">Additional Services</legend>
+                                    <div className="flex items-center">
+                                        <input 
+                                            type="checkbox" 
+                                            id="videography"
+                                            className="h-5 w-5 text-blue-600 rounded focus:ring-blue-500"
+                                            onChange={(e) => setFormDetails({...formDetails, videography: e.target.checked})}  
+                                            name="videography"
+                                            checked={formDetails.videography} 
                                         />
-                                        <label htmlFor='drone' className='ml-2'>Drone Photography</label>
+                                        <label htmlFor="videography" className="ml-3 text-gray-100">Videography</label>
                                     </div>
-                                    <div>
-                                        <input type='checkbox' 
-                                            onChange={(e)=> {setFormDetails({...formDetails, live: e.target.checked})}}  
-                                            name= 'live'
-                                            checked= {formDetails.live}
-                                            id='live' 
+                                    <div className="flex items-center">
+                                        <input 
+                                            type="checkbox" 
+                                            id="drone"
+                                            className="h-5 w-5 text-blue-600 rounded focus:ring-blue-500"
+                                            onChange={(e) => setFormDetails({...formDetails, drone: e.target.checked})}  
+                                            name="drone"
+                                            checked={formDetails.drone}
                                         />
-                                        <label htmlFor='live' className='ml-2'>Live Coverage</label>
+                                        <label htmlFor="drone" className="ml-3 text-gray-100">Drone Photography</label>
+                                    </div>
+                                    <div className="flex items-center">
+                                        <input 
+                                            type="checkbox" 
+                                            id="live"
+                                            className="h-5 w-5 text-blue-600 rounded focus:ring-blue-500"
+                                            onChange={(e) => setFormDetails({...formDetails, live: e.target.checked})}  
+                                            name="live"
+                                            checked={formDetails.live}
+                                        />
+                                        <label htmlFor="live" className="ml-3 text-gray-100">Live Coverage</label>
                                     </div>
                                 </fieldset>
 
-                                <div className='flex items-center mt-4'>
-                                    <input type='checkbox' 
-                                        onChange={(e)=> {setFormDetails({...formDetails, terms: e.target.checked})}}  
-                                        name= 'terms'
-                                        checked= {formDetails.terms}
-                                        id='terms' 
-                                        required 
-                                    />
-                                    <label htmlFor='terms' className='ml-2'>I agree to the Terms and Conditions</label>
+                                {/* Terms and Conditions */}
+                                <div className="flex items-start">
+                                    <div className="flex items-center h-5">
+                                        <input 
+                                            type="checkbox" 
+                                            id="terms"
+                                            className="h-5 w-5 text-blue-600 rounded focus:ring-blue-500"
+                                            onChange={(e) => setFormDetails({...formDetails, terms: e.target.checked})}  
+                                            name="terms"
+                                            checked={formDetails.terms}
+                                            required 
+                                        />
+                                    </div>
+                                    <label htmlFor="terms" className="ml-3 text-gray-100">
+                                        I agree to the <a href="#" className="text-blue-400 hover:underline">Terms and Conditions</a>
+                                    </label>
                                 </div>
 
-                                
-
+                                {/* Submit Button */}
                                 <button 
-                                    type='submit' 
-                                    className={`w-full p-3 rounded-lg transition ${
-                                        isFormComplete() && !isSubmitting ? 'bg-blue-600 text-white hover:bg-blue-700' : 'bg-blue-500 cursor-not-allowed'
+                                    type="submit" 
+                                    className={`w-full py-3 px-4 rounded-lg font-medium transition-all ${
+                                        isFormComplete() && !isSubmitting 
+                                            ? 'bg-blue-600 text-white hover:bg-blue-700 shadow-md hover:shadow-lg' 
+                                            : 'bg-blue-400 cursor-not-allowed'
                                     }`} 
                                     disabled={!isFormComplete() || isSubmitting} 
                                     title={!isFormComplete() ? 'Please fill all fields before booking' : isSubmitting ? 'Processing...' : ''}
                                 >
-                                    {isSubmitting ? 'Booking...' : 'Book for Event'}
+                                    {isSubmitting ? (
+                                        <span className="flex items-center justify-center">
+                                            <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                                                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                            </svg>
+                                            Processing...
+                                        </span>
+                                    ) : 'Book for Event'}
                                 </button>
-
                             </form>
                         </div>
                     </div>
                 )}
+                
+                <Toaster 
+                    position="bottom-center" 
+                    autoClose={3000} 
+                    toastOptions={{
+                        className: 'bg-gray-800 text-white',
+                    }}
+                />
             </div>
-        </div> 
+        </div>
         );
 }
 

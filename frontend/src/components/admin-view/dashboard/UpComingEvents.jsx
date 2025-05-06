@@ -47,9 +47,9 @@ const UpComingEvents = () => {
   };
 
   const deleteEvent = (email, id) => {
-    fetch(`http://localhost:5000/api/updatebookings/${id}/${email}`, {
+    fetch(`http://localhost:5000/api/updatebookings/${id}/${email}/${bookingToDelete.budgetRange}`, {
       method: "PUT",
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "application/json" }, 
       body: JSON.stringify({ status: "Canceled" }),
     })
       .then((res) => {
@@ -130,7 +130,7 @@ const UpComingEvents = () => {
                                     {selectedBooking.clientName}'s Booking
                                   </DialogTitle>
                                 </DialogHeader>
-                                const formattedDate = new Date(book.eventDate).toISOString().split("T")[0];
+                                
 
                                 <div className="bg-white rounded-xl shadow p-4 border">
                                   <h3 className="text-lg font-semibold mb-2 text-blue-600">Client Info</h3>
@@ -142,7 +142,7 @@ const UpComingEvents = () => {
                                 <div className="bg-white rounded-xl shadow p-4 border">
                                   <h3 className="text-lg font-semibold mb-2 text-green-600">Event Details</h3>
                                   <p><strong>Type:</strong> {selectedBooking.eventType}</p>
-                                  <p><strong>Date:</strong> {formattedDate}</p>
+                                  <p><strong>Date:</strong> {new Date(book.eventDate).toISOString().split("T")[0]}</p>
                                   <p><strong>Location:</strong> {selectedBooking.location}</p>
                                   <p><strong>Duration:</strong> {selectedBooking.duration}</p>
                                 </div>

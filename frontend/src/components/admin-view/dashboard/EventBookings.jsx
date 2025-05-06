@@ -2,8 +2,12 @@ import { useEffect, useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
+import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition';
+import { useNavigate } from "react-router-dom";
+
 
 const EventBookings = () => {
+    const navigate = useNavigate();
     const [bookings, setBookings] = useState([]);
     const [loading, setLoading] = useState(true);
     const [selectedBooking, setSelectedBooking] = useState(null);
@@ -15,11 +19,69 @@ const EventBookings = () => {
     const [upcomingBookings, setUpcomingBookings] = useState([]);
     const [matchEvent, setMatchEvent] = useState([]);
     const [matchEventDisplay, setMatchEventDisplay] = useState([]);
+    const [finalBudget, setFinalBudget] = useState('');
+    const [errors, setErrors] = useState(false);
 
-    const handleSearch = (e) => {
-        setSearchQuery(e.target.value);
-        const query = e.target.value.toLowerCase();
-        console.log(searchQuery);
+    const [voiceSearch, setVoiceSearch] = useState("");
+
+
+
+    const commands = [
+        {
+            command: "search for *",            
+            callback: (spokenQuery) => {
+                setVoiceSearch("");
+                handleSearchListen("");
+                setSearchQuery("");
+
+                setTimeout(() => {
+                    console.log("Transcript : "+transcript);
+                    console.log("Search text : "+spokenQuery);
+                    setVoiceSearch(spokenQuery);
+                    resetTranscript();
+                    SpeechRecognition.startListening({ continuous: true });
+                }, 100)
+            },
+            isFuzzyMatch: true,
+            fuzzyMatchingThreshold: 0.7,
+            matchInterim: false,
+            bestMatchOnly: true
+          }, 
+    ]
+
+    const { 
+        transcript,
+        listening,
+        resetTranscript,
+        browserSupportsSpeechRecognition
+    } = useSpeechRecognition({ commands });
+
+    useEffect(() => {
+        console.log("Transcript: " + transcript);
+        console.log("Search text: " + transcript);
+        const lowerTranscript = transcript.toLowerCase();
+
+        if (lowerTranscript.startsWith("search for")) {
+            const query = lowerTranscript.replace("search for", "").trim();
+
+            if (query) {
+                console.log("Transcript: " + transcript);
+                console.log("Search text: " + query);
+                setSearchQuery(query);
+                handleSearchListen(query);
+
+                setTimeout(() => {
+                    resetTranscript();
+                    SpeechRecognition.startListening({ continuous: true });
+                }, 1000); 
+            }
+        }
+    }, [transcript, voiceSearch])
+        
+
+    const handleSearchListen = (e) => {
+        setSearchQuery(e);
+        const query = e.toLowerCase();
        
         const filteredBookings = bookings.filter((book) => 
             book.clientName.toLowerCase().includes(query) ||
@@ -33,7 +95,25 @@ const EventBookings = () => {
         }
 
         setSortedBookings(filteredBookings);
-        console.log(filteredBookings);
+    };
+
+    
+    const handleSearch = (e) => {
+        setSearchQuery(e.target.value);
+        const query = e.target.value.toLowerCase();
+       
+        const filteredBookings = bookings.filter((book) => 
+            book.clientName.toLowerCase().includes(query) ||
+            book.eventType.toLowerCase().includes(query)
+        );
+
+        if (sortOrder === "asc") {
+            filteredBookings.sort((a, b) => new Date(a.eventDate) - new Date(b.eventDate));
+        } else if (sortOrder === "desc") {
+            filteredBookings.sort((a, b) => new Date(b.eventDate) - new Date(a.eventDate));
+        }
+
+        setSortedBookings(filteredBookings);
     };
 
     const handleSortChange = (order) => {
@@ -53,7 +133,7 @@ const EventBookings = () => {
     };
     
 
-    const handleAccept = (id, clientName, email, eDate, eType, location) => {
+    const handleAccept = (id, clientName, email, eDate, eType, location, budgetRng) => {
         setConfirmAction({
             type: "accept",
             id,
@@ -61,11 +141,12 @@ const EventBookings = () => {
             email,
             eDate,
             eType,
-            location
+            location,
+            budgetRng
         });
     };
 
-    const handleReject = (id, clientName, email, eDate, eType, location) => {
+    const handleReject = (id, clientName, email, eDate, eType, location, budgetRng) => {
         setConfirmAction({
             type: "reject",
             id,
@@ -73,18 +154,36 @@ const EventBookings = () => {
             email,
             eDate,
             eType,
-            location
+            location,
+            budgetRng
         });
     };
 
     const confirmActionHandler = () => {
+        const { type, id, clientName, email, eDate, eType, location, budgetRng } = confirmAction;
+        let finalSend = 0;
         if (!confirmAction) return;
+        if( confirmAction.type == "accept" ) {
+            if( finalBudget< 3000 || finalBudget>1000000 ) {
+                setErrors(true);
+                return;
+            }
+        } 
         setIsProcessing(true);
 
-        const { type, id, clientName, email, eDate, eType, location } = confirmAction;
+        
+
         const status = type === "accept" ? "Accepted" : "Rejected";
 
-        fetch(`http://localhost:5000/api/updatebookings/${id}/${email}`, {
+        if( status == "Accepted") {
+            finalSend = finalBudget;
+        } else if( status == "Rejected" ) {
+            finalSend = budgetRng;
+        } else {
+            return;
+        } 
+
+        fetch(`http://localhost:5000/api/updatebookings/${id}/${email}/${finalSend}`, {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ status, clientName, eventDate: eDate, eventType: eType, eventLocation: location }),
@@ -116,6 +215,8 @@ const EventBookings = () => {
     };
 
     useEffect(() => {
+        setFinalBudget('');
+        setErrors(false);
         if (confirmAction) {
             var matchDisplay = "";
             setMatchEventDisplay([]);
@@ -203,6 +304,7 @@ const EventBookings = () => {
                 <table className="w-full border-collapse border border-gray-300 bg-white rounded-xl relative z-10">
                     <thead>
                         <tr className="bg-blue-200">
+                            <th className="border border-gray-400 p-2 text-center">No</th>
                             <th className="border border-gray-400 p-2 text-center">Name</th>
                             <th className="border border-gray-400 p-2 text-center">Event Type</th>
                             <th className="border border-gray-400 p-2 text-center">Event Date</th>
@@ -217,10 +319,11 @@ const EventBookings = () => {
                             </td>
                         </tr>
                     ) : (
-                        sortedBookings.map((book) => { 
+                        sortedBookings.map((book, index) => { 
                             const formattedDate = new Date(book.eventDate).toISOString().split("T")[0];
                             return (
-                                <tr key={book._id} className="cursor-pointer hover:bg-gray-300">
+                                <tr key={book._id} className="bg-white cursor-pointer hover:bg-gray-300">
+                                    <td className="border border-gray-400 p-2 text-center">{index+1}</td>
                                     <td className="border border-gray-400 p-2 text-center">{book.clientName}</td>
                                     <td className="border border-gray-400 p-2 text-center">{book.eventType}</td>
                                     <td className="border border-gray-400 p-2 text-center">{formattedDate}</td>
@@ -278,7 +381,7 @@ const EventBookings = () => {
                                                     className="bg-red-600 hover:bg-red-700 text-white font-semibold px-4 py-2 rounded-lg"
                                                     onClick={() => handleReject(
                                                       selectedBooking._id, selectedBooking.clientName, selectedBooking.email, 
-                                                      selectedBooking.eventDate, selectedBooking.eventType, selectedBooking.location
+                                                      selectedBooking.eventDate, selectedBooking.eventType, selectedBooking.location, selectedBooking.budgetRange
                                                     )}
                                                   >
                                                     Reject
@@ -287,7 +390,7 @@ const EventBookings = () => {
                                                     className="bg-green-600 hover:bg-green-700 text-white font-semibold px-4 py-2 rounded-lg"
                                                     onClick={() => handleAccept(
                                                       selectedBooking._id, selectedBooking.clientName, selectedBooking.email, 
-                                                      selectedBooking.eventDate, selectedBooking.eventType, selectedBooking.location
+                                                      selectedBooking.eventDate, selectedBooking.eventType, selectedBooking.location, selectedBooking.budgetRange
                                                     )}
                                                   >
                                                     Accept
@@ -337,24 +440,38 @@ const EventBookings = () => {
                                 the booking for <strong className="text-gray-900">{confirmAction.clientName}</strong>?
                             </p>
                         </div>
-                        <DialogFooter className="flex justify-end gap-4 p-5 border-t border-gray-200">
-                            <Button className="bg-gray-200 hover:bg-gray-300 text-gray-700 font-medium px-4 py-2 rounded-lg transition-all" 
+                        <DialogFooter className="flex justify-between gap-4 p-5 ps-0 border-t border-gray-200">
+                            <Button className="bg-gray-300 hover:bg-gray-400 text-gray-700 font-medium px-4 py-2 rounded-lg transition-all" 
                                 onClick={() => setConfirmAction(null)}
                                 disabled={isProcessing}
                             >
                                 Cancel
                             </Button>
-                            <Button className={`px-4 py-2 font-medium rounded-lg transition-all ${
-                                    confirmAction.type === "accept"
-                                    ? "bg-green-600 hover:bg-green-700 text-white"
-                                    : "bg-red-600 hover:bg-red-700 text-white"
-                                }`} 
-                                onClick={confirmActionHandler}
-                                disabled={isProcessing}
-                            >
-                                {confirmAction.type === "accept" ? "Accept" : "Reject"}
-                            </Button>
+
+                            <div className="flex gap-2 border-t border-gray-200">
+                                {confirmAction.type === "accept" &&
+                                    <input 
+                                        type="number" 
+                                        name="finalBudget" 
+                                        onChange={(e) => setFinalBudget(e.target.value)} 
+                                        value={finalBudget} 
+                                        placeholder="Final Budget"
+                                        className="border border-gray-700 bg-indigo-100 rounded-lg px-3 py-2 w-full sm:w-40 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500" 
+                                    />
+                                }
+                                <Button className={`px-4 py-2 font-medium rounded-lg transition-all ${
+                                        confirmAction.type === "accept"
+                                        ? "bg-green-600 hover:bg-green-700 text-white"
+                                        : "bg-red-600 hover:bg-red-700 text-white"
+                                    }`} 
+                                    onClick={confirmActionHandler}
+                                    disabled={isProcessing}
+                                >
+                                    {confirmAction.type === "accept" ? "Accept" : "Reject"}
+                                </Button>
+                            </div>
                         </DialogFooter>
+                        { errors && <p className="text-center text-red-600">Please Enter the correct amount.</p> }
                     </DialogContent>
                 </Dialog>
             )}

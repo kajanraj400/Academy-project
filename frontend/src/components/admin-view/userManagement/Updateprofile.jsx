@@ -1,140 +1,235 @@
-
-
 import React, { useEffect, useState } from "react";
-import logo from '../../../assets/Logo.png';
 import { Link, useNavigate } from "react-router-dom";
 import Cookies from 'js-cookie';
 import axios from 'axios';
+import './css/ProfileUpdate.css';
 
 const ProfileUpdate = () => {
   const userSession = Cookies.get('user') ? JSON.parse(Cookies.get('user')) : null;
 
-  const [alert, setAlert] = useState("");
   const [username, setUsername] = useState(userSession?.user?.username || "");
   const [email, setEmail] = useState(userSession?.user?.email || "");
   const [address, setAddress] = useState(userSession?.user?.address || "");
   const [phone, setPhone] = useState(userSession?.user?.phone || "");
-  const [error, setError] = useState("");
+  const [profileImage, setProfileImage] = useState(userSession?.user?.profileImage || "");
   const [isChanged, setIsChanged] = useState(false);
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
+  const [alert, setAlert] = useState("");
+  const [isEditingImage, setIsEditingImage] = useState(false);
 
   const navigate = useNavigate();
-
+ 
   useEffect(() => {
-    if (
+    const isModified =
       username !== userSession?.user?.username ||
       email !== userSession?.user?.email ||
       address !== userSession?.user?.address ||
-      phone !== userSession?.user?.phone
-    ) {
-      setIsChanged(true);
-    } else {
-      setIsChanged(false);
-    }
-  }, [username, email, address, phone, userSession]);
+      phone !== userSession?.user?.phone ||
+      profileImage !== userSession?.user?.profileImage;
 
-  function handleUpdate(e) {
+    setIsChanged(isModified);
+  }, [username, email, address, phone, profileImage, userSession]);
+
+  const handleFileChange = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const allowedTypes = ["image/jpeg", "image/jpg", "image/png", "image/svg+xml", "image/bmp", "image/webp"];
+    if (!allowedTypes.includes(file.type)) {
+      setError("Only JPG, JPEG, PNG files are allowed");
+      return;
+    }
+
+    const imageUrl = await uploadToCloudinary(file);
+    if (imageUrl) {
+      setProfileImage(imageUrl);
+      setIsEditingImage(false);
+    } else {
+      setError("Image upload failed.");
+    }
+  };
+
+  const uploadToCloudinary = async (file) => {
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("upload_preset", "proshots_event_management");
+
+      const response = await fetch("https://api.cloudinary.com/v1_1/proshots/image/upload", {
+        method: "POST",
+        body: formData,
+      });
+
+      const data = await response.json();
+      return data.secure_url;
+    } catch (err) {
+      console.error("Cloudinary Upload Error:", err);
+      return null;
+    }
+  };
+
+  const handleUpdate = (e) => {
     e.preventDefault();
     setError("");
+    setSuccess("");
 
-    if (!username || username.length < 3) {
+    if (username.trim().length < 3) {
       setError("Username must be at least 3 characters long");
       return;
     }
 
     const realPhone = /^(?:\+94|0)(7[01245678]\d{7})$/;
-    if (phone.startsWith("+94")) {
-      if (phone.length !== 12 || !realPhone.test(phone)) {
-        setError("Invalid phone number");
-        return;
-      }
-    } else if (phone.length !== 10 || !realPhone.test(phone)) {
+    if (!realPhone.test(phone)) {
       setError("Invalid phone number");
       return;
     }
 
-    axios.post("http://localhost:5000/updateprofile", { username, phone, address, email })
-      .then((result) => {
-        const { message, newprofile } = result.data;
+    axios.post("http://localhost:5000/updateprofile", {
+      username,
+      phone,
+      address,
+      email,
+      profileImage,
+    })
+      .then((res) => {
+        const { message, newprofile } = res.data;
 
         if (message === "Updated successfully") {
-          setError("Details updated successfully");
           Cookies.remove("user");
-
           const expirationTime = new Date().getTime() + 24 * 60 * 60 * 1000;
           Cookies.set("user", JSON.stringify({ user: newprofile, expirationTime }), { expires: 1 });
 
-          setTimeout(() => { navigate('/client/profile'); }, 3000);
-        } 
+          setSuccess("Details updated successfully!");
+          setTimeout(() => navigate('/client/profile'), 2500);
+        } else {
+          setError("Something went wrong. Try again.");
+        }
       })
       .catch((err) => {
-        console.error("Profile Update Error: ", err);
+        console.error("Profile Update Error:", err);
         setError("Profile update failed. Please try again.");
       });
-  }
+  };
+
+  const handleImageClick = () => {
+    setIsEditingImage(true);
+  };
+
+  const handleCancelImageEdit = () => {
+    setIsEditingImage(false);
+  };
 
   return (
-    <>
-      <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', backgroundColor: 'black', padding: '10px 30px' }}>
-        <img src={logo} alt="Logo" style={{ width: '260px', height: '100px' }} />
-        <Link to="/client/profile" style={{ display: 'inline-block', padding: '10px 20px', fontSize: '18px', backgroundColor: 'rgb(20, 190, 190)', color: 'white', textDecoration: 'none', borderRadius: '25px', textAlign: 'center' }}><b>Back</b></Link>
-      </header>
-
-      <div style={{ maxWidth: "500px", margin: "auto", background: "#fff", padding: "30px", borderRadius: "10px", boxShadow: "0 4px 8px rgba(0,0,0,0.1)", fontFamily: "'Arial', sans-serif" }}>
-        <h1 style={{ fontSize: "24px", fontWeight: "bold", marginBottom: "20px", textAlign: "center", color: "#333" }}>Update Profile</h1>
-
-        <form onSubmit={handleUpdate}>
-          <div style={{ marginBottom: "15px" }}>
-            <label style={{ fontSize: "16px", fontWeight: "500", color: "#555", marginBottom: "5px", display: "block" }}>Name:</label>
-            <input type="text" name="username" required onChange={(e) => setUsername(e.target.value)} value={username} style={{ width: "100%", padding: "10px", borderRadius: "5px", border: "1px solid #ccc", fontSize: "16px", boxSizing: "border-box" }} />
+    <div className="profile-update-container">
+      <div className="profile-update-form-container">
+        <Link to="/client/profile" className="profile-update-back-btn">
+          ← Back
+        </Link>
+    
+        <h1 className="profile-update-title">Update Profile</h1>
+    
+        <form className="profile-update-form" onSubmit={handleUpdate}>
+          {/* Profile Image Section */}
+          <div className="profile-image-section">
+            {!isEditingImage ? (
+              <div className="profile-image-display">
+                {profileImage ? (
+                  <img 
+                    src={profileImage} 
+                    alt="Profile" 
+                    className="profile-image-preview"
+                    onClick={handleImageClick}
+                  />
+                ) : (
+                  <div 
+                    className="profile-image-placeholder"
+                    onClick={handleImageClick}
+                  >
+                    <span>Click to add image</span>
+                  </div>
+                )}
+                <button 
+                  type="button" 
+                  className="change-image-btn"
+                  onClick={handleImageClick}
+                >
+                  Change Image
+                </button>
+              </div>
+            ) : (
+              <div className="image-upload-section">
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleFileChange}
+                  className="profile-update-file-input"
+                  id="profileImageInput"
+                />
+                <label htmlFor="profileImageInput" className="file-input-label">
+                  Choose Image
+                </label>
+                <button
+                  type="button"
+                  className="cancel-image-btn"
+                  onClick={handleCancelImageEdit}
+                >
+                  Cancel
+                </button>
+              </div>
+            )}
           </div>
 
-          <div style={{ marginBottom: "25px" }}>
-            <label style={{ fontSize: "16px", fontWeight: "500", color: "#555", marginBottom: "5px", display: "block" }}>Email:</label>
-            <div style={{ width: "100%", padding: "10px", borderRadius: "5px", border: "1px solid #ccc", fontSize: "16px", backgroundColor: "#f9f9f9", boxSizing: "border-box" }}
-              onMouseOver={() => setAlert("You can't change Email")} onMouseOut={() => setAlert("")}>{email}</div>
-            {alert && <p style={{ color: "red", fontSize: "14px" }}>{alert}</p>}
-          </div>
-
-          <div style={{ marginBottom: "15px" }}>
-            <label style={{ fontSize: "16px", fontWeight: "500", color: "#555", marginBottom: "5px", display: "block" }}>Address:</label>
-            <input type="text" name="address" required onChange={(e) => setAddress(e.target.value)} value={address} style={{ width: "100%", padding: "10px", borderRadius: "5px", border: "1px solid #ccc", fontSize: "16px", boxSizing: "border-box" }} />
-          </div>
-
-          <div style={{ marginBottom: "25px" }}>
-            <label style={{ fontSize: "16px", fontWeight: "500", color: "#555", marginBottom: "5px", display: "block" }}>Phone:</label>
-            <input type="text" name="phone" required onChange={(e) => setPhone(e.target.value)} value={phone} style={{ width: "100%", padding: "10px", borderRadius: "5px", border: "1px solid #ccc", fontSize: "16px", boxSizing: "border-box" }} />
-          </div>
-
-          <div style={{ marginBottom: "25px" }}>
-            <label style={{ fontSize: "16px", fontWeight: "500", color: "#555", marginBottom: "5px", display: "block" }}>Add Your Profile:</label>
-            <input type="file" name="file" style={{ width: "100%", padding: "10px", borderRadius: "5px", border: "1px solid #ccc", fontSize: "16px", boxSizing: "border-box" }} />
-          </div>
-
-          <br /><br />
-
-          <button
-            style={{
-              width: "100%",
-              padding: "12px",
-              backgroundColor: isChanged ? "#4CAF50" : "#ccc",
-              color: "#fff",
-              border: "none",
-              borderRadius: "5px",
-              fontSize: "16px",
-              cursor: isChanged ? "pointer" : "not-allowed",
-              transition: "background-color 0.3s"
-            }}
-            onMouseOver={(e) => { if (isChanged) e.target.style.backgroundColor = "#45a049"; }}
-            onMouseOut={(e) => { if (isChanged) e.target.style.backgroundColor = "#4CAF50"; }}
-            disabled={!isChanged}
+          <label className="profile-update-label">Name:</label>
+          <input
+            type="text"
+            value={username}
+            required
+            onChange={(e) => setUsername(e.target.value)}
+            className="profile-update-input"
+          />
+    
+          <label className="profile-update-label">Email:</label>
+          <div
+            className="profile-update-email-display"
+            onMouseOver={() => setAlert("You can't change Email")}
+            onMouseOut={() => setAlert("")}
           >
-            <b>Update Profile</b>
+            {email}
+          </div>
+          {alert && <p className="profile-update-alert">{alert}</p>}
+    
+          <label className="profile-update-label">Address:</label>
+          <input
+            type="text"
+            value={address}
+            required
+            onChange={(e) => setAddress(e.target.value)}
+            className="profile-update-input"
+          />
+    
+          <label className="profile-update-label">Phone:</label>
+          <input
+            type="text"
+            value={phone}
+            required
+            onChange={(e) => setPhone(e.target.value)}
+            className="profile-update-input"
+          />
+    
+          <button
+            type="submit"
+            disabled={!isChanged}
+            className={`profile-update-submit-btn ${!isChanged ? 'disabled' : ''}`}
+          >
+            Update Profile
           </button>
-
-          {error && <p style={{ color: "green", fontSize: "16px", textAlign: "center" }}>{error}</p>}
+    
+          {success && <p className="profile-update-success">{success}</p>}
+          {error && <p className="profile-update-error">{error}</p>}
         </form>
       </div>
-    </>
+    </div>
   );
 };
 

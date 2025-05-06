@@ -16,17 +16,19 @@ const getAllPackages = require('../controls/eventBookings/GetPackages');
 const deletePackage = require('../controls/eventBookings/deletePackage');
 const getMyBookings = require('../controls/eventBookings/getMyBooking');
 const deleteMyBooking = require('../controls/eventBookings/deleteMyBooking');
+const getAllBookings = require('../controls/eventBookings/getAllBookings');
 
 router.get('/getbookings', getEventBookings);
 router.post('/bookings', EventBookings);
 router.get('/getMyBookings/:email', getMyBookings);
+router.get('/getAllBookings', getAllBookings);
 router.delete('/deleteMyBookings/:id', deleteMyBooking);
-router.put('/updatebookings/:_id/:email', updateEventBooking);
-router.post('/oldEvents', uploadOldEvents);
+router.put('/updatebookings/:_id/:email/:amount', updateEventBooking); 
+router.post('/oldEvents', uploadOldEvents); 
 router.get('/getOldEvents', getOldEvents);
 router.get('/getUpcomingBookings', getUpcomingEvents);
 router.get('/getSpecificEvent/:id', getSpecificEvent);
-router.delete('/deleteOldEvent/:id', deleteOldEvent)
+router.delete('/deleteOldEvent/:id', deleteOldEvent) 
 
 
 

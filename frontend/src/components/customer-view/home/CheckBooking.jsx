@@ -53,7 +53,7 @@ export const CheckBooking = (formDetails) => {
             return false;
         }
     }
-
+ 
     if (!formDetails.eventType) {
         toast.error("Invalid Event Type : Please select valid event type", {
             action: {

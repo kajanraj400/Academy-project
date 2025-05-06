@@ -4,12 +4,13 @@ const Booking = require('../../models/EventBookingModel');
 const updateEventBooking = async (req, res) => {
     const bookingId = req.params._id;
     const to = req.params.email;
+    const amount = req.params.amount;
     const { status, clientName, eventDate, eventType, eventLocation } = req.body;
- 
+     
     try { 
         const updateBooking = await Booking.findByIdAndUpdate(
             bookingId,
-            { status: status },
+            { status: status, budgetRange: amount },
             { new: true }
         );
 
