@@ -6,7 +6,7 @@ const feedbackSchema = new mongoose.Schema(
     type: { type: String, required: true },
     subject: { type: String, required: true },
     message: { type: String, required: true },
-    status: { type: String, enum: ["normal", "urgent", "resolved"], default: "normal" },
+    status: { type: String, default: "Normal" },
   },
   { timestamps: true } // Adds createdAt & updatedAt automatically
 );

@@ -256,7 +256,7 @@ const ItemList = () => {
         {!location.pathname.includes("/client/products") && <Navbar />}
 
         {/* Cart Button */}
-        <div className="fixed left-4 bottom-4 md:bottom-6 z-50 flex gap-4">
+        <div className="fixed right-4 top-28 md:top-32 z-50 flex gap-4">
           {/* Cart Button - Only show in client view */}
           {!location.pathname.includes("/admin/product-list") && (
             <div

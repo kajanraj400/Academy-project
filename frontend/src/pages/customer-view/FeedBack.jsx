@@ -35,8 +35,7 @@ const FeedBack = () => {
         setType("");
         setSubject("");
         setMessage("");
-      }, 3000)
-      
+      }, 3000);
     } catch (error) {
       console.error("Error submitting feedback:", error.message);
     }
@@ -50,17 +49,23 @@ const FeedBack = () => {
       return;
     }
 
-    if(subject.length<15){
-      window.alert("Subject must Be 15 Characters")
+    if (subject.length < 15) {
+      window.alert("Subject must Be 15 Characters");
       return;
     }
 
-    if(message.length<15){
-      window.alert("Message must Be 15 Characters")
+    if (message.length < 15) {
+      window.alert("Message must Be 15 Characters");
       return;
     }
 
-    const feedback = { date: currentDate, type, subject, message, status: "normal" };
+    const feedback = {
+      date: currentDate,
+      type,
+      subject,
+      message,
+      status: "normal",
+    };
     await createFeedback(feedback);
   };
 
@@ -75,10 +80,16 @@ const FeedBack = () => {
       {/* Right Side - Enlarged Form */}
       <div className="w-full md:w-1/2 flex justify-center">
         <form className="w-full md:w-2/3 lg:w-3/4 p-8 md:p-10 bg-white shadow-xl rounded-xl flex flex-col space-y-6">
-          <h1 className="text-4xl font-bold text-center text-blue-800 underline">Feedback Form</h1>
+          <h1 className="text-4xl font-bold text-center text-blue-800 underline">
+            Feedback Form
+          </h1>
 
-          <select className="w-full h-12 px-4 border border-gray-400 rounded-lg outline-none focus:border-blue-500 transition"
-            value={type} onChange={(e) => setType(e.target.value)} required>
+          <select
+            className="w-full h-12 px-4 border border-gray-400 rounded-lg outline-none focus:border-blue-500 transition"
+            value={type}
+            onChange={(e) => setType(e.target.value)}
+            required
+          >
             <option value="">Select Feedback Type</option>
             <option value="order">Order Feedback</option>
             <option value="delivery">Delivery Feedback</option>
@@ -88,24 +99,39 @@ const FeedBack = () => {
             <option value="other">Other</option>
           </select>
 
-          <input className="w-full h-12 px-4 border border-gray-400 rounded-lg outline-none focus:border-blue-500 transition"
-            type="text" placeholder="Subject" value={subject} onChange={(e) => setSubject(e.target.value)} required />
+          <input
+            className="w-full h-12 px-4 border border-gray-400 rounded-lg outline-none focus:border-blue-500 transition"
+            type="text"
+            placeholder="Subject"
+            value={subject}
+            onChange={(e) => setSubject(e.target.value)}
+            required
+          />
 
-          <textarea className="w-full h-32 p-4 border border-gray-400 rounded-lg outline-none resize-none focus:border-blue-500 transition"
-            placeholder="Message" value={message} onChange={(e) => setMessage(e.target.value)} required />
+          <textarea
+            className="w-full h-32 p-4 border border-gray-400 rounded-lg outline-none resize-none focus:border-blue-500 transition"
+            placeholder="Message"
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
+            required
+          />
 
-          <button className="w-full h-12 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition duration-300"
-            type="submit" onClick={insertfb}>
+          <button
+            className="w-full h-12 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition duration-300"
+            type="submit"
+            onClick={insertfb}
+          >
             Submit
           </button>
           <p className="text-lg text-right text-gray-800 hover:text-blue-600 cursor-pointer transition-all duration-300 ease-in-out">
-              Go To 
-              <span 
-                onClick={handleNavigate} 
-                className="text-gray-400 hover:underline hover:text-gray-700 font-semibold pl-3">
-                Frequently Asked Questions
-              </span>
-            </p>
+            If You Have any Question
+            <span
+              onClick={handleNavigate}
+              className="text-gray-400 hover:underline hover:text-gray-700 font-semibold pl-3"
+            >
+              Frequently Asked Questions
+            </span>
+          </p>
         </form>
       </div>
     </div>

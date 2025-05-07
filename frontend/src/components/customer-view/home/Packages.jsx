@@ -85,7 +85,7 @@ const PackageScroll = ({ allPackage }) => {
 
                 <div className="relative">
                     {/* Left gradient fade */}
-                    <div className={`absolute left-0 top-0 bottom-0 w-24 bg-gradient-to-r from-${primaryColor}-50 to-transparent z-30 pointer-events-none`}></div>
+                    <div className={`absolute left-0 top-0 bottom-0 w-24 bg-transparent z-30 pointer-events-none`}></div>
                     
                     {/* Package cards container */}
                     <div
@@ -167,7 +167,7 @@ const PackageScroll = ({ allPackage }) => {
 
                                     {/* CTA Button */}
                                     <button
-                                        onClick={() => {window.open('https://wa.me/94777484378', '_blank')}}
+                                        onClick={() => {navigate('/client/livechat')}}
                                         className={`
                                             w-full 
                                             bg-gradient-to-r from-blue-500 to-blue-600 
@@ -189,7 +189,7 @@ const PackageScroll = ({ allPackage }) => {
                     </div>
 
                     {/* Right gradient fade */}
-                    <div className={`absolute right-0 top-0 bottom-0 w-24 bg-gradient-to-l from-${primaryColor}-50 to-transparent z-30 pointer-events-none`}></div>
+                    <div className={`absolute right-0 top-0 bottom-0 w-24 bg-transparent z-30 pointer-events-none`}></div>
                 </div>
 
                 {/* Scroll indicator dots */}

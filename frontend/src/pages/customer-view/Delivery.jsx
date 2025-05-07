@@ -122,7 +122,7 @@ function DeliveryMethodPage() {
           setDistrict(data.address?.county || data.address?.state || "");
         })
         .catch((err) => console.error("Reverse geocode error:", err));
-    }
+    } 
   }, [location]);
 
   useEffect(() => {
