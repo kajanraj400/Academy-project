@@ -28,6 +28,8 @@ function AdminDeliveryPage() {
       console.error("Failed to update status", err);
     }
   };
+
+  
  
   const filtered = deliveries.filter((d) => {
     return (
@@ -73,6 +75,7 @@ function AdminDeliveryPage() {
             <th className="border p-2">Order ID</th>
             <th className="border p-2">Type</th>
             <th className="border p-2">Address</th>
+            <th className="border p-2">Phone Number</th>
             <th className="border p-2">Fee</th>
             <th className="border p-2">Status</th>
             <th className="border p-2">Action</th>
@@ -86,7 +89,12 @@ function AdminDeliveryPage() {
               <td className="border p-2">{order.orderId}</td>
               <td className="border p-2">{order.deliveryType}</td>
               <td className="border p-2">{order.address}</td>
-              <td className="border p-2">Rs. {order.deliveryFee || "0"}</td>
+              <td className="border p-2">{order.address}</td>
+              <td className="border p-2">
+                  {order.deliveryFee && order.deliveryFee !== 0 
+                  ? `Rs. ${order.deliveryFee}` 
+                  : 'Free'}
+              </td>
               <td className="border p-2">{order.status}</td>
               <td className="border p-2">
                 {order.status === "pending" ? (
