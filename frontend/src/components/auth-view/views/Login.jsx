@@ -106,7 +106,7 @@ const Login = () => {
       ))}
 
       {/* Main Content */}
-      <div className="relative z-10 min-h-screen flex flex-col">
+      <div className="relative z-10 min-h-screen flex flex-col ">
         {/* Header */}
         <header className="flex justify-between items-center p-6 w-full">
           <motion.div
@@ -123,25 +123,10 @@ const Login = () => {
               onClick={() => navigate('/')}
             />
           </motion.div>
-          
-          <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.5 }}
-            whileHover={{ scale: 1.05 }}
-          >
-            <Link 
-              to="/auth/sign-up" 
-              className="flex items-center gap-2 px-6 py-3 text-lg bg-white/10 backdrop-blur-md border border-white/20 text-white rounded-xl hover:bg-white/20 hover:border-white/30 transition-all shadow-lg"
-            >
-              <span>Sign Up</span>
-              <FiArrowRight className="text-lg" />
-            </Link>
-          </motion.div>
         </header>
 
         {/* Form Section */}
-        <div className="flex-grow flex items-center justify-center p-6">
+        <div className="flex-grow flex items-center justify-center p-6 -mt-16">
           <AnimatePresence>
             <motion.div
               initial={{ opacity: 0, y: 50, scale: 0.95 }}

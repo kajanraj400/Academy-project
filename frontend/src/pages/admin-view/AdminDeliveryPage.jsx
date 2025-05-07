@@ -7,6 +7,8 @@ function AdminDeliveryPage() {
   const [deliveries, setDeliveries] = useState([]);
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("");
+  const [userDetail, setUserDetail] = useState([]);
+
 
   useEffect(() => {
     axios.get("http://localhost:5000/deliveries").then((res) => {
@@ -27,9 +29,23 @@ function AdminDeliveryPage() {
     } catch (err) {
       console.error("Failed to update status", err);
     }
-  };
+  }; 
 
-  
+  useEffect(() => {
+    axios.get("http://localhost:5000/studentdeatiles")
+      .then((result) => { 
+        setUserDetail(result.data);
+
+        const enrichedDeliveries = deliveries.map(delivery => {
+          const user = userDetail.find(u => u.email === delivery.userId);
+          return user ? { ...delivery, phone: user.phone } : delivery;
+        });
+        
+        setDeliveries(enrichedDeliveries);
+      })
+      .catch((error) => console.error("Error fetching data:", error));
+  }, [deliveries]);
+
  
   const filtered = deliveries.filter((d) => {
     return (
@@ -89,7 +105,7 @@ function AdminDeliveryPage() {
               <td className="border p-2">{order.orderId}</td>
               <td className="border p-2">{order.deliveryType}</td>
               <td className="border p-2">{order.address}</td>
-              <td className="border p-2">{order.address}</td>
+              <td className="border p-2">{order.phone}</td>
               <td className="border p-2">
                   {order.deliveryFee && order.deliveryFee !== 0 
                   ? `Rs. ${order.deliveryFee}` 

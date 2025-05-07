@@ -214,11 +214,11 @@ const SearchBar = ({
       voiceButton: "from-blue-600 to-indigo-700",
       voiceButtonActive: "from-red-500 to-pink-600",
       cameraButton: "from-green-500 to-teal-600",
-      text: "text-white",
+      text: "text-black-300",
       placeholder: "placeholder-gray-400",
       ring: "ring-indigo-500",
       listeningBg: "bg-gray-800",
-      listeningText: "text-white",
+      listeningText: "text-black-300",
       listeningSubtext: "text-gray-300",
     },
   };

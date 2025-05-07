@@ -6,6 +6,8 @@ import Cookies from 'js-cookie';
 import axios from 'axios';
 import "./css/profile.css";
 import Swal from "sweetalert2";
+import { Bar } from 'react-chartjs-2';
+import { Chart as ChartJS } from 'chart.js/auto'; // Importing Chart.js
 
 const AdminviewProfile = () => {
   const navigate = useNavigate();
@@ -17,6 +19,7 @@ const AdminviewProfile = () => {
   const [event, setEvent] = useState([]);
   const [order, setOder] = useState([]);
   const [statusFilter, setStatusFilter] = useState(""); // 🔹 NEW: filter state
+  const [loading, setLoading] = useState(true);  // Loading state for data fetching
 
   useEffect(() => {
     axios.get("http://localhost:5000/getuserdeatiles", { params: { id } })
@@ -24,10 +27,14 @@ const AdminviewProfile = () => {
         setUser(result.data.user);
         setEvent(result.data.eventbooking);
         setOder(result.data.order);
-        console.log("Users:", result.data.user);
+        setLoading(false);  // Data loaded, stop the loading state
+       
       })
-      .catch((error) => console.error("Error fetching data:", error));
-  }, []);
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+        setLoading(false);  // Even if error occurs, stop loading
+      });
+  }, [id]);
 
   // 🔹 Filter utility function
   const filterByStatus = (data, status) => {
@@ -51,6 +58,61 @@ const AdminviewProfile = () => {
     }
   };
 
+  // 🔹 Graph Data Preparation
+const getStatusCounts = (data) => {
+  const counts = {
+    accepted: 0,
+    pending: 0,
+    processing: 0,
+    completed: 0,
+    canceled: 0,
+    rejected: 0
+  };
+
+  data.forEach((item) => {
+    const status = item.status.toLowerCase();
+    if (counts.hasOwnProperty(status)) {
+      counts[status]++;
+    }
+  });
+
+  return counts;
+};
+
+  const eventCounts = getStatusCounts(event);
+  const orderCounts = getStatusCounts(order);
+
+  console.log("Event count : " , eventCounts)
+  console.log("order count : " , orderCounts)
+
+  // 🔹 Chart Data
+  const chartData = {
+    labels: ['Accepted', 'Pending', 'Processing', 'Completed', 'Canceled', 'Rejected'],
+    datasets: [
+      {
+        label: 'Event Bookings',
+        data: Object.values(eventCounts),
+        backgroundColor: 'rgba(54, 162, 235, 0.2)',
+        borderColor: 'rgba(54, 162, 235, 1)',
+        borderWidth: 1,
+      },
+      {
+        label: 'Orders',
+        data: Object.values(orderCounts),
+        backgroundColor: 'rgba(255, 99, 132, 0.2)',
+        borderColor: 'rgba(255, 99, 132, 1)',
+        borderWidth: 1,
+      },
+    ],
+  };
+
+  // 🔹 Conditional Rendering for Loading
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  console.log("event:", event);
+
   return (
     <div className="profile-container" style={{ background: "linear-gradient(to right,rgba(51, 51, 51, 0.48),rgba(238, 238, 238, 0.81))" }}>
       <header className="profile-header">
@@ -71,25 +133,103 @@ const AdminviewProfile = () => {
             </h1>
           </div>
 
-          {/* 🔹 Status Filter Dropdown (Admin Only) */}
-          {userSession.user?.role === "admin" && (
-            <div style={{ marginBottom: "15px" }}>
-              <label htmlFor="statusFilter" style={{ color: "white", marginRight: "10px" }}>Filter by Status:</label>
-              <select
-                id="statusFilter"
-                value={statusFilter}
-                onChange={(e) => setStatusFilter(e.target.value)}
-              >
-                <option value="">All</option>
-                <option value="Accepted">Accepted</option>
-                <option value="Pending">Pending</option>
-                <option value="Processing">Processing</option>
-                <option value="Completed">Completed</option>
-                <option value="Canceled">Canceled</option>
-                <option value="Rejected">Rejected</option>
-              </select>
-            </div>
-          )}
+{/* 🔹 Chart Display for Events and Orders */}
+<div style={{ 
+  marginBottom: "30px", 
+  marginTop: "30px", 
+  textAlign: "center",
+  backgroundColor: "white",
+  padding: "20px",
+  borderRadius: "10px",
+  boxShadow: "0 4px 8px rgba(0,0,0,0.1)"
+}}>
+  <h2 style={{ 
+    color: "#2c3e50",
+    marginBottom: "20px",
+    fontWeight: "600"
+  }}>
+    Event & Order Status
+  </h2>
+  
+  <div className="chart-container" style={{ 
+    width: '100%', 
+    height: '300px',
+    position: 'relative'
+  }}>
+    <Bar 
+      data={chartData}
+      options={{
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            position: 'top',
+            labels: {
+              color: '#2c3e50',
+              font: {
+                size: 14,
+                weight: '500'
+              },
+              padding: 20
+            }
+          },
+          tooltip: {
+            backgroundColor: 'rgba(0,0,0,0.8)',
+            titleColor: '#ffffff',
+            bodyColor: '#ffffff'
+          }
+        },
+        scales: {
+          x: {
+            grid: {
+              display: false
+            },
+            ticks: {
+              color: '#2c3e50',
+              font: {
+                size: 12
+              }
+            }
+          },
+          y: {
+            grid: {
+              color: 'rgba(0,0,0,0.05)'
+            },
+            ticks: {
+              color: '#2c3e50',
+              font: {
+                size: 12
+              },
+              precision: 0
+            }
+          }
+        },
+        elements: {
+          bar: {
+            borderRadius: 4
+          }
+        }
+      }}
+    />
+  </div>
+</div>
+
+
+          <div style={{ marginBottom: 15, background: "#fff", padding: 10, borderRadius: 5, display: "inline-flex", alignItems: "center", maxWidth: 300 }}>
+            <label htmlFor="statusFilter" style={{ color: "#000", marginRight: 10, fontWeight: "bold", whiteSpace: "nowrap" }}>Filter by Status:</label>
+            <select id="statusFilter" value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)} style={{ width: 120, padding: 5, borderRadius: 4 }}>
+              <option value="">All</option>
+              <option value="Accepted">Accepted</option>
+              <option value="Pending">Pending</option>
+              <option value="Processing">Processing</option>
+              <option value="Completed">Completed</option>
+              <option value="Canceled">Canceled</option>
+              <option value="Rejected">Rejected</option>
+            </select>
+          </div>
+
+
+        
 
           <h2 style={{ color: "white" }}>Event Photography</h2>
           <div className="table-wrapper">
@@ -142,7 +282,7 @@ const AdminviewProfile = () => {
               <tbody>
                 {Array.isArray(order) && filterByStatus(order, statusFilter).length === 0 ? (
                   <tr>
-                    <td colSpan="2" style={{ textAlign: 'center', color: 'red' }}>
+                    <td colSpan="2" style={{ textAlign: 'center', color: 'red' }} >
                       No orders found
                     </td>
                   </tr>

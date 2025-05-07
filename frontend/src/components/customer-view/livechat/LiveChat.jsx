@@ -55,8 +55,8 @@ function LiveChat() {
     const formData = new FormData();
     formData.append("file", file);
     formData.append("sender", "user");
-    formData.append("userId", userId);
-
+    formData.append("userId", userId); 
+ 
     try {
       const res = await axios.post("http://localhost:5000/chat/upload", formData);
       console.log("✅ File uploaded:", res.data);

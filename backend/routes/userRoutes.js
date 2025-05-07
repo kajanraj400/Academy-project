@@ -15,7 +15,7 @@ router.post('/addAdmin', addAdmin);
 router.get('/displayadmin',displayadmin)
 router.post('/updateprofile',updateprofile)
 
-
+ 
 router.post('/checkregister',checkregister) 
 router.post('/send-otp',SentOTP)
 router.post('/send-otpchangepassword',sendotpchangepassword)
@@ -26,5 +26,5 @@ router.post('/adduser', adduser);
 router.post('/checkupdateuserpw',checkupdateuserpw)
 //------------------------------------------------//
 
-
+ 
 module.exports = router; 
