@@ -324,7 +324,7 @@ function AdminChat() {
                   <input type="file" onChange={handleFileChange} className="hidden" />
                 </label>
                 
-                <VoiceRecorder sender="admin" userId={selectedUser} />
+                {/* <VoiceRecorder sender="admin" userId={selectedUser} /> */}
                 
                 <div className="flex-1 relative">
                   <input

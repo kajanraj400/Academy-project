@@ -24,6 +24,7 @@ import {
   CartesianGrid,
   LabelList,
   Cell,
+  ReferenceLine,
 } from "recharts";
 import { useNavigate } from "react-router-dom";
 import { debounce } from "lodash";
@@ -339,62 +340,134 @@ const ProductTable = React.forwardRef(
 
 const DailySalesChart = React.forwardRef(
   ({ data, productName, size, onClearSelection }, ref) => {
-    if (!data || data.length === 0) {
+    // Process data to include week information
+    const chartData = useMemo(() => {
+      if (!data || data.length === 0) return [];
+
+      return data.map((item) => ({
+        ...item,
+        dayName: item.dayName || format(new Date(item.date), "EEE"),
+        fullDayName: item.fullDayName || format(new Date(item.date), "EEEE"),
+        weekNumber: `Week ${
+          item.week || Math.ceil(new Date(item.date).getDate() / 7)
+        }`,
+      }));
+    }, [data]);
+
+    // Calculate statistics
+    const totalSales = chartData.reduce(
+      (sum, day) => sum + (day.sales || 0),
+      0
+    );
+    const averageSales = chartData.length ? totalSales / chartData.length : 0;
+    const bestDay = chartData.reduce(
+      (max, day) => (day.sales > max.sales ? day : max),
+      { sales: 0, fullDayName: "N/A" }
+    );
+
+    if (chartData.length === 0) {
       return (
-        <div
-          ref={ref}
-          className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm"
-        >
-          <p className="text-gray-500">No daily sales data available</p>
+        <div ref={ref} className="bg-white p-4 rounded-lg border shadow">
+          <p>No sales data available</p>
         </div>
       );
     }
 
     return (
-      <div
-        ref={ref}
-        className="bg-white p-6 rounded-xl border border-gray-200 shadow-lg"
-      >
+      <div ref={ref} className="bg-white p-4 rounded-lg border shadow-lg">
         <div className="flex justify-between items-center mb-4">
-          <h3 className="text-xl font-semibold text-gray-800">
-            Daily Sales for {productName} ({size})
-          </h3>
+          <div>
+            <h3 className="text-lg font-bold">
+              {productName} ({size}) - Daily Sales(Quantity)
+            </h3>
+            <p className="text-sm text-gray-600">{totalSales} total units</p>
+          </div>
           <button
             onClick={onClearSelection}
-            className="px-3 py-1 bg-gray-200 text-gray-700 rounded hover:bg-gray-300 transition-colors"
+            className="px-3 py-1 bg-red-500 text-white rounded"
           >
-            Clear Selection
+            X
           </button>
         </div>
+
         <div className="h-64">
           <ResponsiveContainer width="100%" height="100%">
             <BarChart
-              data={data}
-              margin={{ top: 20, right: 30, left: 20, bottom: 60 }}
+              data={chartData}
+              margin={{ top: 30, right: 30, left: 20, bottom: 60 }}
             >
-              <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-              <XAxis dataKey="dayName" tick={{ fontSize: 12 }} />
-              <YAxis tick={{ fontSize: 12 }} />
+              <CartesianGrid strokeDasharray="3 3" />
+
+              {/* Week labels on top */}
+              <XAxis
+                dataKey="weekNumber"
+                xAxisId="week"
+                orientation="top"
+                height={20}
+                tick={{ fontSize: 12 }}
+                axisLine={false}
+                tickLine={false}
+              />
+
+              {/* Day labels on bottom */}
+              <XAxis dataKey="dayName" axisLine={false} tickLine={false} />
+
+              <YAxis
+                label={{ value: "Units", angle: -90, position: "insideLeft" }}
+              />
+
               <Tooltip
                 formatter={(value) => [`${value} units`, "Quantity"]}
-                contentStyle={{
-                  background: "#ffffff",
-                  borderRadius: "8px",
-                  boxShadow: "0 2px 10px rgba(0,0,0,0.1)",
-                  border: "none",
-                }}
+                labelFormatter={(day) =>
+                  chartData.find((d) => d.dayName === day)?.fullDayName || day
+                }
               />
-              <Legend />
+
               <Bar
                 dataKey="sales"
                 name="Daily Sales"
-                fill="#8884d8"
-                radius={[4, 4, 0, 0]}
+                fill="#22c55e" // bg-green-600
               >
-                <LabelList dataKey="sales" position="top" />
+                {chartData.map((entry, index) => (
+                  <Cell
+                    key={`cell-${index}`}
+                    fill={
+                      ["Sat", "Sun"].includes(entry.dayName)
+                        ? "#22c55e"
+                        : "#22c55e"
+                    }
+                  />
+                ))}
               </Bar>
+
+              <ReferenceLine
+                y={averageSales}
+                stroke="#ef4444"
+                strokeDasharray="3 3"
+                label={{
+                  value: `Avg: ${averageSales.toFixed(1)}`,
+                  position: "right",
+                  fill: "#ef4444",
+                  fontSize: 10,
+                }}
+              />
             </BarChart>
           </ResponsiveContainer>
+        </div>
+
+        <div className="grid grid-cols-2 gap-4 mt-4 text-sm">
+          <div className="bg-blue-50 p-2 rounded">
+            <div className="text-blue-800 font-medium">Total Sold</div>
+            <div className="font-bold">{totalSales} units</div>
+          </div>
+          <div className="bg-purple-50 p-2 rounded">
+            <div className="text-purple-800 font-medium">Best Day</div>
+            <div className="font-bold">{bestDay.fullDayName}</div>
+          </div>
+          {/* <div className="bg-green-50 p-2 rounded">
+            <div className="text-green-800 font-medium">Average/Day</div>
+            <div className="font-bold">{averageSales.toFixed(1)} units</div>
+          </div> */}
         </div>
       </div>
     );
@@ -438,6 +511,7 @@ const MonthlyProductReport = () => {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       const data = await response.json();
+      //console.log(data); 
       const completedOrders = data.filter(
         (order) => order.status === "Completed"
       );
@@ -463,6 +537,8 @@ const MonthlyProductReport = () => {
       const year = getYear(date);
       const monthYear = format(date, "MMMM yyyy");
       const monthOnly = format(date, "MMMM");
+        const dayName = format(date, "EEEE");
+        console.log(dayName);
       years.add(year);
 
       if (!grouped[year]) grouped[year] = {};
@@ -539,41 +615,70 @@ const MonthlyProductReport = () => {
   }, [selectedYear, selectedMonth, groupedByYearMonth]);
 
   useEffect(() => {
-    if (!selectedProduct || !selectedMonth || !selectedYear) return;
-
-    const monthData =
-      groupedByYearMonth[selectedYear]?.[selectedMonth]?.items || [];
-    const productData = monthData.filter(
-      (item) =>
-        item.productName === selectedProduct.productName &&
-        item.size === selectedProduct.size
-    );
-
-    if (productData.length === 0) {
+    if (!selectedProduct || !selectedMonth || !selectedYear) {
       setDailySalesData([]);
       return;
     }
 
-    const monthDate = parseISO(productData[0].date);
-    const startDate = startOfMonth(monthDate);
-    const endDate = endOfMonth(monthDate);
-    const daysInMonth = eachDayOfInterval({ start: startDate, end: endDate });
+    // 1. Filter orders for the selected month/year
+    const monthOrders = orders.filter((order) => {
+      const orderDate = parseISO(order.orderDate);
+      return (
+        order.status === "Completed" &&
+        getYear(orderDate) === selectedYear &&
+        format(orderDate, "MMMM yyyy") === selectedMonth
+      );
+    });
 
-    const dailyData = daysInMonth.map((day) => {
+    // 2. Get date range for the month
+    const monthStart =
+      monthOrders.length > 0
+        ? startOfMonth(parseISO(monthOrders[0].orderDate))
+        : startOfMonth(
+            new Date(
+              selectedYear,
+              new Date(selectedMonth + " 1, " + selectedYear).getMonth(),
+              1
+            )
+          );
+    const monthEnd = endOfMonth(monthStart);
+    const daysInMonth = eachDayOfInterval({ start: monthStart, end: monthEnd });
+
+    // 3. Aggregate sales by day
+    const dailySales = daysInMonth.map((day) => {
       const dayStr = format(day, "yyyy-MM-dd");
-      const salesOnDay = productData
-        .filter((item) => format(parseISO(item.date), "yyyy-MM-dd") === dayStr)
-        .reduce((sum, item) => sum + item.quantity, 0);
+      let daySales = 0;
+
+      monthOrders.forEach((order) => {
+        if (format(parseISO(order.orderDate), "yyyy-MM-dd") === dayStr) {
+          order.items.forEach((item) => {
+            if (
+              item.productName === selectedProduct.productName &&
+              item.size === selectedProduct.size
+            ) {
+              daySales += item.quantity;
+            }
+          });
+        }
+      });
 
       return {
         date: dayStr,
-        sales: salesOnDay,
+        sales: daySales,
         dayName: format(day, "EEE"),
+        fullDayName: format(day, "EEEE"),
       };
     });
 
-    setDailySalesData(dailyData);
-  }, [selectedProduct, selectedMonth, selectedYear, groupedByYearMonth]);
+    // 4. Calculate and verify total
+    const calculatedTotal = dailySales.reduce((sum, day) => sum + day.sales, 0);
+    console.log(
+      `Calculated total for ${selectedProduct.productName}:`,
+      calculatedTotal
+    );
+
+    setDailySalesData(dailySales);
+  }, [selectedProduct, selectedMonth, selectedYear, orders]);
 
   useEffect(() => {
     setAnalysis(null);
@@ -864,10 +969,44 @@ const MonthlyProductReport = () => {
 
   if (isLoading) {
     return (
-      <div className="max-w-7xl mx-auto p-6 min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <Spinner />
-          <p className="mt-4 text-lg text-gray-600">Loading order data...</p>
+      <div className="relative max-w-7xl mx-auto p-6 min-h-screen flex items-center justify-center overflow-hidden bg-white dark:bg-gray-900">
+        {/* Background with built-in pulse animation */}
+        <div className="absolute inset-0 bg-gradient-to-r from-blue-300/30 via-purple-300/30 to-pink-300/30 animate-pulse opacity-30 blur-2xl z-0" />
+
+        {/* Foreground content */}
+        <div className="relative text-center z-10 space-y-6">
+          {/* Spinner using built-in spin animation */}
+          <div className="relative inline-flex justify-center items-center">
+            <div className="w-16 h-16 rounded-full border-4 border-blue-200/50 dark:border-gray-700/50" />
+            <div className="absolute w-16 h-16 rounded-full border-4 border-transparent border-t-blue-500 border-r-blue-500 animate-spin" />
+            <div className="absolute w-20 h-20 rounded-full border-2 border-blue-400/20 dark:border-gray-600/20 animate-ping" />
+          </div>
+
+          {/* Text with animated dots using delay utilities */}
+          <div className="space-y-2">
+            <p className="text-lg font-medium text-gray-700 dark:text-gray-300">
+              Loading order data
+              <span className="inline-flex ml-1">
+                <span className="opacity-0 animate-[fadeIn_0.5s_ease-in-out_forwards_0.3s]">
+                  .
+                </span>
+                <span className="opacity-0 animate-[fadeIn_0.5s_ease-in-out_forwards_0.6s]">
+                  .
+                </span>
+                <span className="opacity-0 animate-[fadeIn_0.5s_ease-in-out_forwards_0.9s]">
+                  .
+                </span>
+              </span>
+            </p>
+            <p className="text-sm text-gray-500 dark:text-gray-400 animate-pulse">
+              Please wait while we process your request
+            </p>
+          </div>
+
+          {/* Progress bar using built-in pulse animation */}
+          <div className="w-48 mx-auto h-1.5 bg-gray-200 dark:bg-gray-800 rounded-full overflow-hidden">
+            <div className="h-full bg-gradient-to-r from-blue-500 to-purple-500 w-full animate-pulse duration-2000" />
+          </div>
         </div>
       </div>
     );
@@ -994,7 +1133,7 @@ const MonthlyProductReport = () => {
                     <path
                       fillRule="evenodd"
                       d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z"
-                      clipRule="evenodd" 
+                      clipRule="evenodd"
                     />
                   </svg>
                   Download PDF
@@ -1098,48 +1237,13 @@ const MonthlyProductReport = () => {
 
         {selectedProduct && (
           <div className="mb-8 bg-white p-6 rounded-xl border border-gray-200 shadow-lg">
-            <div className="flex justify-between items-center mb-4">
-              <h3 className="text-xl font-semibold text-gray-800">
-                Daily Sales for {selectedProduct.productName} (
-                {selectedProduct.size})
-              </h3>
-              <button
-                onClick={handleClearSelection}
-                className="px-3 py-1 bg-gray-200 text-gray-700 rounded hover:bg-gray-300 transition-colors"
-              >
-                Clear Selection
-              </button>
-            </div>
-            <div className="h-64">
-              <ResponsiveContainer width="100%" height="100%">
-                <BarChart
-                  data={dailySalesData}
-                  margin={{ top: 20, right: 30, left: 20, bottom: 60 }}
-                >
-                  <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-                  <XAxis dataKey="dayName" tick={{ fontSize: 12 }} />
-                  <YAxis tick={{ fontSize: 12 }} />
-                  <Tooltip
-                    formatter={(value) => [`${value} units`, "Quantity"]}
-                    contentStyle={{
-                      background: "#ffffff",
-                      borderRadius: "8px",
-                      boxShadow: "0 2px 10px rgba(0,0,0,0.1)",
-                      border: "none",
-                    }}
-                  />
-                  <Legend />
-                  <Bar
-                    dataKey="sales"
-                    name="Daily Sales"
-                    fill="#8884d8"
-                    radius={[4, 4, 0, 0]}
-                  >
-                    <LabelList dataKey="sales" position="top" />
-                  </Bar>
-                </BarChart>
-              </ResponsiveContainer>
-            </div>
+            <DailySalesChart
+              ref={chartRef} 
+              data={dailySalesData}
+              productName={selectedProduct.productName}
+              size={selectedProduct.size}
+              onClearSelection={handleClearSelection}
+            />
           </div>
         )}
 

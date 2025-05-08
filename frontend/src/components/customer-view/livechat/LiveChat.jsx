@@ -193,7 +193,7 @@ function LiveChat() {
                 </svg>
               </button>
             </div>
-          )}
+          )} 
           
           <div className="flex items-center">
             <label className="p-2 rounded-full hover:bg-gray-100 cursor-pointer text-blue-600">
