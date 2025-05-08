@@ -348,14 +348,14 @@ const GalleryPage = () => {
       {view === "videos" && (
         <div className="buttons flex justify-between mt-4">
           <button
-            className="prev p-2 bg-gray-200 rounded hover:bg-gray-300"
+            className="prev p-2 bg-black rounded hover:bg-gray-300"
             onClick={() => handlePrev("video")}
             disabled={isDeleting}
           >
             <FontAwesomeIcon icon={faArrowLeft} />
           </button>
           <button
-            className="next p-2 bg-gray-200 rounded hover:bg-gray-300"
+            className="next p-2 bg-black rounded hover:bg-gray-300"
             onClick={() => handleNext("video")}
             disabled={isDeleting}
           >

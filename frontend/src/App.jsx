@@ -60,124 +60,118 @@ import ChangePassword from "./components/admin-view/userManagement/ChangePasswor
 import CompareOrderReport from "./pages/admin-view/order/CompareOrderReport";
 import OrderReport from "./pages/admin-view/order/OrderReport";
 import FaqAndFeedbackReport from "./pages/admin-view/customer-relationship/FaqAndFeedbackReport";
-
-
+import DeliveryReport from "./pages/admin-view/DeliveryReport";
+import UserManagementReport from "./components/admin-view/userManagement/UserManagementReport";
 
 function App() {
     return (
-        <>
-            <RouteGuard />
-           <Routes>
-                <Route path='/' element={<WelcomePage />} />
+      <>
+        <RouteGuard />
+        <Routes>
+          <Route path="/" element={<WelcomePage />} />
 
-                <Route path="/auth" element={<Layout />}>
-                    <Route path="login" element={<Login />} />
-                    <Route path="sign-up" element={<Signup />} />
-                    <Route path="forgot-password" element={<Forgotpassword />} />
-                    <Route path="otp" element={<OTP />} />
-                </Route>
+          <Route path="/auth" element={<Layout />}>
+            <Route path="login" element={<Login />} />
+            <Route path="sign-up" element={<Signup />} />
+            <Route path="forgot-password" element={<Forgotpassword />} />
+            <Route path="otp" element={<OTP />} />
+          </Route>
 
-                <Route path='/client' element={<ClientLayout />}>
-                    <Route path='home' element={<Home />} />
-                    <Route path='blog' element={<Blog />} />
-                    <Route path='products' element={<ItemList />} />
-                    <Route path='contact' element={<FeedBack />} />
-                    <Route path='package' element={<Packages />} />
-                    <Route path="/client/liveChat" element={<LiveChat />} /> 
-                </Route>
-                <Route path='/client' element={<ColorSetUp />}>
-                    <Route path='/client/DisplayOldFullEvent/:id' element={<DisplayOldFullEvent />} />
-                    <Route path="/client/cart" element={<OGcart />} /> 
-                    <Route path="/client/design" element={<Design />} />
-                    <Route path="/client/terms" element={<Terms />} />
-                    <Route path="/client/payment" element={<Payment />} />
-                    <Route path="/client/preview-order" element={<PreviewOrder />} />
-                    <Route path="/client/my-orders" element={<MyOrders />} />
-                    <Route path="/client/detailedMyOrders/:id" element={<DetailedMyOrders />} />
-                    <Route path="/client/profile" element={<Profile />} />
-                    <Route path="/client/feedback" element={<FeedBack />} />
-                    <Route path="/client/updateprofile" element={<ProfileUpdate />} />
-                    <Route path="/client/faq" element={<ClientFAQ />} />
-                    <Route path="/client/delivery" element={<DeliveryMethodPage />} />
-                    <Route path="/client/myBookings" element={<MyBookings />} /> 
-                    <Route path="/client/changepassword" element={<ChangePassword />} />
-                </Route>
-                
+          <Route path="/client" element={<ClientLayout />}>
+            <Route path="home" element={<Home />} />
+            <Route path="blog" element={<Blog />} />
+            <Route path="products" element={<ItemList />} />
+            <Route path="contact" element={<FeedBack />} />
+            <Route path="package" element={<Packages />} />
+            <Route path="/client/liveChat" element={<LiveChat />} />
+          </Route>
+          <Route path="/client" element={<ColorSetUp />}>
+            <Route
+              path="/client/DisplayOldFullEvent/:id"
+              element={<DisplayOldFullEvent />}
+            />
+            <Route path="/client/cart" element={<OGcart />} />
+            <Route path="/client/design" element={<Design />} />
+            <Route path="/client/terms" element={<Terms />} />
+            <Route path="/client/payment" element={<Payment />} />
+            <Route path="/client/preview-order" element={<PreviewOrder />} />
+            <Route path="/client/my-orders" element={<MyOrders />} />
+            <Route
+              path="/client/detailedMyOrders/:id"
+              element={<DetailedMyOrders />}
+            />
+            <Route path="/client/profile" element={<Profile />} />
+            <Route path="/client/feedback" element={<FeedBack />} />
+            <Route path="/client/updateprofile" element={<ProfileUpdate />} />
+            <Route path="/client/faq" element={<ClientFAQ />} />
+            <Route path="/client/delivery" element={<DeliveryMethodPage />} />
+            <Route path="/client/myBookings" element={<MyBookings />} />
+            <Route path="/client/changepassword" element={<ChangePassword />} />
+          </Route>
 
- 
-                <Route path='/admin' element={<AdminLayout />}>
-                    <Route path="dashboard" element={<AdminDashboard />} />
+          <Route path="/admin" element={<AdminLayout />}>
+            <Route path="dashboard" element={<AdminDashboard />} />
+            {/*  Blog Management Routes  */}
+            <Route path="oldEventUpload" element={<OldEventUploadPage />} />
+            <Route path="oldEventDelete" element={<DisplayOldEvents />} />
+            {/*  Booking Management Routes  */}
+            <Route path="upcomingEvents" element={<UpComingEvent />} />
+            <Route path="eventBookings" element={<EventBooking />} />
+            <Route path="bookingsReport" element={<BookingReport />} />
+            <Route path="booking-analytics" element={<BookingAnalytics />} />
+            {/* Package Management Routes */}
+            <Route path="newPackages" element={<AddPackages />} />
+            <Route path="deletePackages" element={<DeletePackages />} />
+            {/*  User Management Routes  */}
+            <Route
+              path="UserManagementReport"
+              element={<UserManagementReport />}
+            />
+            <Route path="delet-user" element={<DeleteUser />} />
+            <Route path="adddAdmin" element={<AddAdmin />} />
+            <Route path="profile" element={<Profile />} />
+            <Route path="updateprofile" element={<ProfileUpdate />} />
+            <Route path="userdetails/:id" element={<AdminviewProfile />} />
+            {/*  Gallery Page Routes  */}
+            <Route path="gallery" element={<Gallery />} />
+            <Route path="uploadPage" element={<UploadPage />} />
+            {/*  Inventory Management Routes  */}
+            <Route path="inventory" element={<Stock />} />
+            <Route path="create-product" element={<ListForm />} />{" "}
+            <Route path="product-list" element={<ItemList />} />{" "}
+            {/*  Order Management Routes  */}
+            <Route path="placedOrders" element={<PlacedOrders />} />
+            <Route path="deletedOrders" element={<DeletedOrders />} />
+            <Route path="OrderReport" element={<OrderReport />} />
+            <Route path="compareOrderReport" element={<CompareOrderReport />} />
+            {/*  Delivery Management Routes  */}
+            <Route path="deliveryReport" element={<DeliveryReport />} />
+            <Route path="delivery" element={<AdminDeliveryPage />} />
+            <Route path="feedback" element={<FeedbackList />} />
+            <Route path="faq" element={<AdminFAQPage />} />
+            <Route
+              path="FaqAndFeedbackReport"
+              element={<FaqAndFeedbackReport />}
+            />
+            <Route path="liveChat" element={<AdminChat />} />
+          </Route>
+          <Route
+            path="/admin/DisplayOldFullEvent/:id"
+            element={<DisplayOldFullEventAdmin />}
+          />
+          <Route
+            path="/admin/detailedOrder/:id"
+            element={<DetailedOrderPage />}
+          />
 
+          <Route path="/common/contact" element={<ContactPage />} />
+          <Route path="/common/blog" element={<BlogHome />} />
 
-                    {/*  Blog Management Routes  */}
-                    <Route path='oldEventUpload' element={<OldEventUploadPage />} />
-                    <Route path='oldEventDelete' element={<DisplayOldEvents />} />
-
-
-                    {/*  Booking Management Routes  */}
-                    <Route path="upcomingEvents" element={<UpComingEvent />} />
-                    <Route path="eventBookings" element={<EventBooking />} />
-                    <Route path="bookingsReport" element={<BookingReport />} />
-                    <Route path="booking-analytics" element={<BookingAnalytics />} />
-
-
-                    {/* Package Management Routes */}
-                    <Route path="newPackages" element={<AddPackages />} />
-                    <Route path="deletePackages" element={<DeletePackages />} />
-
-
-                    {/*  User Management Routes  */}
-                    <Route path="delet-user" element={<DeleteUser />} />
-                    <Route path="adddAdmin" element={<AddAdmin />} />
-                    <Route path="profile" element={<Profile/>}/>
-                    <Route path="updateprofile" element={<ProfileUpdate />}/>
-                    <Route path="userdetails/:id" element={<AdminviewProfile />}/>
-
-
-                    {/*  Gallery Page Routes  */}
-                    <Route path='gallery' element={<Gallery />} />
-                    <Route path="uploadPage" element={<UploadPage />} />
-
-
-
-                    {/*  Inventory Management Routes  */}
-                    <Route path="inventory" element={<Stock />} />
-                    <Route path="create-product" element={<ListForm />} />{" "}
-                    <Route path="product-list" element={<ItemList />} />{" "}
-
-
-
-                    {/*  Order Management Routes  */}
-                    <Route path="placedOrders" element={<PlacedOrders />} />
-                    <Route path="deletedOrders" element={<DeletedOrders />} />
-                    <Route path="OrderReport" element={<OrderReport /> } />
-                    <Route path="compareOrderReport" element={<CompareOrderReport />} />
-
-
-                    <Route path="delivery" element={<AdminDeliveryPage />} />
-                    <Route path="feedback" element={<FeedbackList />} /> 
-                    <Route path="faq" element={<AdminFAQPage />} />
-                    <Route path="FaqAndFeedbackReport" element={<FaqAndFeedbackReport />} />
-
-                    <Route path="liveChat" element={<AdminChat />} />
-                    
-                </Route>
-                <Route path='/admin/DisplayOldFullEvent/:id' element={<DisplayOldFullEventAdmin />} />
-                <Route path="/admin/detailedOrder/:id" element={<DetailedOrderPage />} />
-
-
-                <Route path="/common/contact" element={<ContactPage />} />
-                <Route path="/common/blog" element={<BlogHome />} />
-
-
-
-
-
-                <Route path="*" element={<NotFound />} />
-                <Route path="/unauth-page" element={<UnauthPage />} />
-            </Routes>
-        </>
-    )
+          <Route path="*" element={<NotFound />} />
+          <Route path="/unauth-page" element={<UnauthPage />} />
+        </Routes>
+      </>
+    );
 }
 
 export default App;

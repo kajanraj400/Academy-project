@@ -160,12 +160,14 @@ export default function CompareOrderReport() {
     setSummaryReport(report);
   };
 
+
   const generateInsights = () => {
     setProcessing(true);
     
     setTimeout(() => {
       const insights = [];
       
+      // Compare current year with previous yea
       if (availableYears.length >= 2) {
         const currentYear = availableYears[0];
         const prevYear = availableYears[1];
@@ -182,6 +184,7 @@ export default function CompareOrderReport() {
         }
       }
 
+      // Get the best month for the selected year and data type
       if (compareMode === 'months-same-year' && selectedYears.length === 1) {
         const year = selectedYears[0];
         const monthsData = Object.entries(yearsData[year])
@@ -197,6 +200,7 @@ export default function CompareOrderReport() {
         }
       }
 
+      // Calculate the seasonal trend
       if (compareMode === 'years' && selectedYears.length >= 2) {
         const seasonalPatterns = months.map(month => {
           const avg = selectedYears.reduce((sum, year) => sum + (yearsData[year]?.[month]?.[dataType] || 0), 0) / selectedYears.length;
@@ -219,6 +223,7 @@ export default function CompareOrderReport() {
       setProcessing(false);
     }, 1500);
   };
+
 
   // Effects
   useEffect(() => {

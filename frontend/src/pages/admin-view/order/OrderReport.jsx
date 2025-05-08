@@ -91,7 +91,7 @@ const ExclamationIcon = () => (
 const AnalysisResults = React.forwardRef(({ analysis, summary }, ref) => {
   if (!analysis) return null;
 
-  const convertedAnalysis = analysis.replace(/\$\s*(\d+)/g, "Rs $1");
+  const convertedAnalysis = analysis.replace(/\$\s*(\d+)/g, "Rs 1");
   const sections = convertedAnalysis
     .split("\n\n")
     .filter((section) => section.trim());
@@ -378,13 +378,13 @@ const DailySalesChart = React.forwardRef(
         <div className="flex justify-between items-center mb-4">
           <div>
             <h3 className="text-lg font-bold">
-              {productName} ({size}) - Daily Sales(Quantity)
+              {productName} ({size}) - Daily Sales (Quantity)
             </h3>
             <p className="text-sm text-gray-600">{totalSales} total units</p>
           </div>
           <button
             onClick={onClearSelection}
-            className="px-3 py-1 bg-red-500 text-white rounded"
+            className="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 transition-colors"
           >
             X
           </button>
@@ -395,6 +395,7 @@ const DailySalesChart = React.forwardRef(
             <BarChart
               data={chartData}
               margin={{ top: 30, right: 30, left: 20, bottom: 60 }}
+              barCategoryGap={5}
             >
               <CartesianGrid strokeDasharray="3 3" />
 
@@ -410,7 +411,16 @@ const DailySalesChart = React.forwardRef(
               />
 
               {/* Day labels on bottom */}
-              <XAxis dataKey="dayName" axisLine={false} tickLine={false} />
+              <XAxis
+                dataKey="dayName"
+                axisLine={false}
+                tickLine={false}
+                interval={0}
+                tick={{ fontSize: 10 }}
+                angle={-45}
+                textAnchor="end"
+                height={40}
+              />
 
               <YAxis
                 label={{ value: "Units", angle: -90, position: "insideLeft" }}
@@ -426,18 +436,29 @@ const DailySalesChart = React.forwardRef(
               <Bar
                 dataKey="sales"
                 name="Daily Sales"
-                fill="#22c55e" // bg-green-600
+                fill="#22c55e"
+                barSize={20}
               >
                 {chartData.map((entry, index) => (
                   <Cell
                     key={`cell-${index}`}
                     fill={
                       ["Sat", "Sun"].includes(entry.dayName)
-                        ? "#22c55e"
-                        : "#22c55e"
+                        ? "#16a34a" // Darker green for weekends
+                        : "#22c55e" // Standard green for weekdays
                     }
                   />
                 ))}
+
+                {/* Quantity labels above bars (excluding zero values) */}
+                <LabelList
+                  dataKey="sales"
+                  position="top"
+                  formatter={(value) => (value > 0 ? value : null)}
+                  fill="#000"
+                  fontSize={10}
+                  offset={5}
+                />
               </Bar>
 
               <ReferenceLine
@@ -464,10 +485,6 @@ const DailySalesChart = React.forwardRef(
             <div className="text-purple-800 font-medium">Best Day</div>
             <div className="font-bold">{bestDay.fullDayName}</div>
           </div>
-          {/* <div className="bg-green-50 p-2 rounded">
-            <div className="text-green-800 font-medium">Average/Day</div>
-            <div className="font-bold">{averageSales.toFixed(1)} units</div>
-          </div> */}
         </div>
       </div>
     );

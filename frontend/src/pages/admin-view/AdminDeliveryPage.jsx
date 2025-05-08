@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { MapContainer, TileLayer, Marker } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
+import { Link } from "react-router-dom";
 
 function AdminDeliveryPage() {
   const [deliveries, setDeliveries] = useState([]);
@@ -60,6 +61,14 @@ function AdminDeliveryPage() {
           <h1 className="text-white text-xl font-bold">
             📦 Delivery Management
           </h1>
+          <h1 className="text-white text-xl font-bold">
+            <Link
+              to="/admin/deliveryReport"
+              className="text-white hover:text-gray-200"
+            >
+              Delivery Report
+            </Link>
+          </h1>
           <div className="space-x-6 flex items-center"></div>
         </div>
       </div>
@@ -100,61 +109,64 @@ function AdminDeliveryPage() {
           </thead>
           <tbody>
             {filtered.map((order, i) => (
-               <>
-              {order.deliveryType === "Online Delivery" && (
-              <tr
-                key={i}
-                className="text-center bg-white border-blue-200 border-2"
-              >
-                <td className="border p-2">{order.userId}</td>
-                <td className="border p-2">{order.orderId}</td>
-                <td className="border p-2">{order.address}</td>
-                <td className="border p-2">{order.phone}</td>
-                <td className="border p-2">
-                  {order.deliveryFee && order.deliveryFee !== 0
-                    ? `Rs. ${order.deliveryFee}`
-                    : "Free" }
-                </td>
-                <td className="border p-2">{order.status}</td>
-                <td className="border p-2">
-                  {order.status === "pending" ? (
-                    <button
-                      onClick={() => updateStatus(order._id, "delivered")}
-                      className="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded"
-                    >
-                      Mark Delivered
-                    </button>
-                  ) : (
-                    <span className="text-green-700 font-semibold">
-                      Delivered
-                    </span>
-                  )}
-                </td>
-                <td className="border p-2">
-                  {order.location?.lat && order.location?.lng ? (
-                    <div style={{ overflow: "auto" }}>
-                      <MapContainer
-                        center={[order.location.lat, order.location.lng]}
-                        zoom={13}
-                        scrollWheelZoom={false}
-                        style={{
-                          height: "250px",
-                          width: "300px",
-                          borderRadius: "10px",
-                        }}
-                      >
-                        <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-                        <Marker
-                          position={[order.location.lat, order.location.lng]}
-                        />
-                      </MapContainer>
-                    </div>
-                  ) : (
-                    <span>—</span>
-                  )}
-                </td>
-              </tr>
-              )}
+              <>
+                {order.deliveryType === "Online Delivery" && (
+                  <tr
+                    key={i}
+                    className="text-center bg-white border-blue-200 border-2"
+                  >
+                    <td className="border p-2">{order.userId}</td>
+                    <td className="border p-2">{order.orderId}</td>
+                    <td className="border p-2">{order.address}</td>
+                    <td className="border p-2">{order.phone}</td>
+                    <td className="border p-2">
+                      {order.deliveryFee && order.deliveryFee !== 0
+                        ? `Rs. ${order.deliveryFee}`
+                        : "Free"}
+                    </td>
+                    <td className="border p-2">{order.status}</td>
+                    <td className="border p-2">
+                      {order.status === "pending" ? (
+                        <button
+                          onClick={() => updateStatus(order._id, "delivered")}
+                          className="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded"
+                        >
+                          Mark Delivered
+                        </button>
+                      ) : (
+                        <span className="text-green-700 font-semibold">
+                          Delivered
+                        </span>
+                      )}
+                    </td>
+                    <td className="border p-2">
+                      {order.location?.lat && order.location?.lng ? (
+                        <div style={{ overflow: "auto" }}>
+                          <MapContainer
+                            center={[order.location.lat, order.location.lng]}
+                            zoom={13}
+                            scrollWheelZoom={false}
+                            style={{
+                              height: "250px",
+                              width: "300px",
+                              borderRadius: "10px",
+                            }}
+                          >
+                            <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+                            <Marker
+                              position={[
+                                order.location.lat,
+                                order.location.lng,
+                              ]}
+                            />
+                          </MapContainer>
+                        </div>
+                      ) : (
+                        <span>—</span>
+                      )}
+                    </td>
+                  </tr>
+                )}
               </>
             ))}
           </tbody>

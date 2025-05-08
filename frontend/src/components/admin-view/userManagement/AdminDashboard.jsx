@@ -96,95 +96,205 @@ function AdminDashboard() {
   }
 
   return (
-    <div className='w-11/12 mx-auto'>
+    <div className="w-11/12 mx-auto">
       <nav className="bg-blue-500 p-4 shadow-lg mt-10 w-10/12 m-auto">
-            <div className="container mx-auto flex justify-between items-center">
-              <h1 className="text-white text-xl font-bold">User Management</h1>
-              <div className="space-x-6 flex items-center">
-                  <Link to="/admin/dashboard" className="text-white hover:text-gray-200">
-                      Current Customers
-                </Link>
-                <Link to="/admin/delet-user" className="text-white hover:text-gray-200">
-                      Deleted Customers
-                </Link>
-              </div>
-            </div>
-          </nav>
+        <div className="container mx-auto flex justify-between items-center">
+          <h1 className="text-white text-xl font-bold">User Management</h1>
+          <div className="space-x-6 flex items-center">
+            <Link
+              to="/admin/dashboard"
+              className="text-white hover:text-gray-200"
+            >
+              Current Customers
+            </Link>
+            <Link
+              to="/admin/delet-user"
+              className="text-white hover:text-gray-200"
+            >
+              Deleted Customers
+            </Link>
+            <Link
+              to="/admin/UserManagementReport"
+              className="text-white hover:text-gray-200"
+            >
+              Usermanagement report
+            </Link>
+          </div>
+        </div>
+      </nav>
 
-          <h1 className='text-4xl mt-8 mb-8 text-center text-white underline font-bold'>Current Customers</h1>
+      <h1 className="text-4xl mt-8 mb-8 text-center text-white underline font-bold">
+        Current Customers
+      </h1>
 
-      <div style={{ display: 'flex', justifyContent: 'center', padding: '10px' }}>
-        
+      <div
+        style={{ display: "flex", justifyContent: "center", padding: "10px" }}
+      >
         <input
           type="text"
           placeholder="Search....."
           value={searchQuery}
-          onChange={handleSearch} 
-          style={{ width: '300px', padding: '10px', fontSize: '16px', borderRadius: '4px', border: '1px solid #ccc', marginRight: '10px' }}
+          onChange={handleSearch}
+          style={{
+            width: "300px",
+            padding: "10px",
+            fontSize: "16px",
+            borderRadius: "4px",
+            border: "1px solid #ccc",
+            marginRight: "10px",
+          }}
         />
       </div>
 
-      <h2 className='inline-block text-blue-600 bg-white bg-w-cover font-bold text-xl ml-5 py-3 px-5'>Total number of customers: {searchResults.length}</h2>
+      <h2 className="inline-block text-blue-600 bg-white bg-w-cover font-bold text-xl ml-5 py-3 px-5">
+        Total number of customers: {searchResults.length}
+      </h2>
 
       <div className="relative z-0 cardShape rounded-xl">
-      <table className="w-full border-collapse border border-gray-300 bg-white rounded-xl relative z-10">
-        <thead style={{ color: '#333' }} className='bg-blue-50'>
-          <tr>
-            <th style={{ padding: '15px', border: '1px solid #ddd', textAlign: 'left' }}>Name</th>
-            <th style={{ padding: '15px', border: '1px solid #ddd', textAlign: 'left' }}>Email</th>
-            <th style={{ padding: '15px', border: '1px solid #ddd', textAlign: 'left' }}>Address</th>
-            <th style={{ padding: '15px', border: '1px solid #ddd', textAlign: 'left' }}>Phone Number</th>
-            <th style={{ padding: '15px', border: '1px solid #ddd', textAlign: 'center' }}>View Details</th>
-            <th style={{ padding: '15px', border: '1px solid #ddd', textAlign: 'center' }}>Reason</th>
-            {/* <th style={{ padding: '15px', border: '1px solid #ddd', textAlign: 'left' }}>Add Admin</th> */}
-          </tr>
-        </thead>
-        <tbody>
-          {searchResults.map((ob, index) => (
-            <tr key={ob.email} style={{ backgroundColor: index % 2 === 0 ? '#fafafa' : '#fff' }}>
-              <td style={{ padding: '12px', border: '1px solid #ddd' }}>{ob.username}</td>
-              <td style={{ padding: '12px', border: '1px solid #ddd' }}>{ob.email}</td>
-              <td style={{ padding: '12px', border: '1px solid #ddd' }}>{ob.address}</td>
-              <td style={{ padding: '12px', border: '1px solid #ddd' }}>{ob.phone}</td>
-              <td style={{ textAlign: 'center' }}>
-                <button style={{
-                  padding: '10px 20px',
-                  backgroundColor: '#007bffb7',
-                  color: '#fff',
-                  border: 'none',
-                  borderRadius: '5px',
-                  cursor: 'pointer',
-                  transition: 'background-color 0.3s'
-                }}  onClick={(e) => ViewUser(e, ob._id)} >
-                  View
-                </button>
-              </td>
-              
-              <td style={{ padding: '10px', border: '1px solid #ddd' }}>
-              <form 
-                 onSubmit={
-                (e) => { e.preventDefault(); 
-                 deleteUser(e, ob.email) , ob.username }} style={{ display: 'flex', alignItems: 'center' }}>
-                 <input  type="text" name="reason" onChange={(e) => setReason(e.target.value)} required
-                  style={{ padding: '8px', width: '70%', borderRadius: '4px', border: '1px solid #ccc', marginRight: '10px' }}
-               />
-                 <button type="submit"
-                  style={{ padding: '8px 15px', backgroundColor: '#f44336', color: '#fff', border: 'none', borderRadius: '5px', cursor: 'pointer', transition: 'background-color 0.3s' }}
-                 >
-                 Delete
-              </button>
-             </form>
-</td>
+        <table className="w-full border-collapse border border-gray-300 bg-white rounded-xl relative z-10">
+          <thead style={{ color: "#333" }} className="bg-blue-50">
+            <tr>
+              <th
+                style={{
+                  padding: "15px",
+                  border: "1px solid #ddd",
+                  textAlign: "left",
+                }}
+              >
+                Name
+              </th>
+              <th
+                style={{
+                  padding: "15px",
+                  border: "1px solid #ddd",
+                  textAlign: "left",
+                }}
+              >
+                Email
+              </th>
+              <th
+                style={{
+                  padding: "15px",
+                  border: "1px solid #ddd",
+                  textAlign: "left",
+                }}
+              >
+                Address
+              </th>
+              <th
+                style={{
+                  padding: "15px",
+                  border: "1px solid #ddd",
+                  textAlign: "left",
+                }}
+              >
+                Phone Number
+              </th>
+              <th
+                style={{
+                  padding: "15px",
+                  border: "1px solid #ddd",
+                  textAlign: "center",
+                }}
+              >
+                View Details
+              </th>
+              <th
+                style={{
+                  padding: "15px",
+                  border: "1px solid #ddd",
+                  textAlign: "center",
+                }}
+              >
+                Reason
+              </th>
+              {/* <th style={{ padding: '15px', border: '1px solid #ddd', textAlign: 'left' }}>Add Admin</th> */}
+            </tr>
+          </thead>
+          <tbody>
+            {searchResults.map((ob, index) => (
+              <tr
+                key={ob.email}
+                style={{
+                  backgroundColor: index % 2 === 0 ? "#fafafa" : "#fff",
+                }}
+              >
+                <td style={{ padding: "12px", border: "1px solid #ddd" }}>
+                  {ob.username}
+                </td>
+                <td style={{ padding: "12px", border: "1px solid #ddd" }}>
+                  {ob.email}
+                </td>
+                <td style={{ padding: "12px", border: "1px solid #ddd" }}>
+                  {ob.address}
+                </td>
+                <td style={{ padding: "12px", border: "1px solid #ddd" }}>
+                  {ob.phone}
+                </td>
+                <td style={{ textAlign: "center" }}>
+                  <button
+                    style={{
+                      padding: "10px 20px",
+                      backgroundColor: "#007bffb7",
+                      color: "#fff",
+                      border: "none",
+                      borderRadius: "5px",
+                      cursor: "pointer",
+                      transition: "background-color 0.3s",
+                    }}
+                    onClick={(e) => ViewUser(e, ob._id)}
+                  >
+                    View
+                  </button>
+                </td>
 
-              {/* <td>
+                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
+                  <form
+                    onSubmit={(e) => {
+                      e.preventDefault();
+                      deleteUser(e, ob.email), ob.username;
+                    }}
+                    style={{ display: "flex", alignItems: "center" }}
+                  >
+                    <input
+                      type="text"
+                      name="reason"
+                      onChange={(e) => setReason(e.target.value)}
+                      required
+                      style={{
+                        padding: "8px",
+                        width: "70%",
+                        borderRadius: "4px",
+                        border: "1px solid #ccc",
+                        marginRight: "10px",
+                      }}
+                    />
+                    <button
+                      type="submit"
+                      style={{
+                        padding: "8px 15px",
+                        backgroundColor: "#f44336",
+                        color: "#fff",
+                        border: "none",
+                        borderRadius: "5px",
+                        cursor: "pointer",
+                        transition: "background-color 0.3s",
+                      }}
+                    >
+                      Delete
+                    </button>
+                  </form>
+                </td>
+
+                {/* <td>
                 <button style={{ padding: '10px 20px', backgroundColor: '#4CAF50', color: '#fff', border: 'none', borderRadius: '5px', cursor: 'pointer', transition: 'background-color 0.3s' }}>
                   Add Admin
                 </button>
               </td> */}
-            </tr>
-          ))}
-        </tbody>
-      </table>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
 
       {/* Confirmation Modal */}
@@ -193,8 +303,12 @@ function AdminDashboard() {
           <div className="modal">
             <h2>Are you sure you want to delete this user?</h2>
             <div className="modal-buttons">
-              <button className="confirm-btn" onClick={handleConfirmDelete}>Yes, Delete</button>
-              <button className="cancel-btn" onClick={handleCancelDelete}>Cancel</button>
+              <button className="confirm-btn" onClick={handleConfirmDelete}>
+                Yes, Delete
+              </button>
+              <button className="cancel-btn" onClick={handleCancelDelete}>
+                Cancel
+              </button>
             </div>
           </div>
         </div>
