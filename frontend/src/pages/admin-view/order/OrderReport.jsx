@@ -817,58 +817,183 @@ const MonthlyProductReport = () => {
     try {
       const doc = new jsPDF("p", "pt", "a4");
       const margin = 40;
-      let position = margin;
+      const pageWidth = doc.internal.pageSize.getWidth();
       const pageHeight = doc.internal.pageSize.height;
 
-      doc.setFontSize(20);
-      doc.setTextColor(40);
-      doc.text(`Monthly Product Report - ${selectedMonth}`, margin, position);
-      position += 30;
+      // Design System
+      const colors = {
+        primary: [52, 152, 219],
+        secondary: [155, 89, 182],
+        accent: [26, 188, 156],
+        dark: [44, 62, 80],
+        light: [236, 240, 241],
+        background: [249, 249, 249],
+      };
 
-      doc.setFontSize(12);
-      doc.setTextColor(100);
+      const fonts = {
+        title: { size: 24, style: "bold" },
+        subtitle: { size: 18, style: "bold" },
+        section: { size: 16, style: "bold" },
+        body: { size: 12, style: "normal" },
+        footer: { size: 10, style: "normal" },
+      };
+
+      // Helper functions
+      const addHeader = (pageNumber) => {
+        doc.setFillColor(colors.light[0], colors.light[1], colors.light[2]);
+        doc.rect(0, 0, pageWidth, 80, "F");
+
+        doc.setTextColor(colors.dark[0], colors.dark[1], colors.dark[2]);
+        doc.setFontSize(fonts.subtitle.size);
+        doc.setFont("helvetica", fonts.subtitle.style);
+        doc.text(`Monthly Product Report - ${selectedMonth}`, margin, 50);
+
+        doc.setFontSize(fonts.body.size);
+        doc.setFont("helvetica", fonts.body.style);
+        doc.text(`Page ${pageNumber}`, pageWidth - margin, 50, {
+          align: "right",
+        });
+
+        doc.setDrawColor(
+          colors.primary[0],
+          colors.primary[1],
+          colors.primary[2]
+        );
+        doc.setLineWidth(1);
+        doc.line(margin, 70, pageWidth - margin, 70);
+      };
+
+      const addFooter = () => {
+        doc.setFontSize(fonts.footer.size);
+        doc.setFont("helvetica", fonts.footer.style);
+        doc.setTextColor(150);
+        doc.text(
+          `Generated on ${new Date().toLocaleDateString()}`,
+          margin,
+          pageHeight - 30
+        );
+        doc.text(
+          "Confidential - For internal use only",
+          pageWidth / 2,
+          pageHeight - 30,
+          { align: "center" }
+        );
+      };
+
+      const addSectionTitle = (title, position) => {
+        doc.setFontSize(fonts.section.size);
+        doc.setFont("helvetica", fonts.section.style);
+        doc.setTextColor(
+          colors.primary[0],
+          colors.primary[1],
+          colors.primary[2]
+        );
+        doc.text(title, margin, position);
+
+        doc.setFillColor(colors.accent[0], colors.accent[1], colors.accent[2]);
+        doc.rect(margin, position + 5, 100, 2, "F");
+
+        return position + 30;
+      };
+
+      // Cover Page
+      doc.setFillColor(colors.primary[0], colors.primary[1], colors.primary[2]);
+      doc.rect(0, 0, pageWidth, pageHeight, "F");
+
+      doc.setTextColor(255, 255, 255);
+      doc.setFontSize(fonts.title.size);
+      doc.setFont("helvetica", fonts.title.style);
+      doc.text("Monthly Product Report", pageWidth / 2, pageHeight / 2 - 60, {
+        align: "center",
+      });
+
+      doc.setFontSize(fonts.subtitle.size);
+      doc.text(selectedMonth, pageWidth / 2, pageHeight / 2, {
+        align: "center",
+      });
+
+      doc.setFontSize(fonts.body.size);
       doc.text(
         `Generated on ${new Date().toLocaleDateString()}`,
-        margin,
-        position
+        pageWidth / 2,
+        pageHeight / 2 + 60,
+        { align: "center" }
       );
-      position += 40;
 
-      const addSectionToPDF = async (element, title) => {
+      // Report Content
+      let currentPage = 1;
+      doc.addPage();
+      addHeader(currentPage);
+      let position = 100;
+
+      const addContentSection = async (element, title) => {
         if (!element) return position;
+
+        position = addSectionTitle(title, position);
 
         const canvas = await html2canvas(element, {
           scale: 2,
           logging: false,
           useCORS: true,
           allowTaint: true,
+          backgroundColor: `rgb(${colors.background.join(",")})`,
         });
 
         const imgData = canvas.toDataURL("image/png");
-        const imgWidth = doc.internal.pageSize.getWidth() - 2 * margin;
+        const imgWidth = pageWidth - 2 * margin;
         const imgHeight = (canvas.height * imgWidth) / canvas.width;
 
-        if (position + imgHeight > pageHeight - margin) {
+        // Check if content fits on current page
+        if (position + imgHeight > pageHeight - 60) {
+          addFooter();
           doc.addPage();
-          position = margin;
+          currentPage++;
+          addHeader(currentPage);
+          position = 100;
         }
 
+        // Content container with subtle shadow
+        doc.setDrawColor(220, 220, 220);
+        doc.setFillColor(255, 255, 255);
+        doc.roundedRect(
+          margin - 5,
+          position - 5,
+          imgWidth + 10,
+          imgHeight + 10,
+          5,
+          5,
+          "FD"
+        );
+
         doc.addImage(imgData, "PNG", margin, position, imgWidth, imgHeight);
-        return position + imgHeight + 20;
+        return position + imgHeight + 30;
       };
 
-      position = await addSectionToPDF(analysisRef.current, "AI Analysis");
-      position = await addSectionToPDF(chartRef.current, "Product Performance");
+      // Add all sections
+      position = await addContentSection(analysisRef.current, "AI Analysis");
+      position = await addContentSection(
+        chartRef.current,
+        "Product Performance"
+      );
 
       if (selectedProduct && dailySalesRef.current) {
-        position = await addSectionToPDF(dailySalesRef.current, "Daily Sales");
+        position = await addContentSection(
+          dailySalesRef.current,
+          "Daily Sales"
+        );
       }
 
       if (productTableRef.current) {
-        await addSectionToPDF(productTableRef.current, "Product Details");
+        position = await addContentSection(
+          productTableRef.current,
+          "Product Details"
+        );
       }
 
-      doc.save(`report-${selectedMonth.replace(/\s+/g, "-")}.pdf`);
+      // Final footer
+      addFooter();
+
+      doc.save(`Product_Report_${selectedMonth.replace(/\s+/g, "_")}.pdf`);
     } catch (error) {
       console.error("PDF generation error:", error);
       alert("Failed to generate PDF. Please try again.");
@@ -876,21 +1001,72 @@ const MonthlyProductReport = () => {
       setIsGeneratingPDF(false);
     }
   };
-
   const generateDataPDF = useCallback(() => {
     try {
       const doc = new jsPDF();
 
+      // Document metadata
       doc.setProperties({
-        title: `Product Report - ${selectedMonth}`,
-        subject: "Monthly Product Analysis",
+        title: `Product Performance Report - ${selectedMonth}`,
+        subject: "Comprehensive Product Analysis",
         author: "Your App Name",
+        keywords: "product, sales, report, analysis",
+        creator: "Your App Name",
       });
 
+      // Color scheme
+      const colors = {
+        primary: [41, 128, 185],
+        secondary: [142, 68, 173],
+        accent: [39, 174, 96],
+        dark: [44, 62, 80],
+        light: [236, 240, 241],
+        background: [249, 249, 249],
+      };
+
+      // Add cover page
+      doc.setFillColor(colors.primary[0], colors.primary[1], colors.primary[2]);
+      doc.rect(
+        0,
+        0,
+        doc.internal.pageSize.width,
+        doc.internal.pageSize.height,
+        "F"
+      );
+
+      doc.setTextColor(255, 255, 255);
       doc.setFont("helvetica", "bold");
+      doc.setFontSize(24);
+      doc.text("Product Performance Report", 105, 60, { align: "center" });
+
       doc.setFontSize(18);
-      doc.setTextColor(40, 40, 40);
-      doc.text(`Monthly Product Report - ${selectedMonth}`, 105, 20, {
+      doc.text(selectedMonth, 105, 90, { align: "center" });
+
+      doc.setFont("helvetica", "normal");
+      doc.setFontSize(12);
+      doc.text(`Generated on ${new Date().toLocaleDateString()}`, 105, 120, {
+        align: "center",
+      });
+
+      // Add decorative elements
+      doc.setDrawColor(255, 255, 255, 30);
+      doc.setLineWidth(1);
+      doc.circle(30, 30, 15, "S");
+      doc.circle(180, 30, 15, "S");
+      doc.circle(30, 270, 15, "S");
+      doc.circle(180, 270, 15, "S");
+
+      // Add content page
+      doc.addPage();
+
+      // Page header
+      doc.setFillColor(colors.light[0], colors.light[1], colors.light[2]);
+      doc.rect(0, 0, doc.internal.pageSize.width, 30, "F");
+
+      doc.setTextColor(colors.dark[0], colors.dark[1], colors.dark[2]);
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(14);
+      doc.text(`Product Report - ${selectedMonth}`, 105, 20, {
         align: "center",
       });
 
@@ -901,83 +1077,210 @@ const MonthlyProductReport = () => {
         align: "center",
       });
 
-      let yPos = 40;
+      let yPos = 50;
 
+      // Performance Summary Section
+      doc.setFillColor(colors.primary[0], colors.primary[1], colors.primary[2]);
+      doc.rect(14, yPos - 8, 50, 5, "F");
+
+      doc.setTextColor(colors.dark[0], colors.dark[1], colors.dark[2]);
+      doc.setFont("helvetica", "bold");
       doc.setFontSize(14);
-      doc.text("Product Performance", 14, yPos);
-      yPos += 10;
+      doc.text("Performance Summary", 14, yPos);
+      yPos += 15;
 
       const performanceData = chartData.map((item) => [
-        item.name.length > 25 ? `${item.name.substring(0, 22)}...` : item.name,
-        view === "quantity" ? item.quantity : `Rs ${item.price.toFixed(2)}`,
+        {
+          content:
+            item.name.length > 25
+              ? `${item.name.substring(0, 22)}...`
+              : item.name,
+          styles: { fontStyle: "bold" },
+        },
+        view === "quantity"
+          ? { content: item.quantity, styles: { halign: "right" } }
+          : {
+              content: `Rs ${item.price.toFixed(2)}`,
+              styles: { halign: "right" },
+            },
       ]);
 
       autoTable(doc, {
         startY: yPos,
         head: [
-          ["Product", view === "quantity" ? "Units Sold" : "Revenue (Rs)"],
+          [
+            {
+              content: "Product",
+              styles: {
+                fillColor: colors.primary,
+                textColor: 255,
+                fontStyle: "bold",
+              },
+            },
+            {
+              content: view === "quantity" ? "Units Sold" : "Revenue (Rs)",
+              styles: {
+                fillColor: colors.primary,
+                textColor: 255,
+                fontStyle: "bold",
+                halign: "right",
+              },
+            },
+          ],
         ],
         body: performanceData,
         styles: {
-          fontSize: 9,
-          cellPadding: 3,
+          fontSize: 10,
+          cellPadding: 4,
           overflow: "linebreak",
+          valign: "middle",
+          lineColor: [224, 224, 224],
+          lineWidth: 0.5,
         },
         columnStyles: {
-          0: { cellWidth: 120 },
+          0: { cellWidth: 120, fontStyle: "bold" },
           1: { cellWidth: "auto", halign: "right" },
         },
-        headStyles: {
-          fillColor: [41, 128, 185],
-          textColor: 255,
-          fontStyle: "bold",
+        alternateRowStyles: {
+          fillColor: [249, 249, 249],
         },
+        margin: { left: 14, right: 14 },
+        tableWidth: "auto",
+        theme: "grid",
       });
 
-      yPos = doc.lastAutoTable.finalY + 15;
+      yPos = doc.lastAutoTable.finalY + 20;
 
+      // Detailed Product Data Section
       const monthData =
         groupedByYearMonth[selectedYear]?.[selectedMonth]?.items || [];
       if (monthData.length > 0) {
+        doc.setFillColor(
+          colors.secondary[0],
+          colors.secondary[1],
+          colors.secondary[2]
+        );
+        doc.rect(14, yPos - 8, 80, 5, "F");
+
+        doc.setTextColor(colors.dark[0], colors.dark[1], colors.dark[2]);
+        doc.setFont("helvetica", "bold");
         doc.setFontSize(14);
         doc.text("Detailed Product Data", 14, yPos);
-        yPos += 10;
+        yPos += 15;
 
         const productData = monthData.map((item) => [
-          item.productName.length > 20
-            ? `${item.productName.substring(0, 17)}...`
-            : item.productName,
+          {
+            content:
+              item.productName.length > 20
+                ? `${item.productName.substring(0, 17)}...`
+                : item.productName,
+            styles: { fontStyle: "bold" },
+          },
           item.size || "-",
-          item.quantity,
-          `Rs ${item.price.toFixed(2)}`,
-          `Rs ${(item.price * item.quantity).toFixed(2)}`,
+          { content: item.quantity, styles: { halign: "right" } },
+          {
+            content: `Rs ${item.price.toFixed(2)}`,
+            styles: { halign: "right" },
+          },
+          {
+            content: `Rs ${(item.price * item.quantity).toFixed(2)}`,
+            styles: { halign: "right", fontStyle: "bold" },
+          },
         ]);
 
         autoTable(doc, {
           startY: yPos,
-          head: [["Product", "Size", "Qty", "Unit Price", "Total"]],
+          head: [
+            [
+              {
+                content: "Product",
+                styles: {
+                  fillColor: colors.secondary,
+                  textColor: 255,
+                  fontStyle: "bold",
+                },
+              },
+              {
+                content: "Size",
+                styles: {
+                  fillColor: colors.secondary,
+                  textColor: 255,
+                  fontStyle: "bold",
+                },
+              },
+              {
+                content: "Qty",
+                styles: {
+                  fillColor: colors.secondary,
+                  textColor: 255,
+                  fontStyle: "bold",
+                  halign: "right",
+                },
+              },
+              {
+                content: "Unit Price",
+                styles: {
+                  fillColor: colors.secondary,
+                  textColor: 255,
+                  fontStyle: "bold",
+                  halign: "right",
+                },
+              },
+              {
+                content: "Total",
+                styles: {
+                  fillColor: colors.secondary,
+                  textColor: 255,
+                  fontStyle: "bold",
+                  halign: "right",
+                },
+              },
+            ],
+          ],
           body: productData,
           styles: {
-            fontSize: 8,
-            cellPadding: 2,
+            fontSize: 9,
+            cellPadding: 3,
             overflow: "linebreak",
+            valign: "middle",
+            lineColor: [224, 224, 224],
+            lineWidth: 0.5,
           },
           columnStyles: {
             0: { cellWidth: 70 },
             1: { cellWidth: 30 },
-            2: { cellWidth: 20, halign: "right" },
-            3: { cellWidth: 30, halign: "right" },
-            4: { cellWidth: 30, halign: "right" },
+            2: { cellWidth: 25, halign: "right" },
+            3: { cellWidth: 35, halign: "right" },
+            4: { cellWidth: 35, halign: "right" },
           },
-          headStyles: {
-            fillColor: [128, 0, 128],
-            textColor: 255,
-            fontStyle: "bold",
+          alternateRowStyles: {
+            fillColor: [249, 249, 249],
           },
+          margin: { left: 14, right: 14 },
+          tableWidth: "auto",
+          theme: "grid",
         });
+
+        yPos = doc.lastAutoTable.finalY + 20;
       }
 
-      doc.save(`product-report-${selectedMonth.replace(/\s+/g, "-")}.pdf`);
+      // Add footer
+      doc.setFont("helvetica", "normal");
+      doc.setFontSize(8);
+      doc.setTextColor(150);
+      doc.text(
+        "© Your App Name - Confidential Report",
+        105,
+        doc.internal.pageSize.height - 10,
+        { align: "center" }
+      );
+
+      doc.save(
+        `Product-Performance-Report-${selectedMonth.replace(
+          /\s+/g,
+          "-"
+        )}-${new Date().toISOString().slice(0, 10)}.pdf`
+      );
     } catch (error) {
       console.error("PDF Generation Error:", error);
       alert(`Failed to generate PDF: ${error.message}`);
