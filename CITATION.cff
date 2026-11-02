@@ -1,0 +1,7 @@
+cff-version: 1.2.0
+message: "Cite this software repository when using it; this is not a research paper citation."
+title: "Academic Project Collection"
+authors:
+  - name: "kajanraj400 and repository contributors"
+repository-code: "https://github.com/kajanraj400/Academy-project"
+type: software

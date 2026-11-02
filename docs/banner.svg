@@ -1,12 +1,1 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="320" viewBox="0 0 1280 320" role="img" aria-labelledby="title desc">
-<title id="title">Academic Projects</title><desc id="desc">Three systems. One place to explore the work.</desc>
-<rect width="1280" height="320" rx="20" fill="#0F172A"/>
-<circle cx="1190" cy="55" r="210" fill="#2DD4BF" opacity=".12"/>
-<circle cx="1130" cy="245" r="130" fill="none" stroke="#2DD4BF" stroke-width="2" opacity=".35"/>
-<path d="M910 80h90v90h90v90h95" fill="none" stroke="#2DD4BF" stroke-width="3" opacity=".5"/>
-<rect x="64" y="52" width="5" height="32" rx="2" fill="#2DD4BF"/>
-<text x="86" y="76" fill="#2DD4BF" font-family="Segoe UI,Arial,sans-serif" font-size="18" letter-spacing="3">COURSEWORK / WEB APPLICATIONS</text>
-<text x="64" y="159" fill="#F8FAFC" font-family="Segoe UI,Arial,sans-serif" font-size="54" font-weight="700">Academic Projects</text>
-<text x="64" y="207" fill="#CBD5E1" font-family="Segoe UI,Arial,sans-serif" font-size="23">Three systems. One place to explore the work.</text>
-<text x="64" y="270" fill="#94A3B8" font-family="Segoe UI,Arial,sans-serif" font-size="17">KAJANRAJ400 / GITHUB</text>
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="400" viewBox="0 0 1280 400" role="img"><style>text{font-family:Segoe UI,Arial,sans-serif}</style><defs><linearGradient id="g"><stop stop-color="#2DD4BF"/><stop offset="1" stop-color="#38BDF8"/></linearGradient><pattern id="p" width="32" height="32" patternUnits="userSpaceOnUse"><circle cx="1" cy="1" r="1" fill="#475569"/></pattern></defs><rect width="1280" height="400" rx="24" fill="#0B1021"/><rect width="1280" height="400" rx="24" fill="url(#p)" opacity=".35"/><path d="M850 400 1040 0h240v400" fill="url(#g)" opacity=".14"/><rect x="55" y="52" width="6" height="26" rx="3" fill="#2DD4BF"/><text x="80" y="73" fill="#2DD4BF" font-size="18" letter-spacing="3">SOFTWARE / LEARNING / PROJECTS</text><text x="55" y="158" fill="#F8FAFC" font-size="43" font-weight="700">Academic Project Collection</text><text x="55" y="211" fill="#CBD5E1" font-size="21">Three applications. Clear entry points. One visual project directory.</text><rect x="55" y="270" width="184" height="40" rx="20" fill="#2DD4BF" opacity=".16"/><text x="78" y="296" fill="#2DD4BF" font-size="16">KAJANRAJ400</text><g transform="translate(980 105)"><path d="m0 60 65-38 65 38v76l-65 38-65-38z" fill="none" stroke="url(#g)" stroke-width="3"/><path d="m0 60 65 38 65-38M65 98v76M65 22v76" stroke="#2DD4BF" fill="none"/><circle cx="65" cy="98" r="15" fill="#2DD4BF"/></g><path d="M0 375h1280" stroke="url(#g)" stroke-width="3"/></svg>
