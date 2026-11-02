@@ -15,6 +15,9 @@
 
 ---
 
+![Project highlights](docs/project-cards.svg)
+
+
 ## Project directory
 
 Each project lives on its own branch. The `main` branch is the entry point for this collection.
@@ -70,6 +73,9 @@ Review the servlet imports, project settings and database connection code to sel
 
 ## Repository guide
 
+![Source architecture](docs/architecture.svg)
+
+
 | Branch | Purpose |
 | --- | --- |
 | `main` | Project directory and collection documentation |
@@ -97,3 +103,7 @@ This is an academic source collection. Local setup has not been executed as part
 <div align="center">
 Explore the source · Understand the design · Build on the work
 </div>
+
+## Documentation
+
+[Visual guide](docs/README.md) · [Roadmap](docs/ROADMAP.md) · [Citation](CITATION.cff) · [Licensing](docs/LICENSING.md)
